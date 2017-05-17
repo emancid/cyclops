@@ -1,0 +1,6 @@
+#### MAIN DAEMON CONFIG FILE ####
+#### [index];[process type,main|detail];[source, hostname/ip];[dst data prefix];[descriptive name] ####
+
+0001;main;slurm-server;expl;slurm production extractor
+0002;main;nimbus4;dev;slurm development extractor
+

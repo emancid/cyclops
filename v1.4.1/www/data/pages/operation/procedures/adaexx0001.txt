@@ -1,0 +1,14 @@
+
+
+
+|< 50% >|
+^  Código       ^  Nombre Procedimiento  ^  Verificado    ^  Operativo    ^  Fecha Creación   ^  Fecha Ultima Modificación  ^  Versión  ^
+===== Procedimiento =====
+
+  * Los procedimientos de configuración para el uso de la VPN están incluidos en el documento asociado e incluten:
+    * Configuracion VPN con cliente Windows
+    * Configuracion VPN con Linux ( Network Manager)
+    * Configuracion VPN con Linux ( Scripts )
+
+{{operation:procedures:procedimiento_vpn_paloalto_v1.1.pdf|}}
+

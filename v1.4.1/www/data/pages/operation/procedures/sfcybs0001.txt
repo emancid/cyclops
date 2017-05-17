@@ -1,0 +1,36 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** Software - Cyclops : Monitorización estado de un nodo **  
+
+===== Sistemas Objetivo =====
+
+|< 100% 10% 10% 32% 8% 30% >| 
+^  Grupo      ^  Nodos                      ^  Descripción                                                                             ^  Criticidad          ^  Implicación  ^
+|  Todos      |  Todos                  |                                           |  @#EAFFD5: BAJA               |  Ninguna Conocida  |
+
+===== Sistemas Colaterales =====
+
+|< 100% 10% 10% 32% 8% 30% >| 
+^  Grupo         ^  Nodos           ^  Descripción                                                     ^  Criticidad  ^  Implicación  ^ 
+|  Ninguno       |  Ninguno         |                                                                  |  @#EAFFD5: BAJA        |  Ninguna Conocida  | 
+
+
+
+
+===== Procedimiento =====
+
+  * Ejecutar el siguiente comando, donde pone [nodo|grupo|type] especificar el nombre de host, grupo o tipo deseado:<code>
+/opt/cyclops/scripts/sensors.nodes.mon.sh -v human -i -m [nodo|grupo|tipo]
+</code>
+
+<hidden Ejemplo de Salida>
+<code>
+/opt/cyclops/scripts/sensors.nodes.mon.sh -v human -i -m login
+
+OK NODE STATUS - OPERATIVE
+
+family  hostname    mon_time  uptime       cpu    cpu_temp  swap  disk_space  bios_log  lsidisk  network  daemon_status  lustre    heartbeat  munge  vsftpd  crond  z
+login   UP [LOGIN NODES]  12.00.46  CHECKING 3d  UP 1%  UP 33%    UP    UP          UP        UP       UP       UP/36/36/      UP mount  UP         UP     UP      UP     UP 
+login   UP [LOGIN NODES]  12.00.46  CHECKING 3d  UP 1%  UP 36%    UP    UP          UP        UP       UP       UP/36/36/      UP mount  UP         UP     UP      UP     UP
+</code>
+</hidden>

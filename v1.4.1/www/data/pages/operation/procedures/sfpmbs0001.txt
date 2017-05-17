@@ -1,0 +1,188 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** Software - HA Pacemaker: Chequeo ** 
+
+===== Sistemas Objetivo =====
+
+|< 100% >| 
+^  Grupo    ^  Nodos        ^  Descripción                                   ^  Criticidad         ^  Implicacion                                             ^
+|  Gestión  |  MANAGEMENT NODES  |  Acceso de los usuarios al sistema productivo  |  @#FAAC58:ALTA  |  Caida en el nivel de integridad del sistema productivo  |
+|  Lustre   |  node[RANGE]  |  Funcionamiento del servicio                   |  @#FAAC58: ALTA  |  Posibilidad de caida completa del sistema productivo    |
+
+
+
+===== Sistemas Colaterales =====
+
+|< 100% >| 
+^  Grupo    ^  Nodos        ^  Descripción  ^  Criticidad  ^  Implicacion                                             ^
+|  Gestión  |  MANAGEMENT NODES  |               |   @#FAAC58:ALTA    |  Caida en el nivel de integridad del sistema productivo  |
+|  Lustre   |  LUSTRE MDS NODES  |               |   @#FAAC58: ALTA    |  Posibilidad de caida completa del sistema productivo    |
+| :::       |  node[RANGE]  |               |  @#FAAC58:  ALTA    |  Posibilidad de caida completa del sistema productivo    |
+===== Procedimiento =====
+
+  * Este servicio está instalado en Nodos de Gestión ([MANAGEMENT NODE] y [MANAGEMENT NODE]) . Los pasos a seguir para chequear Pacemaker son:
+
+    - Conectarse al nodo de gestión: [[:operation:procedures:SPXXXX0002| SPXXXX0002 : Establecer Conexión SSH]]
+    - Con los siguientes comandos podemos observar los servicios que gestiona Pacemaker y ver que servidor lo controla en ese momento
+    - Lanzamos desde cualquiera de los nodos de Gestión: 
+<code>
+haresl  listprefs
+</code> 
+
+<hidden Resultado>
+<code>
+
+Please wait a few seconds ...
+----------------------- listprefs -----------------------
+resource           preferred-node status                 
+---------------------------------------------------------
+restofence[MANAGEMENT NODES]  [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+restofence[MANAGEMENT NODES]  [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+                                                         
+console            [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+dhcp               [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+dns                [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+fs-BCM             [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+fs-IDC             [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+fs-Shine           [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+fs-ibms            [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+ibms-database      [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+ibms-devmgr        [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+ibms-perfmgr       [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+kconf              [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+ksis-rsync         [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+monitoring         [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+mysql              [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+nfs                [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+postfix            [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+postfix-client     [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+postgresql         [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+slurm              [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+slurmdbd           [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+tftp               [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+yabix              [MANAGEMENT NODES]        (running on: [MANAGEMENT NODES])  
+                                                         
+</code>
+</hidden>
+
+También podemos utilizar los comandos:
+
+ haadml show</code>
+
+<hidden Resultado>
+<code>
+[root@[MANAGEMENT NODES] ~]# haadml show
+============
+Last updated: Tue Mar 10 13:22:59 2015
+Last change: Mon Mar  9 10:25:42 2015 via crm_resource on [MANAGEMENT NODES]
+Stack: openais
+Current DC: [MANAGEMENT NODES] - partition with quorum
+Version: 1.1.7-6.el6.Bull.1.2.20140109-148fccfd5985c5590cc601123c6c16e966b85d14
+2 Nodes configured, 2 expected votes
+68 Resources configured.
+============
+
+Online: [ [MANAGEMENT NODES] [MANAGEMENT NODES] ]
+
+ restofence[MANAGEMENT NODES]      (stonith:fence_ipmilan):        Started [MANAGEMENT NODES]
+ restofence[MANAGEMENT NODES]      (stonith:fence_ipmilan):        Started [MANAGEMENT NODES]
+ Resource Group: postfix
+     IPaddr-postfix-1   (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     postfix-fs-postfix (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     postfix-postfix    (ocf::heartbeat:postfix):       Started [MANAGEMENT NODES]
+ Resource Group: fs-BCM
+     fs-BCM-data        (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     fs-BCM-conf        (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     fs-BCM-console     (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     fs-BCM-log (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     fs-BCM-storage     (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+ Resource Group: kconf
+     IPaddr-kconf-1     (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     kconf-etc-puppet   (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     kconf-lib-puppet   (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     kconf-puppetmaster (lsb:kconf-server):     Started [MANAGEMENT NODES]
+ Resource Group: fs-Shine
+     fs-Shine-ShineXMF  (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+ Resource Group: fs-IDC
+     fs-IDC-bullxscs4   (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     fs-IDC-libsystemimager     (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     fs-IDC-etcsystemimager     (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     fs-IDC-tftpboot    (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+ Resource Group: tftp
+     IPaddr-tftp-1      (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     tftp-tftp-server   (lsb:xinetd):   Started [MANAGEMENT NODES]
+ Resource Group: nfs
+     pred-fs    (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     expl-fs    (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     optintel-fs        (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     nfs-fs-nfs-shared-infodir  (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     nfs-nfs-lock       (lsb:nfslock):  Started [MANAGEMENT NODES]
+     nfs-nfs-server     (ocf::heartbeat:nfsserver):     Started [MANAGEMENT NODES]
+     IPaddr-nfs-1       (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     IPaddr-nfs-2       (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+ Resource Group: ksis-rsync
+     ksis-rsync-ksis-rsyncd     (lsb:systemimager-server-rsyncd):       Started [MANAGEMENT NODES]
+ Resource Group: fs-ibms
+     fs-ibms-fs-ibms-ramdisk    (lsb:ibms-database-filesystem): Started [MANAGEMENT NODES]
+ Resource Group: postgresql
+     IPaddr-postgresql-1        (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     postgresql-fs-postgresql   (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     postgresql-clusterdb       (ocf::heartbeat:pgsql): Started [MANAGEMENT NODES]
+ Clone Set: munge [munge-munge-server]
+     Started: [ [MANAGEMENT NODES] [MANAGEMENT NODES] ]
+ Resource Group: dns
+     IPaddr-dns-1       (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     dns-dns-server     (lsb:named):    Started [MANAGEMENT NODES]
+ Resource Group: ibms-database
+     ibms-database-ibms-database        (lsb:ibms-database):    Started [MANAGEMENT NODES]
+ Resource Group: dhcp
+     IPaddr-dhcp-1      (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     dhcp-dhcp-server   (lsb:dhcpd):    Started [MANAGEMENT NODES]
+ Resource Group: console
+     IPaddr-console-1   (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     console-console    (lsb:conman):   Started [MANAGEMENT NODES]
+ Clone Set: syslog-ng [syslog-ng-syslog-ng]
+     Started: [ [MANAGEMENT NODES] [MANAGEMENT NODES] ]
+ Resource Group: yabix
+     IPaddr-yabix-1     (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     yabix-yabix-server (lsb:yabix):    Started [MANAGEMENT NODES]
+ Resource Group: postfix-client
+     IPaddr-postfix-client-1    (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     postfix-client-postfix-client      (ocf::heartbeat:postfix):       Started [MANAGEMENT NODES]
+ Resource Group: ibms-devmgr
+     ibms-devmgr-ibms-devmgr    (lsb:ibms_devmgr):      Started [MANAGEMENT NODES]
+ Resource Group: ibms-perfmgr
+     ibms-perfmgr-ibms-perfmgr  (lsb:ibms_perfmgr):     Started [MANAGEMENT NODES]
+ Resource Group: mysql
+     IPaddr-mysql-1     (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     mysql-fs-mysql     (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     mysql-mysqld       (ocf::Bull:mysql):      Started [MANAGEMENT NODES]
+ Resource Group: monitoring
+     IPaddr-monitoring-1        (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     monitoring-syslog-ng       (lsb:syslog-ng-monitoring):     Started [MANAGEMENT NODES]
+     monitoring-nodeAgent       (lsb:collectd-server):  Started [MANAGEMENT NODES]
+     monitoring-eventManager    (lsb:eventManager):     Started [MANAGEMENT NODES]
+     monitoring-errorManager    (lsb:errorManager):     Started [MANAGEMENT NODES]
+     monitoring-powerManager    (lsb:powerManager):     Started [MANAGEMENT NODES]
+     monitoring-nagios  (lsb:bsm_nagios):       Started [MANAGEMENT NODES]
+ Clone Set: nodeAgent-client [nodeAgent-client-nodeAgent-client]
+     Started: [ [MANAGEMENT NODES] [MANAGEMENT NODES] ]
+ Resource Group: slurm
+     IPaddr-slurm-1     (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+     slurm-fs-SLURM     (ocf::Bull:Filesystem): Started [MANAGEMENT NODES]
+     slurm-slurm-server (lsb:slurm):    Started [MANAGEMENT NODES]
+ Resource Group: slurmdbd
+     slurmdbd-slurmdbd-server   (lsb:slurmdbd): Started [MANAGEMENT NODES]
+ IPaddr-slurm-2 (ocf::Bull:IPaddr2):    Started [MANAGEMENT NODES]
+</code>
+</hidden>
+
+<code>  haadml status [MANAGEMENT NODES] [MANAGEMENT NODES]</code>
+
+<hidden Resultado>
+[root@[MANAGEMENT NODES] ~]# haadm status [MANAGEMENT NODES] [MANAGEMENT NODES]
+NODE [MANAGEMENT NODES] : Pacemaker is started
+NODE [MANAGEMENT NODES] : Pacemaker is started
+
+</hidden>
+

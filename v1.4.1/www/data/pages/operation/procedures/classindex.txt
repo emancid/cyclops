@@ -1,0 +1,75 @@
+====== Procedimientos - Indice por Clase/tipo ======
+
+===== Comunes =====
+
+<hidden NOTIFICACION>
+  * [[operation:procedures:ADAEXX0002|ADAEXX0002 : Notificatión AEMET ]]
+  * [[operation:procedures:ADAEXX0003|ADAEXX0003 : Notificacion AL CPD AEMET ]]
+  * [[operation:procedures:ADBAXX0001|ADBAXX0001 : Notificación BULL - AEMET]]
+  * [[operation:procedures:ADBMXX0001|ADBMXX0001 : Notificación BULL - Madrid]]
+  * [[operation:procedures:ADBMXX0002|ADBMXX0002 : Notificacion BULL - Madrid ( Hardware )]] 
+  * [[operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia]]
+  * [[operation:procedures:ADBIXX0001|ADBIXX0001 : Notificacion BULL - Refrigeracion ( MIBAIR)]]
+</hidden>
+
+<hidden ACCESO AL SISTEMA>
+  * [[operation:procedures:ADAEXX0001|ADAEXX0001 : VPN]]
+  * [[operation:procedures:SPXXXX0001|SPXXXX0001 : Conexión al sistema de monitorización desde el exterior de AEMET]]
+  * [[operation:procedures:SPXXXX0002|SPXXXX0002 : Conexión SSH al Sistema]]
+  * [[operation:procedures:SPXXXX0003|SPXXXX0003 : Ejecución de Firefox desde exportación X con ssh]]
+  * [[operation:procedures:SPXXXX0004|SPXXXX0004 : Perdida de Conexión con la monitorización]]
+</hidden>
+<hidden SITUACION DE EXCEPCION>
+  * [[operation:procedures:SPXXXX0005|SPXXXX0005 : Caso de Emergencia]]
+</hidden>
+
+===== Técnicos de Soporte =====
+
+<hidden PROCEDIMIENTOS GENERALES>
+  * [[operation:procedures:HRBLAV0005|HRBLAV0005 : Comprobacion de estado de un nodo ]]
+  * [[operation:procedures:HRBLAV0003|HRBLAV0003 : Contención de un nodo]]
+  * [[operation:procedures:HRBLAV0006|HRBLAV0006 : Sustitucion Blade B7xx]]
+  * [[operation:procedures:HRHYAV0002|HRHYAV0002 : HYC Masive Error, Refrigeration alert]]
+  * [[operation:procedures:HRIBAV0001|HRIBAV0001 : Actualización Infiniband (flint)]]
+  * [[operation:procedures:HRBIAV0001|HRBIAV0001 : BIOS/BMC Log Trace Alert]]
+</hidden>
+
+<hidden GUIA DE REFERENCIA>
+  * BIOS:
+    - [[operation:procedures:HRBIBS0001|HRBIBS0001 : Listar Eventos BIOS]]
+    - [[operation:procedures:HRBIBS0002|HRBIBS0002 : Borrar Eventos BIOS]]
+  * Blade/Nodo:
+    - [[operation:procedures:HRBLBS0001|HRBLBS0001 : Encendido Nodo]] 
+    - [[operation:procedures:HRBLBS0002|HRBLBS0002 : Reinicio Nodo]]
+    - [[operation:procedures:HRBLBS0003|HRBLBS0003 : Apagado Nodo]]
+    - [[operation:procedures:HRBLBS0005|HRBLBS0005 : Estado Energetico de un Nodo]]
+    - [[operation:procedures:HRBLBS0004|HRBLBS0004 : Identificar Código Hardware - Nodo]]
+  * Almacenamiento:
+    - [[operation:procedures:HRSTBS0001|HRSTBS0001 : Chequear Estado Cabinas de Almacenamiento]]
+    - [[operation:procedures:HRSTBS0002|HRSTBS0002 : Encender una cabina]]
+    - [[operation:procedures:HRSTBS0003|HRSTBS0003 : Apagar una cabina]]
+  * BMC/ILO:
+    - [[operation:procedures:HRBMBS0001|HRBMBS0001 : BMC Comprobar sensores]]
+    - [[operation:procedures:HRBMBS0002|HRBMBS0002 : BMC, Herramienta de Diagnostico Hardware BULL]]
+  * B7xx Sistema Hidráulico:
+    - [[operation:procedures:HRHYBS0001|HRHYBS0001 : HYC Comprobar el numero de hyc configuradas]]
+    - [[operation:procedures:HTHYBS0002|HRHYBS0002 : HYC Cambiar el numero de hycs configuradas en un rack (CODIGO MAL)]]
+    - [[operation:procedures:HRHYBS0002|HRHYBS0002 : HYC Cambiar el numero de hycs configuradas en un rack]]
+  * Chasis Blades:
+    - [[operation:procedures:HRCMBS0001|HRCMBS0001 : CMC, Herramienta de Diagnostico Hardware BULL]]
+    - [[operation:procedures:HRCMBS0002|HRCMBS0002 : CMC B7xx Conexión interfaz web]]
+    - [[operation:procedures:HRCMBS0003|HRCMBS0003 : CMC B7xx Verificación estado energético del nodo - interfaz web]]
+    - [[operation:procedures:HRCMBS0004|HRCMBS0004 : CMC Cambiar el estado energético del nodo - interfaz web]]
+    - [[operation:procedures:HRCMBS0005|HRCMBS0005 : CMC Insertar/Remover un blade - interfaz web]]
+    - [[operation:procedures:HRCMBS0006|HRCMBS0006 : CMC Cambiar Exclusión nodos - interfaz web]]
+    - [[operation:procedures:HRCMBS0007|HRCMBS0007 : CMC Insertar/Extraer físicamente un blade]]
+    - [[operation:procedures:HRCMBS0008|HRCMBS0008 : CMC Actualizar información EEPROM de los nodos]]
+    - [[operation:procedures:HRCMBS0009|HRCMBS0009 : CMC Obtener información EEPROM de los nodos]]
+  * Infiniband:
+    - [[operation:procedures:HRIBBS0001|HRIBBS0001 : Actualización Infiniband (clusterdb)]]
+</hidden>
+===== Operadores de Monitorización =====
+
+===== Administradores de Sistemas =====
+
+===== Analista Desarrollo =====

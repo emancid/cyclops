@@ -1,0 +1,68 @@
+====== Service cron failure ======
+
+===== Datos Generales =====
+
+
+|< 50% >|
+^  Código      ^  Nombre Procedimiento  ^  Verificado                  ^  Operativo    ^  Fecha Creación  ^  Fecha Ultima Modificación  ^  Versión  ^
+|  OSDAAV0003  |  Service cron failure  |  @#FA5858:<fc white>NO</fc>  |  @#EAFFD5:SI  |  28/07/2015      |  30/09/2015                 |  0.3      |
+
+
+  * ** <fc red> IMPORTANTE: </fc> INFORMACION DEL ENTORNO : ** {{popup>:documentation:cyclops:architecture?[keepOpen]|AEMET: HPC Architecture and Risk Definitions}}
+
+===== Sistemas Objetivo =====
+
+|< 100% 10% 10% 30% 10% 50%>| 
+^  Grupo    ^  Nodos        ^  Descripción                      ^  Criticidad                          ^  Implicación                                        ^
+|  Gestion  |  nimbus[0-1]  | Tareas Administrativas            |  @#FFFF00: MEDIA                     |  Problemas para administrar los sistemas afectados  |
+|  Login    |  nimbus[2-3]  | Ejecución del Sistema Productivo  |  @#FA5858:<fc white> MUY ALTA </fc>  |  La producción no se ejecuta                        |
+|  IO       |  nimbus[4-5]  | Tareas de Backup                  |  @#FAAC58: ALTA                      |  No se realiza la copia de seguridad                |
+|  Lustre   |  nimbus[6-9]  | Tareas Administrativas            |  @#EAFFD5: BAJA                      |  Problemas de administración de lustre              |
+
+===== Sistemas Colaterales =====
+
+|< 100% 10% 10% 30% 10% 50%>| 
+^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad  ^  Implicación  ^ 
+|  Todos         |  Todos          |                                                                  |  @#FA5858: <fc white>MUY ALTA  </fc>      |Posibilidad de Parada del Sistema Productivo  |
+
+
+===== Procedimiento =====
+
+==== Notificación Inicial ====
+
+
+  - Notificar la incidencia:
+    * SI SOY: Valencia -> [[:operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia ]]
+    * SI SOY: AEMET ->    [[:operation:procedures:ADAEXX0002|ADAEXX0002 : AEMET Notificatión ]]
+    * SI NO SOY NINGUNO DE LOS ANTERIORES -> [[:operation:procedures:ADBAXX0001| ADBAXX0001 : Notificación BULL - AEMET ]]
+
+==== Alcance ====
+
+  * ** Este procedimiento solo se ejecutara por los siguientes actores en las siguientes circunstancias: **
+
+|< 50% >|
+^  ACTOR          ^  EJECUCION                   ^  HORARIO EJECUCION                                                                     ^
+|  AEMET          |  @#FA5858:<fc white>NO</fc>  |  @#FAAC58: SOLO NOTIFICACIÓN INICIAL                                                   |
+|  BULL VALENCIA  |  @#EAFFD5:SI                 |  @#FFFF00: EXCLUIR HORARIO BULL AEMET  ( L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL )  |
+|  BULL AEMET     |  @#EAFFD5:SI                 |  @#EAFFD5:L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL                                   |
+|  BULL MADRID    |  @#EAFFD5:SI                 |  @#FFFF00: INTERVENCION SOLICITADA                                                     |
+   
+==== Ejecución ====
+
+  * ** Se ejecutan los siguientes pasos: **
+  - Conectamos desde el exterior a un nodo de gestión [[operation:procedures:SPXXXX0002|SPXXXX0002 : Conexión SSH al Sistema]]
+    - En caso de no poderse conectar realizar: [[operation:procedures:SPXXXX0004|SPXXXX0004 : Perdida de Conexión con la monitorización]]
+  - Conectamos internamente al nodo afectado [[operation:procedures:SPXXXX0002|SPXXXX0002 : Conexión SSH al Sistema]]
+  - Comprobamos que el servicio esta funcionando: 
+    * [[:operation:procedures:OSDABS0003|OSDABS0003: Chequear servicio]]
+    - En caso negativo,
+      - Si el resultado es  ** stopped ** -> [[:operation:procedures:OSDABS0004|OSDABS0004: Start servicio]]
+      - cualquier otro resultado: Reiniciar el servicio en el nodo objetivo -> [[:operation:procedures:OSDABS0002|OSDABS0002: Reiniciar servicio]]
+      - Verificar de nuevo el estado del servicio
+        * [[:operation:procedures:OSDABS0003|OSDABS0003: Chequear servicio]]
+
+==== Notificación Final ====
+
+  - Notificar la incidencia:
+    * SI SOY Valencia -> [[:operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia ]]
+  - FINAL

@@ -1,0 +1,37 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** Sistema Operativo - Administración : Conexión Remota a Consola Nodo **  
+
+===== Sistemas Objetivo =====
+
+|< 100% >| 
+|< 100% >| 
+^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad     ^  Implicación  ^ 
+|  Todos         |  Todos          |                                                                  |  @#EAFFD5:BAJA  |               |
+
+
+===== Sistemas Colaterales =====
+
+|< 100% >| 
+^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad     ^  Implicación  ^ 
+|  Gestión       |  [MANAGEMENT NODES]    |  Permiten la administración del sistema                          |  @#EAFFD5:BAJA  |  El servicio de consola puede quedarse en estado inestable  |
+
+===== Procedimiento =====
+
+  * Se ejecuta desde los nodos de gestión:
+
+  * ** OPCION A ** (Depende de la suit de hpc de bull)
+    - se ejecuta el comando:<code>
+conman [nodo objetivo]
+</code>
+
+  * ** OPCION B ** (generica)
+    - se ejecuta el comando:<code>
+ipmiconsole -u [usuario] -p [clave] -h bmc[nodo objetivo]
+</code>
+
+** NOTA **
+  * En ocasiones la conexion puede no devolver nada, se puede requerir un reinicio de la maquina o un comando que implique una "impresion" en la consola
+
+
+  

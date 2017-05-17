@@ -1,0 +1,19 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1417448695;s:8:"modified";i:1418290272;}s:7:"creator";s:11:"admin bullx";s:4:"user";s:5:"admin";s:11:"last_change";b:0;s:11:"contributor";a:2:{s:5:"admin";s:11:"admin bullx";s:3:"ink";s:20:"ignacio garcia hoyos";}s:5:"title";s:5:"Slurm";s:11:"description";a:2:{s:15:"tableofcontents";a:5:{i:0;a:4:{s:3:"hid";s:5:"slurm";s:5:"title";s:5:"Slurm";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:30:"trabajos_gestionados_por_slurm";s:5:"title";s:30:"Trabajos Gestionados por Slurm";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:9:"prototipo";s:5:"title";s:9:"Prototipo";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:3;a:4:{s:3:"hid";s:70:"generacion_de_tabla_maestra_de_resultados_y_generacion_de_paginas_wiki";s:5:"title";s:70:"Generacion de Tabla Maestra de Resultados y Generacion de Paginas WIKI";s:4:"type";s:2:"ul";s:5:"level";i:3;}i:4;a:4:{s:3:"hid";s:29:"chequeo_de_trabajos_por_horas";s:5:"title";s:29:"Chequeo de Trabajos por horas";s:4:"type";s:2:"ul";s:5:"level";i:3;}}s:8:"abstract";s:503:"Slurm
+
+Trabajos Gestionados por Slurm
+
+	*  Genera una tabla de resultados y grafica sobre los trabajos enviados a la cola de slurm.
+
+Prototipo
+
+	*  Script Iniciales o prototipos para ver la viabilidad de la monitorizacion
+
+
+#!/bin/bash
+
+_log=$1
+_resultado="/var/www/html/dokuwiki/data/pages/operacion/monitorizacion/wikihungry/slurmlogs/numjobsok.txt"
+
+echo -e "====== Slurm Logs Statictics: Jobs OK ======\n\n\n  * ** Tabla de Resultados **\n\n\n^  Fecha  ^  Numero  ^" > $_resultado
+
+cat $_log | se…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1417448695;s:8:"modified";i:1418290272;}s:7:"creator";s:11:"admin bullx";s:4:"user";s:5:"admin";s:11:"last_change";b:0;s:11:"contributor";a:2:{s:5:"admin";s:11:"admin bullx";s:3:"ink";s:20:"ignacio garcia hoyos";}}}

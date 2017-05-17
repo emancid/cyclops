@@ -1,0 +1,63 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** Software - Slurm : Estado Nodo **  
+
+===== Sistemas Objetivo =====
+
+|< 100% >| 
+^  Grupo         ^  Nodos           ^  Descripción                                   ^  Criticidad      ^  Implicación  ^
+|  Gestión       |  nimbus[0-1]     |  Permiten la administración del servicio       |  @#EAFFD5: BAJA  |               |
+|  Login         |  nimbus[2-3]     |  Acceso de los usuarios al sistema productivo  |  @#EAFFD5: BAJA  |               |
+|  Lustre        |  nimbus[4-5]     |  Servidores de Lustre (sistema de ficheros)    |  @#EAFFD5: BAJA  |               |
+|  Computo/Aire  |  nimbus[10-13]   |  Uso del servicio por el sistema productivo    |  @#EAFFD5: BAJA  |  Merma el rendimiento productivo             |
+|  Computo/Agua  |  nimbus[0-9]{4}  |  Uso del servicio por el sistema productivo    |  @#EAFFD5: BAJA  |  Merma el rendimiento productivo             |
+
+
+===== Sistemas Colaterales =====
+
+|< 100% >| 
+^  Grupo         ^  Nodos          ^  Descripción            ^  Criticidad          ^  Implicación  ^ 
+|  Todos        |  Todos           |                         |  @#FFFF00: MEDIA  |   |
+
+===== Procedimiento =====
+
+  * Se ejecuta el siguiente comando desde los nodos de gestión para los siguientes nodos afectados:
+
+|< 50% >|
+^  Producción  ^^^^
+^  Tipo        ^  Nombre             ^  Descripción                                       ^   Criticidad  ^
+|  management  |  nimbus[0,1]        |  <fc orange> ** EJECUCION: Nodos de control de slurm de explotación ** </fc>  |   Muy Alta    |
+|  login       |  nimbus[2,3]        |  Nodos de acceso usuarios de explotación           |   Muy Alta    |
+|  air         |  nimbus[10-13]      |  Nodos de computo de explotación                   |   Muy Alta    |
+|  water       |  nimbus[3101-3104]  |  Nodos de computo (agua) de backup de explotación  |   Media       |
+
+  
+
+<code>scontrol update Nodename=[Nodo afectado] State=[Estado en Slurm] Reason=[Indicar el motivo]</code>
+
+  * Los estados disponibles para un nodo son:
+    * ** DOWN ** -> se inhabilita ese nodo para Slurm
+    * ** DRAIN ** -> estado de mantenimiento de un nodo en Slurm, es obligatorio indicar indicar el motivo (Reason)
+    * ** IDLE ** -> se habilita el nodo en Slurm.
+    * ** RESUME ** 
+
+  * Se ejecuta el siguiente comando desde los nodos de gestión para los siguientes nodos afectados: 
+
+|< 50% >|
+^  Desarrollo  ^^^^
+^  Tipo             ^  Nombre             ^  Descripción                                       ^   Criticidad  ^
+|  dev              |  nimbus[4,5]        |   <fc orange> ** EJECUCION: Nodos de control de slurm de Desarrollo ** </fc>          |   Media       |
+|  water_rack[0-9]  |  nimbus[3105-8318]  |  Nodos de computo de Desarrollo                    |   Baja        |
+
+
+<code>ssh nimbus[4,5] scontrol update Nodename=[Nodo afectado] State=[Estado en Slurm] Reason="[Indicar el motivo, Procedimiento Padre que forzó este procedimiento]"</code>
+
+  * **NOTA** especificar en el comando anterior nimbus4 o nimbus5 en funcion de si uno de los dos esta ** no operativo **
+  
+  * Los estados disponibles para un nodo son:
+    * ** DOWN ** -> se inhabilita ese nodo para Slurm.m
+    * ** DRAIN ** -> estado de mantenimiento de un nodo en Slurm, es obligatorio indicar indicar el motivo (Reason)
+    * ** IDLE ** -> se habilita el nodo en Slurm.
+    * ** RESUME ** 
+ 
+

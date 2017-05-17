@@ -1,0 +1,23 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** Hardware - BIOS : Bull B7xx salvar configuracion de BIOS **  
+
+===== Sistemas Objetivo =====
+
+|< 100% >| 
+^  Grupo     ^  Nodos                      ^  Descripción                                                                             ^  Criticidad          ^  Implicación  ^
+|  Todos     |  Todos                      |                                                                                          |  @#EAFFD5: BAJA      |  Cambios en la configuración de la BMC  |
+
+===== Sistemas Colaterales =====
+
+|< 100% >| 
+^  Grupo         ^  Nodos           ^  Descripción                                                     ^  Criticidad  ^  Implicación  ^ 
+|  Todos         |  Depende         |                                                                  |  @#EAFFD5: BAJA       |  Ninguno Conocido  |
+
+===== Procedimiento =====
+
+  - Desde un nodo de gestión:<code>
+/opt/BSMHW/bin/ipmitool -H [NOMBRE BMC NODO] -U [USUARIO] -P [CLAVE] bulloem read bios_region 0 [/DIRECTORIO/NOMBRE FICHERO DESTINO AREA BIOS].fd
+</code>
+
+  * <fc orange> ** NOTA: ** </fc> Si se desea integrar con cyclops y las herramientas disponibles para la actualizacion de firmware el path por defecto es // /opt/cyclops/aemet/updates/firmwares/bios/b710 //

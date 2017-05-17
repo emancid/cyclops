@@ -1,0 +1,6 @@
+#### PRE CYCLOPS MON TASK ####
+## [TIMES/DATES];[SCRIPT];[SCRIPT OUTPUT] #### 
+## TIMES:	[0-2][0-9]h - at [X]h hour all days
+##		[0-5][0-9]m - at [X]m mins at day all days	
+##		[0-2][0-9]:[0-5][0-9] - at [X]h hour and [X]m minutes all days	
+## DATES:	[YYYY]-[MM]-[DD]t[0-2][0-9]:[0-6][0-9] - at day in date

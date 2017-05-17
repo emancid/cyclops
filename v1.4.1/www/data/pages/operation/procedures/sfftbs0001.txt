@@ -1,0 +1,41 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** Software - FTP: Chequeo **  
+
+===== Sistemas Objetivo =====
+
+|< 100% >| 
+^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad          ^  Implicacion                                             ^
+|  Gestion       |  MANAGEMENT NODES    |  Permiten la administracion del servicio                         |  @#EAFFD5:BAJA       |  Ninguna                                                 |
+|  Login         |  LOGIN NODES (CRITICAL)    |  Acceso de los usuarios al sistema productivo                    |  @#FFFF00:MEDIA      |  Caida en el nivel de integridad del sistema productivo  |
+|  IO            |  LOGIN NODES    |  Transferencia de Informacion con el entorno de la organizacion  |  @#FFFF00:MEDIA      |  Caida en el nivel de integridad del sistema productivo  |
+|  Lustre        |  node[RANGE]    |  Funcionamiento del servicio                                     |  @#FA5858: MUY ALTA  |  Posibilidad de caida completa del sistema productivo    |
+|  Computo/Aire  |  node[RANGE]  |  Uso del servicio por el sistema productivo                      |  @#EAFFD5:BAJA       |  Merma en el rendimiento productivo                      |
+|  Computo/Agua  |  node[RANGE]      |  Uso del servicio por el sistema productivo                      |  @#EAFFD5:BAJA       |  Merma en el rendimiento productivo                      |
+
+
+===== Sistemas Colaterales =====
+
+
+|< 100% >| 
+^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad  ^  Implicacion  ^ 
+|  Gestion       |  MANAGEMENT NODES    |  Permiten la administracion del servicio                         |   @#EAFFD5:BAJA        |  Ninguna      |
+|  Login         |  LOGIN NODES (CRITICAL)    |  Acceso de los usuarios al sistema productivo                    |  @#FFFF00:MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
+|  Computo/Aire  |  node[RANGE]  |  Uso del servicio por el sistema productivo                      |   @#EAFFD5:BAJA        |  Merma en el rendimiento productivo  |
+|  Computo/Agua  |  node[RANGE]      |  Uso del servicio por el sistema productivo                      |   @#EAFFD5:BAJA        |  Merma en el rendimiento productivo  |
+
+
+===== Procedimiento =====
+  * Este servicio debemos chequearlo en los nodos  [LOGIN NODE], [LOGIN NODE] . Los pasos a seguir para chequear FTP son:
+
+    - Conectarse al nodo de gestión: [[:operation:procedures:SPXXXX0002| SPXXXX0002 : Establecer Conexión SSH]]
+    - Comprobamos el servicio ejecutando el siguiente comando desde el nodo  <code>
+ /etc/init.d/vsftpd status
+</code>
+    - Los posibles resultados serian:
+      * Todo esta **CORRECTO**:  =) <code>
+vsftpd(pid 14719) is running...
+</code>
+      * Si obtenemos que el servicio esta  **STOPPED**: :-/ <code>
+vsftpd is stopped
+</code>

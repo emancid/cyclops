@@ -1,0 +1,209 @@
+
+<h1 class="sectionedit1" id="configuracion">Configuración</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Configuración" [1-30] -->
+<h2 class="sectionedit2" id="instalar_cyclops">Instalar Cyclops</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Copiar la ultima version de cyclops<pre class="code">scp -r [dir_last_vers_cyclops] /opt</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Crear los enlaces simbolicos en el sistema<pre class="code">ln -s /opt/[dir_vers_update_cyclops] /opt/cyclops
+ln -s /opt/[dir_vers_update_cyclops]/etc/cyclops /etc/cyclops</pre>
+</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT2 SECTION "Instalar Cyclops" [31-322] -->
+<h2 class="sectionedit3" id="instalar_dokuwiki">Instalar Dokuwiki</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Copiar la ultima version de la dokuwiki adaptada a cyclops<pre class="code">scp -R [dir_doku_last_ver_cyclops] /[apache web dir]/cyclops</pre>
+</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT3 SECTION "Instalar Dokuwiki" [323-491] -->
+<h2 class="sectionedit4" id="configurar_cyclops">Configurar Cyclops</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Cambiar en <strong> monitor.sh </strong> el usuario <em>apache:apache</em> por el que corresponda en la distro de la instalación.</div>
+</li>
+<li class="level1"><div class="li"> Crear los nodos en <strong> node.type.cfg </strong> y sus características.</div>
+</li>
+<li class="level1"><div class="li"> Crear los sensores activos por los grupos creados en el anterior fichero. (ficheros <strong> [grupo/familia].mon.cfg </strong> )</div>
+</li>
+<li class="level1"><div class="li"> Crear los nodos de acceso externo en <strong> login.node.list </strong></div>
+</li>
+<li class="level1"><div class="li"> Activar los módulos a monitorización en <strong> monitoring.cfg </strong></div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT4 SECTION "Configurar Cyclops" [492-958] -->
+<h3 class="sectionedit5" id="configuraciones_opcionales">Configuraciones opcionales.</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Crear las credenciales y nombres de las consolas ipmi si fuese necesario en el fichero <strong> bios.mng.cfg </strong></div>
+</li>
+<li class="level1"><div class="li"> Crear los dispositivos de entorno y activarlos ( <strong> env.mon.cfg </strong> y <strong> monitor.cfg </strong> )</div>
+</li>
+<li class="level1"><div class="li"> Configurar las alertas de correo electrónico en <strong> alert.email.cfg </strong></div>
+</li>
+<li class="level1"><div class="li"> Configurar los usuarios administradores y de soporte para el plugin de control de usuarios, este plugin es dependiente del modulo de usuarios <em>sensors.users.mon.sh</em> . El fichero de configuracion se encuentra por defecto en: <strong>/etc/cyclops/monitor/plugin.users.ctrl.cfg</strong></div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT5 SECTION "Configuraciones opcionales." [959-1553] -->
+<h3 class="sectionedit6" id="pasos_finales">Pasos Finales</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Crear e inicializar los valores de la monitorizacion en el fichero: <pre class="code">/opt/cyclops/monitor/sensors/data/status/stateofthings.cyc 
+
+#### CYCLOPS MON STATUS HISTORIC ####
+# TAG;NAME;[VARIABLE FIELDS]
+## --  TAG &gt;&gt; INFO;[NAME];[TIME START];[TIME END];DESCRIPTION
+## --  TAG &gt;&gt; ALERT;[NODE/DEVICE/SERVICE];[SENSOR];[TIME START];[TIME END];[STATE]
+## --  TAG &gt;&gt; CYC;[NUM CYCLES];[STATUS]
+## 
+CYC;0001;0;DISABLED
+CYC;0002;[node name];1;UPTIME_RECORD
+CYC;0003;AUDIT;[ENABLED|DISABLED]
+CYC;0004;MAIL;[ENABLED|DISABLED]
+CYC;0005;SOUND;[ENABLED|DISABLED]
+CYC;0006;HA;[ENABLED|DISABLED];[main cyclops hostname]</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Crear el directorio en todos los nodos configurados para monitorizar.<pre class="code">/root/cyclops/sensors</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Lanzar el comando para crear la programacion.<pre class="code">/opt/cyclops/scripts/cyclops.sh -y cron</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Lanzar el comando para activar la monitorizacion.<pre class="code">/opt/cyclops/scripts/cyclops.sh -y enable -c </pre>
+</div>
+</li>
+</ol>
+<ul>
+<li class="level1"><div class="li"> Los codigos actualmente disponibles en cyclops:</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+CYC CODES
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+CYC CODES
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><ul>
+<li class="level1"><div class="li"> 0001: Cyclops Monitoring Status</div>
+</li>
+<li class="level1"><div class="li"> 0002: Host Uptime Control Status</div>
+</li>
+<li class="level1"><div class="li"> 0003: Cyclops Audit System Status</div>
+</li>
+<li class="level1"><div class="li"> 0004: Cyclops Mail Alerts Status</div>
+</li>
+<li class="level1"><div class="li"> 0005: Cyclops Web Interfaz Sound Status</div>
+</li>
+<li class="level1"><div class="li"> 0006: Cyclops HA Control Status</div>
+</li>
+</ul>
+</div></div>
+</div>
+<!-- EDIT6 SECTION "Pasos Finales" [1554-2833] -->
+<h2 class="sectionedit7" id="acciones_especiales">Acciones Especiales</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Crear si no existe el directorio siguiente en el nodo principal de monitorización<pre class="code">/opt/cyclops/temp</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Verificar la existencia y correcta configuración de los Ficheros <em>.cfg</em> dentro de la configuración controlar la existencia del fichero: “<em>sensor.var.cfg</em>”</div>
+</li>
+<li class="level1"><div class="li"> Crear el directorio <pre class="code">/var/www/html/cyclops/data/pages/operation/monitoring/history/noindex/</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Crear el directorio<pre class="code">/opt/cyclops/monitor/sensors/temp</pre>
+</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT7 SECTION "Acciones Especiales" [2834-3331] -->
+<h2 class="sectionedit8" id="problemas_para_su_depuracion">Problemas para su depuración</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Cambiar la linea 134 de audit.sh por:<pre class="code">for _host_data in $( cat $_type | egrep -v &quot;^$|^#&quot; | grep $_par_node&quot;\;&quot; )</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Cambiar en la doku el enlace de la auditoria por <em>start</em></div>
+</li>
+<li class="level1"><div class="li"> Revisar el plugin <strong> uptime </strong> </div>
+</li>
+<li class="level1"><div class="li"> Revisar plugin <strong> Full operative nodes </strong> y <strong> UPTIME </strong></div>
+</li>
+<li class="level1"><div class="li"> Añadir iconos que faltan iconos en la dokuwiki<pre class="code">{{ :wiki:hb-alert-orange.gif?nolink |}}</pre>
+</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT8 SECTION "Problemas para su depuración" [3332-3770] -->
+<h2 class="sectionedit9" id="otras_configuraciones_o_personalizaciones">Otras configuraciones o Personalizaciones</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Configurar los usuarios cyclops para que tengan informacion en la carga de su profile:</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+/etc/profile customize
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+/etc/profile customize
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code bash"><span class="co0"># CYCLOPS PROFILE</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#91;</span> <span class="re5">-f</span> <span class="sy0">/</span>etc<span class="sy0">/</span>cyclops<span class="sy0">/</span>monitor<span class="sy0">/</span>plugin.users.ctrl.cfg <span class="br0">&#93;</span>
+<span class="kw1">then</span>
+        <span class="kw3">source</span> <span class="sy0">/</span>etc<span class="sy0">/</span>cyclops<span class="sy0">/</span>monitor<span class="sy0">/</span>plugin.users.ctrl.cfg
+&nbsp;
+        <span class="re2">_cyc_user_ctrl</span>=$<span class="br0">&#40;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$_pg_usr_ctrl_admin</span>,<span class="es2">$_pg_usr_ctrl_l1_support</span>,<span class="es2">$_pg_usr_ctrl_l2_support</span>,<span class="es2">$_pg_usr_ctrl_l3_support</span>,<span class="es2">$_pg_usr_ctrl_other</span>&quot;</span> <span class="sy0">|</span> <span class="kw2">tr</span> <span class="st_h">','</span> <span class="st_h">'\n'</span> <span class="sy0">|</span> <span class="kw2">awk</span> <span class="re5">-v</span> <span class="re2">_u</span>=<span class="st0">&quot;<span class="es2">$USER</span>&quot;</span> <span class="st_h">'{ if ( $1 == _u ) { print &quot;OK&quot; }}'</span> <span class="br0">&#41;</span>
+&nbsp;
+        <span class="kw1">if</span> <span class="br0">&#91;</span> <span class="st0">&quot;<span class="es2">$_cyc_user_ctrl</span>&quot;</span> == <span class="st0">&quot;OK&quot;</span> <span class="br0">&#93;</span>
+        <span class="kw1">then</span>
+                <span class="kw3">source</span> <span class="sy0">/</span>etc<span class="sy0">/</span>cyclops<span class="sy0">/</span>global.cfg
+                <span class="re2">PATH</span>=<span class="st0">&quot;<span class="es3">${PATH}</span>:/opt/cyclops/scripts:/opt/cyclops/tools/approved&quot;</span>
+                <span class="kw3">export</span> PATH
+&nbsp;
+                <span class="kw3">echo</span> <span class="st0">&quot;CYCLOPS: OPERATIVE ENVIRONMENT STATUS&quot;</span>
+                test.productive.env.sh <span class="re5">-t</span> pasive <span class="re5">-v</span> human <span class="nu0">2</span><span class="sy0">&gt;/</span>dev<span class="sy0">/</span>null
+                <span class="kw3">echo</span> <span class="st0">&quot;=============================&quot;</span>
+&nbsp;
+                <span class="kw3">echo</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;CYCLOPS: HELP INFO&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;-----------------------------&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;Use Next commands for maintenance correct link between system and monitoring team&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;  cyclops.sh: manage monitoring or get info about system status&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;  audit.nod.sh: get info about node(s) status or main bitacora data&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;  test.productive.env.sh: known environment productive status&quot;</span>
+                <span class="kw3">echo</span> 
+                <span class="kw3">echo</span> <span class="st0">&quot;Use -h for help in those commands&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;Maybe you need root permissions to manage cyclops, use su or sudo commands&quot;</span>
+                <span class="kw3">echo</span>            
+                <span class="kw3">echo</span> <span class="st0">&quot;Please connect to https://cyclops.aemet.es to get info about cyclops&quot;</span>
+                <span class="kw3">echo</span>
+        <span class="kw1">fi</span>
+<span class="kw1">fi</span>
+&nbsp;
+<span class="kw1">fi</span></pre>
+</div></div>
+</div>
+<!-- EDIT9 SECTION "Otras configuraciones o Personalizaciones" [3771-] -->

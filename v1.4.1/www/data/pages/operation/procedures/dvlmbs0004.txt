@@ -1,0 +1,20 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** Software - LMOD : Descargar modulo **  
+
+===== Sistemas Objetivo =====
+
+|< 100% >| 
+^  Grupo  ^  Nodos        ^  Descripción                                               ^  Criticidad  ^  Implicación   ^
+|  Login  |  nimbus[2-5]  |  Descargar modulo LMOD  |  Ninguna     |  Ninguna       |
+
+===== Procedimiento =====
+
+  - Para descargar un solo modulo:
+    * Se ejecuta el siguiente comando:<code>
+module unload [modulo cargado]
+</code>
+  - Para descargar todos los modulos cargados:
+    * Se ejecuta el siguiente comando:<code>
+module purge
+</code>

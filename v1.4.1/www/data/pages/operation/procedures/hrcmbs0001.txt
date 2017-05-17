@@ -1,0 +1,39 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** Hardware - BMC : Script de Diagnostico de Hardware BULL **  
+
+===== Sistemas Objetivo =====
+
+|< 100% >| 
+^  Grupo     ^  Nodos                      ^  Descripción                                                                             ^  Criticidad          ^  Implicación  ^
+|  Todos     |  Todos                      |                                                                                          |  @#EAFFD5: BAJA      |  Ninguna  |
+
+===== Sistemas Colaterales =====
+
+|< 100% >| 
+^  Grupo         ^  Nodos           ^  Descripción                                                     ^  Criticidad  ^  Implicación  ^ 
+|  Todos         |  Depende         |                                                                  |  @#EAFFD5: BAJA       |  Ninguno Conocido  |
+
+===== Procedimiento =====
+
+  - Diagnosticar un chasis<code>
+/opt/cyclops/bull/Bull_Diag_Tool_v1.4_full/Bull_Diag_Tool.sh -c [HOSTNAME/IP DE CMC]
+</code>
+
+<hidden salida de ejemplo>
+<code>
+[root@nimbus0 Bull_Diag_Tool_v1.4_full]# ./Bull_Diag_Tool.sh -c cmc43                                                                
+Script will collect only CMC logs                                                                                                    
+  ____  _    _ _      _        _____  _              _______          _                                                              
+ |  _ \| |  | | |    | |      |  __ \(_)            |__   __|        | |                                                             
+ | |_) | |  | | |    | |      | |  | |_  __ _  __ _    | | ___   ___ | |                                                             
+ |  _ <| |  | | |    | |      | |  | | |/ _  |  _  |   | |/ _ \ / _ \| |                                                             
+ | |_) | |__| | |____| |____  | |__| | | (_| | (_| |   | | (_) | (_) | |                                                             
+ |____/ \____/|______|______| |_____/|_|\__,_|\__, |   |_|\___/ \___/|_|                                                             
+                                               __/ |                                                                                 
+                                              |___/                                                                                  
+                                                                                                                                     
+Collecting Logs from CMC:##################################################(100%)                                                    
+Archive successfully created, please send Archive Diagnosis_Results/cmc43_2016-05-05_1037.tgz to BULL HPC Support
+</code>
+</hidden>

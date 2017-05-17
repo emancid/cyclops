@@ -1,0 +1,35 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1416830032;s:8:"modified";i:1417538828;}s:7:"creator";s:20:"ignacio garcia hoyos";s:4:"user";s:3:"ink";s:11:"last_change";b:0;s:11:"contributor";a:2:{s:3:"ink";s:20:"ignacio garcia hoyos";s:5:"admin";s:11:"admin bullx";}s:5:"title";s:41:"Utilidades para Administración: Usuarios";s:11:"description";a:2:{s:15:"tableofcontents";a:5:{i:0;a:4:{s:3:"hid";s:38:"utilidades_para_administracionusuarios";s:5:"title";s:41:"Utilidades para Administración: Usuarios";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:12:"dependencias";s:5:"title";s:12:"Dependencias";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:11:"descripcion";s:5:"title";s:12:"Descripción";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:3;a:4:{s:3:"hid";s:8:"sintaxis";s:5:"title";s:8:"Sintaxis";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:4;a:4:{s:3:"hid";s:13:"codigo_fuente";s:5:"title";s:13:"Codigo Fuente";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:505:"Utilidades para Administración: Usuarios
+
+Dependencias
+
+Descripción
+
+Sintaxis
+
+Codigo Fuente
+
+
+#!/bin/bash
+
+#### Gestion de parametros ####
+
+while getopts "u:g:n:U:G:cdmp:" _optname
+do
+	case "$_optname" in
+		"u")
+			_par_user=$OPTARG
+			let "_ctrl_oper = $_ctrl_oper + 1"
+			_ctrl_typ="usuario"
+		;;
+		"g")
+			_par_group=$OPTARG
+			let "_ctrl_oper = $_ctrl_oper + 1"
+			_ctrl_typ="grupo"
+		;;
+		"n")
+			_opt_nodes="yes"
+			_par_nodes=$OPTARG
+		;;
+		"c")
+			let "_ctrl_opt = $_ctrl_opt + 1"
+			_ctrl_a…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1416830032;s:8:"modified";i:1417538828;}s:7:"creator";s:20:"ignacio garcia hoyos";s:4:"user";s:3:"ink";s:11:"last_change";b:0;s:11:"contributor";a:2:{s:3:"ink";s:20:"ignacio garcia hoyos";s:5:"admin";s:11:"admin bullx";}}}

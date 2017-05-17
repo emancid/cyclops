@@ -1,0 +1,24 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1427709254;s:8:"modified";i:1427713279;}s:7:"creator";s:20:"Ester Manjavacas Cid";s:4:"user";s:3:"inp";s:11:"last_change";a:7:{s:4:"date";i:1427713279;s:2:"ip";s:14:"193.144.150.33";s:4:"type";s:1:"E";s:2:"id";s:42:"documentacion:guiarapida:ipmitool:ipmitool";s:4:"user";s:3:"inp";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:1:{s:3:"inp";s:20:"Ester Manjavacas Cid";}s:5:"title";s:8:"IPMITOOL";s:11:"description";a:2:{s:15:"tableofcontents";a:2:{i:0;a:4:{s:3:"hid";s:8:"ipmitool";s:5:"title";s:8:"IPMITOOL";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:8:"consolas";s:5:"title";s:8:"Consolas";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:503:"IPMITOOL
+
+Consolas
+
+	*  Listar errores:
+
+[root@nimbus1 ~]# ipmitool sel list
+   1 | 03/30/2015 | 09:36:48 | Unknown #0xff |  | Asserted
+   2 | 03/30/2015 | 09:43:07 | Unknown #0xff |  | Asserted
+
+
+
+
+	*  Para ver detalle del error:
+
+[root@nimbus1 ~]# ipmitool sel get 1
+SEL Record ID          : 0001
+ Record Type           : 02
+ Timestamp             : 03/30/2015 09:36:48
+ Generator ID          : 0020
+ EvM Revision          : 04
+ Sensor Type           : Unknown
+ Sensor Number         : ff
+ Event Ty…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1427709254;s:8:"modified";i:1427713279;}s:7:"creator";s:20:"Ester Manjavacas Cid";s:4:"user";s:3:"inp";s:11:"last_change";a:7:{s:4:"date";i:1427713279;s:2:"ip";s:14:"193.144.150.33";s:4:"type";s:1:"E";s:2:"id";s:42:"documentacion:guiarapida:ipmitool:ipmitool";s:4:"user";s:3:"inp";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:1:{s:3:"inp";s:20:"Ester Manjavacas Cid";}}}

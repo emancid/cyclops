@@ -1,0 +1,10 @@
+====== Monitoring ======
+
+
+  * [[:operation:monitoring:dashboard|DashBoard]]
+  * [[:operation:monitoring:general|Complete View]]
+  * [[:operation:monitoring:monnod|Nodes View]]
+  * [[:operation:monitoring:monsrv|Services View]]
+  * [[:operation:monitoring:monenv|Environment Devices View]]
+  * [[:operation:monitoring:monsec|Security View]]
+

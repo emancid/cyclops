@@ -1,0 +1,70 @@
+====== HYC Masive Error, Refrigeration alert ======
+
+===== Datos Generales =====
+                            
+ 
+|< 50% >|
+^  Código       ^  Nombre Procedimiento  ^  Verificado    ^  Operativo    ^  Fecha Creación   ^  Fecha Ultima Modificación  ^  Versión  ^
+|  HRHYAV0002   |  HYC Masive Error, Refrigeration alert  |  @#FA5858:NO   |  @#EAFFD5:SI  |  17/09/2015       |  19/01/2016                 |    0.1    | 
+
+
+  * ** <fc red> IMPORTANTE: </fc> INFORMACION DEL ENTORNO : ** {{popup>:documentation:cyclops:architecture?[keepOpen]|AEMET: HPC Architecture and Risk Definitions}}
+
+===== Sistemas Objetivo =====
+
+|< 100% 10% 10% 30% 10% 50%>| 
+^  Grupo         ^  Dispositivos           ^  Descripción                                ^  Criticidad            ^  Implicación                                                 ^
+|  rmc           |  rmc[30-50]             |  Estado de la unidad hidraulica incorrecto  |  @#FAAC58: MEDIA       |  Posible perdida de gran cantidad de nodos de computo        |
+
+===== Sistemas Colaterales =====
+
+|< 100% 10% 10% 30% 10% 50%>| 
+^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad           ^  Implicación  ^ 
+|  Todos         |  Todos          |                                                                  |  @#FA5858: ALTA       |  Afectar al Entorno Productivo  |
+
+===== Procedimiento =====
+
+==== Notificación Inicial ====
+
+
+  - Notificar la incidencia:
+    * SI SOY: Valencia -> [[:operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia ]]
+    * SI SOY: AEMET ->    [[:operation:procedures:ADAEXX0002|ADAEXX0002 : AEMET Notificatión ]]
+    * SI NO SOY NINGUNO DE LOS ANTERIORES -> [[:operation:procedures:ADBAXX0001| ADBAXX0001 : Notificación BULL - AEMET ]]
+
+==== Alcance ====
+
+  * ** Este procedimiento solo se ejecutara por los siguientes actores en las siguientes circunstancias: **
+
+|< 50% >|
+^  ACTOR          ^  EJECUCION                   ^  HORARIO EJECUCION                                                                     ^
+|  AEMET          |  @#FA5858:<fc white>NO</fc>  |  @#FAAC58: SOLO NOTIFICACIÓN INICIAL                                                   |
+|  BULL VALENCIA  |  @#EAFFD5:SI                 |  @#FFFF00: EXCLUIR HORARIO BULL AEMET  ( L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL )  |
+|  BULL AEMET     |  @#EAFFD5:SI                 |  @#EAFFD5:L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL                                   |
+|  BULL MADRID    |  @#EAFFD5:SI                 |  @#FFFF00: INTERVENCION SOLICITADA                                                     |
+   
+
+==== Ejecución ====
+
+  * ** Se ejecutan los siguientes pasos: **
+
+  - Conectarse externamente a un nodo de gestión: [[operation:procedures:SPXXXX0002|SPXXXX0002 : Conexión SSH al Sistema]]
+    - En caso de no poder conectarse: [[operation:procedures:SPXXXX0004|SPXXXX0004 : Perdida de Conexión con la monitorización]]
+  - Comprobación del entorno productivo:
+    * [[operation:procedures:SFCYAV0001|SFCYAV0001 : Comprobar Entorno Productivo]]
+  - ** SOLICITAR INTERVENCIÓN DE TÉCNICO DE GUARDIA **: [[operation:procedures:ADBMXX0001|ADBMXX0001 : Notificación BULL - Madrid]]
+    * Remitir al técnico de guardia al documento {{:documentation:aemet:nimbus.graficos.refrigeracion.troubleshooting.pptx|AEMET: Esquema de Refrigeración y Resolución de problemas}}
+    * Que el técnico de guardia notifique al Soporte de Refrigeración [[operation:procedures:ADBIXX0001|ADBIXX0001 : Notificacion BULL - Refrigeración ( MIBAIR)]] si su valoración de la monitorizacion de la refrigeración.
+==== Notificación Final ====
+
+  - Notificar la incidencia:
+    * SI SOY Valencia -> [[:operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia ]]
+  - FINAL
+   
+
+
+
+    
+  
+    
+ 

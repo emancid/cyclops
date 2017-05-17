@@ -1,0 +1,24 @@
+====== Procedimientos BULL - MADRID ( Técnicos de Guardia ) ======
+
+===== Notificación =====
+
+|< 50% >|
+^  Código      ^  Nombre Procedimiento                     ^  Verificado                  ^  Operativo                   ^  Fecha Creación  ^  Fecha Ultima Modificación  ^  Versión  ^
+|  ADBMXX0002  |  Notificación BULL - MADRID ( Hardware )  |  @#FA5858:<fc white>NO</fc>  |  @#EAFFD5:SI  |  24/11/2015      |  18/10/2016                 |  0.2      |
+===== Procedimiento =====
+
+  - Identificar el dispositivo que produce el error.
+    - En caso de ser un error sin un hardware especifico o si posteriormente no se localiza el numero de serie necesario, utilizar el codigo:
+      * ** XAN-R08-01859 **
+    - Si el error esta asociado a un hardware especifico seguir los siguientes pasos para identificarlo:
+      - NODOS:
+        * [[:operation:procedures:HRBLBS0004|HRBLBS0004: Identificar Código Hardware]]
+      - CABINAS:
+        * [[:operation:procedures:HRSTBS0001|HRSTBS0001: Identificar Código Hardware]]
+  - Llamar al servicio de Soporte BULL:
+    * tlf: ** 901.116.119 **
+  - Avisar de la situacion a:
+    - Registrar la incidencia en el sistema incluyendo el numero de incidencia:  [[operation:procedures:SFCYBS0005|SFCYBS0005 : Registrar informacion en el diario de seguimiento de un nodo]]
+  - Seguimiento de la incidencia :
+    * **https://tickets.bull.com/cmdb/web/en/otrs/login **
+               

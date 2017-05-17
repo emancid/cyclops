@@ -1,0 +1,109 @@
+20170103
+
+- ficheros modificados:
+    data/razor/redhat6/*
+    rzr.ctrl.sh
+    cyc.host.ctrl.sh
+    sensors.nodes.mon.sh
+    (cyclops.sh)
+    monitor/sensors/status/scripts/redhat6/*
+- Error en monitoring, awk division by zero
+- comprobar rzr exit code en caso de var vacia asignar valor 19
+
+
+20170104    
+
+- ficheros modificados
+    torquemada.sh
+    razor/redhat6/*
+    
+- Generar nuevos estados de rzr
+    restart
+
+- Generar nuevos estados de nodo
+    link - estado pre up para la integracion de nodos
+    init - estado de inicializacion de nodos.
+    off
+
+- Controlar casuistica desde cyc.hctrl para los cambios de estado.    
+    
+- Revisar en up porque lustre no monta.
+
+- Ampliar el sensor razor para controlar ficheros de razor vacios
+for _file in $( ls -1 chasis[0-9][0-9].rzr.lst ) ; do _content=$( cat $_file | sed '/^$/d' | grep -v "#" ) ; [ -z "$_content" ] && echo "$_file : EMPTY" || echo "$_file : OK" ; done
+
+20170105
+
+- ficheros modificados
+    status/scripts/redhat6/sensor.rzr.sh
+    local/scripts/rzr.ctrl.sh
+    scripts/sensors.nodes.mon.sh
+    scripts/cyclops.sh
+
+- Hacer imagen de los nodos con el servicio slurm apagado en el arranque....
+
+20170109
+
+    - Se define la arquitectura de la virtualizacion con :
+        - gfs2 y drdb o cabina segun recursos
+        - pacemaker
+        - kvm
+        - Hay que desarrollar modulos en cyclops para estos elementos
+
+    - Cyclops, mejorar la generacion de graficos de auditoria de los nodos, cogen el año presente y no los ultimos 12 meses.
+    
+    
+20170110
+
+    - Crear un razor para zombies
+    - Crear un razor para trazas bmc
+    - Controlar "nice" sercicio ssh , buscar como configurar o controlar que sea superior al slurm
+    
+    - Actualizar el fichero version.cyc
+    - Revisar notas del fichero INSTALL.txt
+    - Mejorar los mensajes del reactive en el interfaz y parece que pueden estar fallando en la auditoria
+    
+20170111 - 
+
+    - ficheros modificados:
+            local/scripts
+                cyc.host.ctrl.sh
+            monitor/sensors/status/scripts/redhat6
+                sensor.hostname.sh
+                sensor.nfs_fs.sh
+            local/data/razor/
+                redhat6/*
+    - creados los directorios:
+            local/data/razor/
+                redhat7
+                scs4
+            monitor/sensors/status/scripts/scs4
+
+20170112
+
+    - ficheros modificados:
+            scripts/
+                monitoring.sh
+                sensors.nodes.mon.sh
+
+20170116 -> NO SYNC
+
+    - ficheros modificados:
+            scripts/
+                sensors.nodes.mon.sh
+            local/data/razor/
+                *
+            local/scripts
+                *
+                
+    - mejoras:
+        - Controlar estados mejor en el interfaz web:
+            - Estado unlink debe monitorizar pero en modo diagnose, cambiar tambien color estado unlink
+
+20170124
+
+    - ficheros modificados:dasds
+            scripts/
+                monitoring.sh
+            etc/monitoring/
+                alert.email.cfg.template

@@ -1,0 +1,392 @@
+~~NOCACHE~~
+
+====== EXPERIMENTAL USER INTERFACE ======
+
+<hidden System Status initialState="visible">
+|< 100% 40% 35% 25%>|
+|  @#C9D6FF: {{ :wiki:cyclops_title.png?nolink |}}  |  @#A5DF00: ENABLED  ||
+|  @#C9D6FF: ** CRITICAL OPERATIVE ENVIRONMENT **  |  @#A5DF00: OPERATIVE  ||
+|  @#C9D6FF: ** NODE STATUS **  |  @#DCE5FF: Status  |  @#DCE5FF: Total  |
+|:::|  UP  |  338  |
+|  @#DCE5FF: TOTAL NODES  ||  @#A5DF00: 338  |
+</hidden>
+
+<hidden System Stats>
+|< 100% 50% 50% >|
+|  System Statistics  ||
+|  2016 System Events  ||
+|  <gchart 850x350 line #088a08 #ffffff center>
+January=1213
+February=723
+March=1136
+April=4696
+May=2621
+June=7525
+July=9
+</gchart>  ||
+|  Actual Month Alerts  |  Actual Month Issues  |
+|  <gchart 700x350 line #ff8000 #ffffff center>
+01=134
+02=21
+03=0
+04=7
+05=0
+06=0
+07=267
+08=654
+09=0
+10=21
+11=0
+12=0
+13=18
+14=18
+15=119
+16=8
+17=0
+18=0
+19=1
+20=0
+21=0
+22=317
+23=0
+24=30
+25=3
+26=24
+27=11
+28=6
+29=1093
+30=1
+</gchart>  |  <gchart 700x350 line #df0101 #ffffff center>
+01=0
+02=0
+03=0
+04=0
+05=0
+06=0
+07=0
+08=0
+09=0
+10=0
+11=0
+12=0
+13=0
+14=0
+15=0
+16=1
+17=0
+18=0
+19=0
+20=0
+21=0
+22=2
+23=0
+24=0
+25=0
+26=0
+27=2
+28=0
+29=0
+</gchart>  |
+|  System Administrators Actions  ||
+|  <gchart 700x350 line #0404b4 #ffffff center>
+01=1082
+02=76
+03=0
+04=1
+05=0
+06=10
+07=863
+08=19
+09=127
+10=273
+11=0
+12=1
+13=362
+14=180
+15=216
+16=68
+17=0
+18=0
+19=0
+20=2
+21=0
+22=28
+23=5
+24=21
+25=0
+26=0
+27=17
+28=9
+29=22
+30=16
+</gchart>  ||
+</hidden>
+
+<hidden System News>
+|< 100% 10% 10% 10% 10% 50% 10%>|
+|  ** Last 10 System Administrator Messages **  |||||| 
+|   @#DCE5FF: date  |  @#DCE5FF: time  |  @#DCE5FF: source  |  @#DCE5FF: event  |  @#DCE5FF: message  |  @#DCE5FF: state  |
+|  2016-06-29  |  12:54  |  main  |  @#FFFF00: INTERVENTION  |  @#FFFF00: INTERVENTION :  Se restablece la monitorizacion, aun se sigue con la tarea de benchmark  |  @#EAFFD5: INFO  |
+|  2016-06-29  |  17:18  |  main  |  @#F2F2F2: DRAIN  |  @#F2F2F2: DRAIN :  Benchmark reason  |  @#EAFFD5: INFO  |
+|  2016-06-29  |  18:19  |  main  |  @#FFFF00: INTERVENTION  |  @#FFFF00: INTERVENTION :  Continua el benchmark  |  @#EAFFD5: INFO  |
+|  2016-06-29  |  18:30  |  main  |  @#F2F2F2: DRAIN  |  @#F2F2F2: DRAIN :  Continua el benchmark  |  @#EAFFD5: INFO  |
+|  2016-06-29  |  18:58  |  main  |  @#FFFF00: INTERVENTION  |  @#FFFF00: INTERVENTION :  Finalizando intervencion  |  @#EAFFD5: INFO  |
+|  2016-06-29  |  19:07  |  main  |  @#A5DF00: ENABLE  |  @#A5DF00: ENABLE :  Cyclops Monitoring System  |  @#EAFFD5: INFO  |
+|  2016-06-30  |  13:46  |  main  |  @#EAFFD5: INFO  |  Re-ordenamiento de nodos recuperados para el benchmark  |  @#A5DF00: OK  |
+</hidden>
+
+<hidden User Quick Guide initialState="visible">
+<hidden System Access>
+</hidden>
+<hidden Slurm>
+
+** Gestión de Particiones **
+
+  * Mostrar Estado de Particiones
+
+<code>
+sinfo
+</code>
+
+<hidden  Ejemplo de Resultado >
+<code>
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+expl1        up   infinite      1   down nimbus10
+expl2        up   infinite      1   idle nimbus11
+expl3        up   infinite      1   down nimbus12
+test*        up   infinite      1   down nimbus13
+</code>
+</hidden>
+
+  * Mostrar Estado de una partición 
+
+<code>
+sinfo -p expl2
+</code>
+
+<hidden  Ejemplo de Resultado >
+<code>
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+expl2        up   infinite      1   idle nimbus11
+
+</code>
+</hidden>
+
+  * Mostrar detalle del las particiones
+
+<code>
+scontrol show partitions
+</code>
+
+<hidden  Ejemplo de resultado >
+<code>
+PartitionName=expl1
+   AllocNodes=ALL AllowGroups=ex Default=NO
+   DefaultTime=NONE DisableRootJobs=NO GraceTime=0 Hidden=NO
+   MaxNodes=UNLIMITED MaxTime=UNLIMITED MinNodes=1 MaxCPUsPerNode=UNLIMITED
+   Nodes=nimbus10
+   Priority=1 RootOnly=NO ReqResv=NO Shared=YES:4 PreemptMode=OFF
+   State=UP TotalCPUs=20 TotalNodes=1 SelectTypeParameters=N/A
+   DefMemPerNode=UNLIMITED MaxMemPerNode=UNLIMITED
+
+PartitionName=expl2
+   AllocNodes=ALL AllowGroups=ex Default=NO
+   DefaultTime=NONE DisableRootJobs=NO GraceTime=0 Hidden=NO
+   MaxNodes=UNLIMITED MaxTime=UNLIMITED MinNodes=1 MaxCPUsPerNode=UNLIMITED
+   Nodes=nimbus11
+   Priority=1 RootOnly=NO ReqResv=NO Shared=YES:4 PreemptMode=OFF
+   State=UP TotalCPUs=20 TotalNodes=1 SelectTypeParameters=N/A
+   DefMemPerNode=UNLIMITED MaxMemPerNode=UNLIMITED
+
+PartitionName=expl3
+   AllocNodes=ALL AllowGroups=ex Default=NO
+   DefaultTime=NONE DisableRootJobs=NO GraceTime=0 Hidden=NO
+   MaxNodes=UNLIMITED MaxTime=UNLIMITED MinNodes=1 MaxCPUsPerNode=UNLIMITED
+   Nodes=nimbus12
+   Priority=1 RootOnly=NO ReqResv=NO Shared=YES:4 PreemptMode=OFF
+   State=UP TotalCPUs=20 TotalNodes=1 SelectTypeParameters=N/A
+   DefMemPerNode=UNLIMITED MaxMemPerNode=UNLIMITED
+
+PartitionName=test
+   AllocNodes=ALL AllowGroups=ALL Default=YES
+   DefaultTime=NONE DisableRootJobs=NO GraceTime=0 Hidden=NO
+   MaxNodes=UNLIMITED MaxTime=UNLIMITED MinNodes=1 MaxCPUsPerNode=UNLIMITED
+   Nodes=nimbus13
+   Priority=1 RootOnly=NO ReqResv=NO Shared=FORCE:4 PreemptMode=OFF
+   State=UP TotalCPUs=20 TotalNodes=1 SelectTypeParameters=N/A
+   DefMemPerNode=UNLIMITED MaxMemPerNode=UNLIMITED
+</code>
+</hidden>
+
+  * Activar una partición desactivada
+
+<code>
+scontrol update NodeName=nimbus13 State=RESUME
+</code>
+
+  * Desactivar una partición activa
+
+<code>
+scontrol update NodeName=nimbus13 State=DOWN
+</code>
+
+  * Modificar nodos de una partición activa
+
+<code>
+scontrol update partition=test2 Nodes=nimbus[10-13]
+</code>
+
+  * Cuando modifiquemos una partición, comprobar que todos los nodos están UP.
+
+<code>
+scontrol show Nodes
+</code>
+
+</hidden>
+</hidden>
+
+<hidden User and System Statistics initialState="visible">
+|<  100% 50% 50%  >|
+|  ** Slurm Statistics **  ||
+|  <gchart 850x350 line #e105da #ffffff center "Group by month ">
+January=21029
+February=86825
+March=82730
+April=196091
+May=500463
+June=337609
+July=254939
+</gchart>  ||
+|  ** Actual Month **      ||
+|  ** Slurm Hour Average ( All Users ) **  |  ** Slurm Hour Average ( png ) **  |
+|  <gchart 700x350 hbar #d345da #ffffff center "dev  - 2016 - June  - Days Average: 30">
+H00=593
+H01=920
+H02=409
+H03=586
+H04=559
+H05=590
+H06=399
+H07=672
+H08=432
+H09=372
+H10=384
+H11=424
+H12=391
+H13=706
+H14=257
+H15=338
+H16=253
+H17=438
+H18=319
+H19=777
+H20=349
+H21=295
+H22=305
+H23=473
+</gchart>  |  <gchart 700x350 hbar #0105da #ffffff center "dev  - 2016 - June - Filter by: png - Days Average: 30">
+H00=411
+H01=416
+H02=297
+H03=410
+H04=377
+H05=295
+H06=249
+H07=262
+H08=350
+H09=278
+H10=267
+H11=210
+H12=283
+H13=309
+H14=216
+H15=249
+H16=152
+H17=211
+H18=214
+H19=303
+H20=318
+H21=189
+H22=179
+H23=203
+</gchart>  |
+|  ** Total Jobs  ( Actual Month ) **  ||
+|  ** Slurm Day Jobs ( All Users ) **  |  ** Slurm Day Jobs ( png ) **  |
+|  <gchart 700x350 line #d345da #ffffff center "Group by day ">
+D01=11245
+D02=13071
+D03=6834
+D04=5365
+D05=4615
+D06=6167
+D07=2763
+D08=4059
+D09=3356
+D10=11741
+D11=2962
+D12=2129
+D13=17633
+D14=12003
+D15=14433
+D16=11403
+D17=12416
+D18=4330
+D19=5092
+D20=11432
+D21=13884
+D22=17817
+D23=23265
+D24=19735
+D25=8541
+D26=29148
+D27=20835
+D28=17379
+D29=14187
+D30=9769
+</gchart>  | <gchart 700x350 line #0105da #ffffff center "Group by day - Filter by: png">
+D01=8624
+D02=5860
+D03=4052
+D04=3157
+D05=1317
+D06=3005
+D10=7580
+D11=416
+D12=17
+D13=12859
+D14=8301
+D15=7763
+D16=4044
+D17=6588
+D18=75
+D19=1223
+D20=6817
+D21=9930
+D22=7761
+D23=15528
+D24=12854
+D25=6227
+D26=26034
+D27=14196
+D28=11355
+D29=11565
+D30=2702
+</gchart>  |
+|  ** Other Stats **  ||
+|  ** User Top 10 **  |  ** Partition Use by User **  |  
+|  <gchart 700x350 bar #d345da #ffffff center "Group by user ">
+png=199850
+harmonie=53849
+pnl=45689
+pny=34226
+pn19=2425
+frbull=431
+pn17=306
+pn6=238
+pn13=190
+pnj=188
+</gchart>  |  <gchart 700x350 bar #da4531 #ffffff center "Group by partition - Filter by: png">
+desa128G=107261
+desa64G=92589
+</gchart>  |
+</hidden>

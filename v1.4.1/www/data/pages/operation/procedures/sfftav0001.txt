@@ -1,0 +1,67 @@
+====== Service FTP failure ======
+
+===== Datos Generales =====
+
+
+|< 50% >|
+^  Código       ^  Nombre Procedimiento  ^  Verificado    ^  Operativo    ^  Fecha Creación   ^  Fecha Ultima Modificación  ^  Versión  ^
+|  SFFTAV0001   |  Service FTP failure   |  @#FA5858:NO   |  @#EAFFD5:SI  |  27/07/2015       |  27/07/2015                 |    0.1    | 
+
+  * ** <fc red> IMPORTANTE: </fc> INFORMACION DEL ENTORNO : ** {{popup>:documentation:cyclops:architecture?[keepOpen]|AEMET: HPC Architecture and Risk Definitions}}
+
+===== Sistemas Objetivo =====
+
+|< 100% >| 
+^  Grupo  ^  Nodos              ^  Descripción                                                                                ^  Criticidad  ^  Implicación  ^
+|  Login         |  nimbus[2-3]    |  Acceso de los usuarios al sistema productivo                    |  @#EAFFD5: BAJA       |  Caída en el nivel de integridad del sistema productivo  |
+|  IO            |  nimbus[4-5]    |  Transferencia de Información con el entorno de la organización  |  @#EAFFD5: BAJA       |  Caída en el nivel de integridad del sistema productivo  |
+
+===== Sistemas Colaterales =====
+
+|< 100% >| 
+^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad  ^  Implicación  ^ 
+|  Login         |  nimbus[2-3]    |  Acceso de los usuarios al sistema productivo                    |  @#EAFFD5: BAJA       |  Caída en el nivel de integridad del sistema productivo  |
+|  IO            |  nimbus[4-5]    |  Transferencia de Información con el entorno de la organización  |  @#EAFFD5: BAJA       |  Caída en el nivel de integridad del sistema productivo  |
+
+
+===== Procedimiento =====
+
+==== Notificación Inicial ====
+
+
+  - Notificar la incidencia:
+    * SI SOY: Valencia -> [[:operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia ]]
+    * SI SOY: AEMET ->    [[:operation:procedures:ADAEXX0002|ADAEXX0002 : AEMET Notificatión ]]
+    * SI NO SOY NINGUNO DE LOS ANTERIORES -> [[:operation:procedures:ADBAXX0001| ADBAXX0001 : Notificación BULL - AEMET ]]
+
+==== Alcance ====
+
+  * ** Este procedimiento solo se ejecutara por los siguientes actores en las siguientes circunstancias: **
+
+|< 50% >|
+^  ACTOR          ^  EJECUCION  ^  HORARIO EJECUCION           ^ 
+|  AEMET          |     @#FA5858: NO      |     NINGUNO                  |
+|  BULL VALENCIA  |     SI      |  @#FFFF00: EXCLUIR HORARIO BULL AEMET  ( L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL )  |
+|  BULL AEMET     |     SI      |  HORARIO ( L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL )  |
+|  BULL MADRID    |     SI      |  @#FFFF00: INTERVENCION SOLICITADA  | 
+
+==== Ejecución ====
+
+
+  - Conectarse externamente a un nodo de gestion: [[operation:procedures:SPXXXX0002|SPXXXX0002 : Conexión SSH al Sistema]]
+    - En caso de no poder conectarse: [[operation:procedures:SPXXXX0004|SPXXXX0004 : Perdida de Conexión con la monitorización]]
+  - Conectarse internamente al nodo afectado: [[operation:procedures:SPXXXX0002|SPXXXX0002 : Conexión SSH al Sistema]]
+  - Comprobar el estado del servicio: 
+    * [[operation:procedures:SFFTBS0001 | SFFTBS0001 : Check FTP]]
+    - En caso de SI estar parado el servicio:
+      * SI: [[:operation:procedures:SFFTBS0002 | SFFTBS0002 : Start FTP]]
+    - En caso de NO estar parado el servicio:
+      * NO: [[:operation:procedures:SFFTBS0003 | SFFTBS0003 : Restart FTP]]
+  - Comprobar el estado del servicio: [[operation:procedures:SFFTBS0001 | SFFTBS0001 : Check FTP]]
+    - En caso de seguir NO operativo lanzar el procedimiento de contención:
+      * [[operation:procedures:HRBLAV0003|HRBLAV0003 : Contención de un nodo]]
+==== Notificación Final ====
+
+  - Notificar la incidencia:
+    * SI SOY Valencia -> [[:operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia ]]
+  - FINAL

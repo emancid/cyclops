@@ -1,0 +1,63 @@
+====== Heartbeat Failure ======
+
+===== Datos Generales =====
+
+
+|< 50% >|
+^  Código       ^  Nombre Procedimiento  ^  Verificado    ^  Operativo    ^  Fecha Creación   ^  Fecha Ultima Modificación  ^  Versión  ^
+|  SFHBAV0001   |  Heartbeat Failure  |  @#FA5858:NO   |  @#EAFFD5:SI  |  17/09/2015       |  03/11/2015                 |    0.2    | 
+
+===== Sistemas Vinculados =====
+
+|< 100% 10% 10% 30% 10% 50%>|
+^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad  ^  Implicacion  ^ 
+|  Login         |  nimbus[2-3]    |  Acceso de los usuarios al sistema productivo                    |  @#FAAC58: MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
+|  IO            |  nimbus[4-5]    |  Transferencia de Informacion con el entorno de la organizacion  |  @#FAAC58: MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
+
+
+===== Sistemas Sobre los que aplicar el procedimiento =====
+
+|< 100% 10% 10% 30% 10% 50%>| 
+^  Grupo  ^  Nodos              ^  Descripción                                                                                ^  Criticidad  ^  Implicacion  ^
+|  Login         |  nimbus[2-3]    |  Acceso de los usuarios al sistema productivo                    |  @#FAAC58: MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
+|  IO            |  nimbus[4-5]    |  Transferencia de Informacion con el entorno de la organizacion  |  @#FAAC58: MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
+
+===== Procedimiento =====
+
+==== Notificación Inicial ====
+
+
+  - Notificar la incidencia:
+    * SI SOY: Valencia -> [[:operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia ]]
+    * SI SOY: AEMET ->    [[:operation:procedures:ADAEXX0002|ADAEXX0002 : AEMET Notificatión ]]
+    * SI NO SOY NINGUNO DE LOS ANTERIORES -> [[:operation:procedures:ADBAXX0001| ADBAXX0001 : Notificación BULL - AEMET ]]
+
+==== Alcance ====
+
+  * ** Este procedimiento solo se ejecutara por los siguientes actores en las siguientes circunstancias: **
+
+|< 50% >|
+^  ACTOR          ^  EJECUCION                   ^  HORARIO EJECUCION                                                                     ^
+|  AEMET          |  @#FA5858:<fc white>NO</fc>  |  @#FAAC58: SOLO NOTIFICACIÓN INICIAL                                                   |
+|  BULL VALENCIA  |  @#EAFFD5:SI                 |  @#FFFF00: EXCLUIR HORARIO BULL AEMET  ( L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL )  |
+|  BULL AEMET     |  @#EAFFD5:SI                 |  @#EAFFD5:L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL                                   |
+|  BULL MADRID    |  @#EAFFD5:SI                 |  @#FFFF00: INTERVENCION SOLICITADA                                                     |
+
+==== Ejecución ====
+
+
+    - Se establece una conexion contra uno de los nodos de gestion [[operation:procedures:SPXXXX0002|SPXXXX0002 : Conexión SSH al Sistema]]
+      - En caso de no conseguir conectarse, ejecutar: [[operation:procedures:SPXXXX0004|SPXXXX0004 : Perdida de Conexión con la monitorización]]
+    - [[operation:procedures:SFHBBS0001|SFHBBS0001:Chequear heartbeat ]] para comprobar el estado.
+    - Los posibles resultados serian:
+      * Funcionamiento correcto del servicio HA: =) <code>
+heartbeat OK [pid 12985 et al] is running on nimbusX[nimbusX]...</code>                                  
+      * El servicio HA esta parado ::-\ <code>
+heartbeat is stopped...</code>                                  
+       - Si está parado: [[operation:procedures:SFHBBS0002 |  SFHBBS0002: Start Heartbeat]]
+
+==== Notificación Final ====
+
+  - Notificar la incidencia:
+    * SI SOY Valencia -> [[:operation:procedures:ADBVXX0001|ADBVXX0001 : Notificación BULL - Valencia ]]
+  - FINAL

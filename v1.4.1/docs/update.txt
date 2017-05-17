@@ -1,0 +1,2 @@
+rsync --dry-run --exclude='www' --exclude='status' --exclude='*.template' -acuv * /opt/cyclops/
+

@@ -1,0 +1,12 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1416991622;s:8:"modified";i:1417680877;}s:7:"creator";s:20:"ignacio garcia hoyos";s:4:"user";s:3:"ink";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:3:"ink";s:20:"ignacio garcia hoyos";}s:5:"title";s:23:"Configuracion: Usuarios";s:11:"description";a:2:{s:15:"tableofcontents";a:2:{i:0;a:4:{s:3:"hid";s:21:"configuracionusuarios";s:5:"title";s:23:"Configuracion: Usuarios";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:14:"usuarios_aemet";s:5:"title";s:14:"Usuarios AEMET";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:399:"Configuracion: Usuarios
+
+Usuarios AEMET
+
+	*  Por ahora será un sistema de producción, por lo que solamente tendremos usuarios locales. El usuario a crear para la cadena HIRLAM es hirexpl.
+
+	*  Entrada en /etc/passwd:
+
+
+hirexpl:x:87:900:HIRLAM EXPLOTACION:/expl/hirexpl:/bin/ksh
+inopera:x:86:900:USUARIO DE EXPLOTACION:/expl/inopera:/bin/ksh
+prod:x:85:900:USUARIO DE EXPLOTACION:/expl/prod:/bin/ksh";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1416991622;s:8:"modified";i:1417680877;}s:7:"creator";s:20:"ignacio garcia hoyos";s:4:"user";s:3:"ink";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:3:"ink";s:20:"ignacio garcia hoyos";}}}

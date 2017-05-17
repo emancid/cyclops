@@ -1,0 +1,24 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1424077659;s:8:"modified";i:1424077820;}s:7:"creator";s:23:"david fernandez alvarez";s:4:"user";s:3:"inp";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:3:"inp";s:23:"david fernandez alvarez";}s:5:"title";s:9:"Operacion";s:11:"description";a:2:{s:15:"tableofcontents";a:2:{i:0;a:4:{s:3:"hid";s:9:"operacion";s:5:"title";s:9:"Operacion";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:27:"start_servicio_de_pacemaker";s:5:"title";s:27:"Start servicio de Pacemaker";s:4:"type";s:2:"ul";s:5:"level";i:1;}}s:8:"abstract";s:505:"Operacion
+
+Start servicio de Pacemaker
+
+	*  Arrancamos servicio con el siguiente comando:
+
+haresl start -n [servicio] 
+
+
+
+	*  Si se produce algún error comprobamos que no tenemos ningún mensaje de error con el comando.
+
+haadml show
+
+
+
+Resultado
+
+
+ restofencenimbus0      (stonith:fence_ipmilan):        Started nimbus1
+ restofencenimbus1      (stonith:fence_ipmilan):        Started nimbus0
+ Resource Group: postfix
+     IPaddr-postfix-1   (ocf::Bull:IPaddr2):    Started nimbus0
+     postfix-fs-post…";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1424077659;s:8:"modified";i:1424077820;}s:7:"creator";s:23:"david fernandez alvarez";s:4:"user";s:3:"inp";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:3:"inp";s:23:"david fernandez alvarez";}}}

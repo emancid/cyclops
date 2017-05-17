@@ -1,0 +1,48 @@
+====== Files Explanation ======
+
+  * Cyclops, esta desarrollado en bash scripting principalmente, aunque puede usar cualquier comando que se pueda ejecutar en un sistema linux/unix.
+
+===== Directory Structure =====
+
+  * La estructura de directorios es:
+
+  - Configuracion:
+    - Global<code>
+/etc/cyclops</code>
+    - Monitorizacion Nodos<code>
+/opt/cyclops/monitor/sensors/status/conf</code>
+      - Red<code>
+/etc/cyclops/network</code>
+  - Scripts Generales:<code>
+/opt/cyclops/scripts</code>
+    - Monitorizacion:
+      - Nodos<code>
+/opt/cyclops/monitor/sensors/status</code>
+      - Slurm<code>
+/opt/cyclops/monitor/sensors/squeue</code>
+      - Usuarios<code>
+/opt/cyclops/monitor/sensors/users</code>
+    - Herramientas:<code>
+/opt/cyclops/tools</code>
+      - Aprovadas y 100% funcionales<code>
+/opt/cyclops/tools/approved</code>
+      - En Pruebas<code>
+/opt/cyclops/tools/approved</code>
+  - Especiales:
+    - Bloqueo de ejecucion:<code>
+/opt/cyclops/lock</code>
+    - Backup:<code>
+/opt/cyclops/backup</code>
+===== Config File Definition =====
+
+  * Los ficheros de configuración y su función:
+
+|< 100% >|
+^  Nombre                  ^  Directorio   ^  Función                                                                  ^
+| global.cfg               | /etc/cyclops  | Definicion de Variables                                                   |
+| monitor.cfg              | /etc/cyclops  | Definicion de Grupos y Orden de Impresion en el DashBoard                 |
+| node.type.cfg            | /etc/cyclops  | Definicion de Nodos, sus caracteristicas y estado administrativo          |
+| [grupo/familia].mon.cfg  | /etc/cyclops  | Definicion de sensores a monitorizar dentro de un grupo/familia de nodos  |
+| bios.mng.cfg             | /etc/cyclops  | Definicion de atributos para los nodos con capacidad ipmi (bmc)           |
+| env.devices.cfg          | /etc/cyclops  | Definicion de los dispositivos de entorno (energia,chasis,switch,etc.)    |
+| [grupo].env.cfg          | /etc/cyclops  | Definicion de sensores de entorno dentro de un grupo                      |

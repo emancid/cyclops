@@ -1,0 +1,278 @@
+
+<h1 class="sectionedit1" id="specifications">Specifications</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Specifications" [1-30] -->
+<h2 class="sectionedit2" id="version_beta_2">Versión Beta 2</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Versión Beta 2" [31-59] -->
+<h3 class="sectionedit3" id="compatibilidad">Compatibilidad</h3>
+<div class="level3">
+<div class="table sectionedit4"><table class="inline" style="min-width: 0px; width: 100%;">
+
+	<tr class="row0">
+		<th class="col0 centeralign" rowspan="6">  Sistema Operativo   </th><th class="col1 centeralign" rowspan="3">  Certficado  </th><td class="col2 centeralign" colspan="2">  Redhat 6 / CentOS 6                                                              </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 centeralign" colspan="2">  Opensuse 12/13                                                                   </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 centeralign" colspan="2">  SLES 11/12                                                                       </td>
+	</tr>
+	<tr class="row3">
+		<th class="col0 centeralign" rowspan="3">  Compatible  </th><td class="col1 centeralign" rowspan="2">  Debian/Ubuntu                         </td><td class="col2 centeralign">  servidor monitorizacion 100% compatible  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 centeralign">  minimal base sensors compatible          </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 centeralign">  SLES 9                                </td><td class="col1 centeralign">  minimal base sensors compatible          </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">                      </td><td class="col1 leftalign">              </td><td class="col2 leftalign" colspan="2">                                                                                   </td>
+	</tr>
+	<tr class="row7">
+		<th class="col0 centeralign" rowspan="3">  FileSystem          </th><th class="col1 centeralign" rowspan="3">  Compatible  </th><td class="col2 centeralign" colspan="2">  Linux Base ( ext2,3,4 )                                                          </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 centeralign">  Lustre                                </td><td class="col1 centeralign">  shine compatible                         </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 centeralign" colspan="2">  DRBD                                                                             </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign">                      </td><td class="col1 leftalign">              </td><td class="col2 leftalign" colspan="2">                                                                                   </td>
+	</tr>
+	<tr class="row11">
+		<th class="col0 centeralign" rowspan="4">  Hardware            </th><th class="col1 centeralign" rowspan="4">  Compatible  </th><th class="col2 centeralign">  Control Servidores                    </th><td class="col3 centeralign">  ipmitool compatible                      </td>
+	</tr>
+	<tr class="row12">
+		<th class="col0 centeralign">  Discos duros                          </th><td class="col1 centeralign">  smart &amp; lsi (MegaCli64 compatible)       </td>
+	</tr>
+	<tr class="row13">
+		<th class="col0 centeralign">  Chasis y elementos electricos         </th><td class="col1 centeralign">  ipmitool compatible                      </td>
+	</tr>
+	<tr class="row14">
+		<th class="col0 centeralign">  Almacenamiento                        </th><td class="col1 centeralign">  ioadm compatible                         </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0 leftalign">                      </td><td class="col1 leftalign">              </td><td class="col2 leftalign" colspan="2">                                                                                   </td>
+	</tr>
+	<tr class="row16">
+		<th class="col0 centeralign">  Electronica de red  </th><th class="col1 centeralign">  Compatible  </th><td class="col2 centeralign" colspan="2">  Ninguna ( Monitorizacion indirecta )                                             </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0 leftalign">                      </td><td class="col1 leftalign">              </td><td class="col2 leftalign" colspan="2">                                                                                   </td>
+	</tr>
+	<tr class="row18">
+		<th class="col0 centeralign">  Software            </th><th class="col1 centeralign">  Compatible  </th><td class="col2 centeralign" colspan="2">  Slurm 2.6                                                                        </td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [97-2471] -->
+</div>
+<!-- EDIT3 SECTION "Compatibilidad" [60-2472] -->
+<h3 class="sectionedit5" id="sensores_disponibles">Sensores Disponibles</h3>
+<div class="level3">
+<div class="table sectionedit6"><table class="inline" style="min-width: 0px; width: 100%;">
+
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Sistema Operativo  </th><th class="col1 centeralign">  Nombre Sensor  </th><th class="col2 centeralign">  Descripción  </th><th class="col3 centeralign">  Compatibilidad  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0 centeralign" rowspan="25">  Redhat6  </th><td class="col1 centeralign">  bios_log          </td><td class="col2 centeralign">   deteccion de eventos en bmc             </td><td class="col3 centeralign">   ipmitool compatible  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 centeralign">  bld_temp_b7       </td><td class="col1 centeralign">   temperatura blade                       </td><td class="col2 centeralign">   Bullx B710/B720 Blade Compatible    </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 centeralign">  cpu               </td><td class="col1 centeralign">   Uso de cpu                              </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 centeralign">  cpu_temp_b7       </td><td class="col1 centeralign">   Temperatura CPU                         </td><td class="col2 centeralign">   Bullx B710/B720 Blade Compatible   </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 centeralign">  cpu_temp          </td><td class="col1 centeralign">   Temperatura CPU                         </td><td class="col2 centeralign">   ipmitool Compatible   </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 centeralign">  daemon_generic    </td><td class="col1 centeralign">   Control Servicios Sistema               </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 centeralign">  daemon_status     </td><td class="col1 centeralign">   Control Servicios en el Arranque        </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 centeralign">  disk_space        </td><td class="col1 centeralign">   Control Espacio en FS                   </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 centeralign">  external_storage  </td><td class="col1 centeralign">   Control Cabina de discos                </td><td class="col2 centeralign">   ioadm compatible   </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 centeralign">  hostname          </td><td class="col1 centeralign">   Nombre de host                          </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 centeralign">  ib_if             </td><td class="col1 centeralign">   Control Link interfaz Infiniband        </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 centeralign">  ib_net            </td><td class="col1 centeralign">   Control comunicacion red                </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 centeralign">  lsidisk           </td><td class="col1 centeralign">   Control estado HD                       </td><td class="col2 centeralign">   LSI Compatible   </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 centeralign">  lustre            </td><td class="col1 centeralign">   Control estado FS lustre                </td><td class="col2 centeralign">   shine compatible    </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0 centeralign">  mon_time          </td><td class="col1 centeralign">   Tiempo de Monitorizacion                </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0 centeralign">  network           </td><td class="col1 centeralign">   Control estado interfaces Red eth       </td><td class="col2 centeralign">   ifconfig Compatible   </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0 centeralign">  none              </td><td class="col1 centeralign" colspan="2">   Sensor Null   </td>
+	</tr>
+	<tr class="row18">
+		<td class="col0 centeralign">  orphanps          </td><td class="col1 centeralign">   Control de Procesos Huerfanos           </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row19">
+		<td class="col0 centeralign">  pacemaker         </td><td class="col1 centeralign">   Control de Servicios Gestionados HA     </td><td class="col2 centeralign">   haresl compatible    </td>
+	</tr>
+	<tr class="row20">
+		<td class="col0 centeralign">  slurm_node_status  </td><td class="col1 centeralign">   Control estado nodos slurm              </td><td class="col2 centeralign">   Slurm 2.6 Compatible   </td>
+	</tr>
+	<tr class="row21">
+		<td class="col0 centeralign">  slurm_queue       </td><td class="col1 centeralign">   Control de Jobs Slurm                   </td><td class="col2 centeralign">   Slurm 2.6 Compatible   </td>
+	</tr>
+	<tr class="row22">
+		<td class="col0 centeralign">  smart_disk        </td><td class="col1 centeralign">   Control de estado HD locales            </td><td class="col2 centeralign">   Smart HD Compatible   </td>
+	</tr>
+	<tr class="row23">
+		<td class="col0 centeralign">  swap              </td><td class="col1 centeralign">   Control de estado particion swap        </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row24">
+		<td class="col0 centeralign">  uptime            </td><td class="col1 centeralign">   Control de tiempo funcionamiento        </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row25">
+		<td class="col0 centeralign">  z                 </td><td class="col1 centeralign">   Control de Procesos Zombie Activos      </td><td class="col2 centeralign">   Redhat Compatible   </td>
+	</tr>
+	<tr class="row26">
+		<td class="col0 leftalign">           </td><td class="col1 leftalign">                    </td><td class="col2 leftalign">                                           </td><td class="col3 leftalign">                       </td>
+	</tr>
+	<tr class="row27">
+		<th class="col0 centeralign" rowspan="7">  Debian   </th><td class="col1 centeralign">  cpu                   </td><td class="col2 centeralign">   Uso de cpu                              </td><td class="col3 centeralign">   Debian Compatible   </td>
+	</tr>
+	<tr class="row28">
+		<td class="col0 centeralign">  daemon_generic        </td><td class="col1 centeralign">   Control Servicios Sistema               </td><td class="col2 centeralign">   Debian Compatible   </td>
+	</tr>
+	<tr class="row29">
+		<td class="col0 centeralign">  disk_space            </td><td class="col1 centeralign">   Control Espacio en FS                   </td><td class="col2 centeralign">   Debian Compatible   </td>
+	</tr>
+	<tr class="row30">
+		<td class="col0 centeralign">  hostname              </td><td class="col1 centeralign">   Nombre de host                          </td><td class="col2 centeralign">   Debian Compatible   </td>
+	</tr>
+	<tr class="row31">
+		<td class="col0 centeralign">  mon_time              </td><td class="col1 centeralign">   Tiempo de Monitorizacion                </td><td class="col2 centeralign">   Debian Compatible   </td>
+	</tr>
+	<tr class="row32">
+		<td class="col0 centeralign">  swap                  </td><td class="col1 centeralign">   Control de estado particion swap        </td><td class="col2 centeralign">   Debian Compatible    </td>
+	</tr>
+	<tr class="row33">
+		<td class="col0 centeralign">  uptime                </td><td class="col1 centeralign">   Control de tiempo funcionamiento        </td><td class="col2 centeralign">   Debian Compatible   </td>
+	</tr>
+	<tr class="row34">
+		<td class="col0 leftalign">           </td><td class="col1 leftalign">                    </td><td class="col2 leftalign">                                           </td><td class="col3 leftalign">                       </td>
+	</tr>
+	<tr class="row35">
+		<th class="col0 centeralign" rowspan="13">  Opensuse  </th><td class="col1 centeralign">  cpu                   </td><td class="col2 centeralign">   Uso de cpu                              </td><td class="col3 centeralign">   Opensuse Compatible   </td>
+	</tr>
+	<tr class="row36">
+		<td class="col0 centeralign">  daemon_generic        </td><td class="col1 centeralign">   Control Servicios Sistema               </td><td class="col2 centeralign">   Opensuse Compatible   </td>
+	</tr>
+	<tr class="row37">
+		<td class="col0 centeralign">  disk_space            </td><td class="col1 centeralign">   Control Espacio en FS                   </td><td class="col2 centeralign">   Opensuse Compatible   </td>
+	</tr>
+	<tr class="row38">
+		<td class="col0 centeralign">  hostname              </td><td class="col1 centeralign">   Nombre de host                          </td><td class="col2 centeralign">   Opensuse Compatible   </td>
+	</tr>
+	<tr class="row39">
+		<td class="col0 centeralign">  mon_time              </td><td class="col1 centeralign">   Tiempo de Monitorizacion                </td><td class="col2 centeralign">   Opensuse Compatible   </td>
+	</tr>
+	<tr class="row40">
+		<td class="col0 centeralign">  swap                  </td><td class="col1 centeralign">   Control de estado particion swap        </td><td class="col2 centeralign">   Opensuse Compatible    </td>
+	</tr>
+	<tr class="row41">
+		<td class="col0 centeralign">  uptime                </td><td class="col1 centeralign">   Control de tiempo funcionamiento        </td><td class="col2 centeralign">   Opensuse Compatible   </td>
+	</tr>
+	<tr class="row42">
+		<td class="col0 centeralign">  bios_log              </td><td class="col1 centeralign">   deteccion de eventos en bmc             </td><td class="col2 centeralign">   ipmitool compatible   </td>
+	</tr>
+	<tr class="row43">
+		<td class="col0 centeralign">  orphanps              </td><td class="col1 centeralign">   Control de Procesos Huerfanos           </td><td class="col2 centeralign">   Opensuse Compatible   </td>
+	</tr>
+	<tr class="row44">
+		<td class="col0 centeralign">  slurm_node_status     </td><td class="col1 centeralign">   Control estado nodos slurm              </td><td class="col2 centeralign">   Slurm 2.6 Compatible   </td>
+	</tr>
+	<tr class="row45">
+		<td class="col0 centeralign">  slurm_queue           </td><td class="col1 centeralign">   Control de Jobs Slurm                   </td><td class="col2 centeralign">   Slurm 2.6 Compatible   </td>
+	</tr>
+	<tr class="row46">
+		<td class="col0 centeralign">  smart_disk            </td><td class="col1 centeralign">   Control de estado HD locales            </td><td class="col2 centeralign">   Smart HD Compatible   </td>
+	</tr>
+	<tr class="row47">
+		<td class="col0 centeralign">  z                     </td><td class="col1 centeralign">   Control de Procesos Zombie Activos      </td><td class="col2 centeralign">   Opensuse Compatible   </td>
+	</tr>
+	<tr class="row48">
+		<td class="col0 leftalign">           </td><td class="col1 leftalign">                    </td><td class="col2 leftalign">                                           </td><td class="col3 leftalign">                       </td>
+	</tr>
+	<tr class="row49">
+		<th class="col0 centeralign" rowspan="15">  SLES     </th><td class="col1 centeralign">  cpu                   </td><td class="col2 centeralign">   Uso de cpu                              </td><td class="col3 centeralign">   SLES Compatible   </td>
+	</tr>
+	<tr class="row50">
+		<td class="col0 centeralign">  daemon_generic        </td><td class="col1 centeralign">   Control Servicios Sistema               </td><td class="col2 centeralign">   SLES Compatible   </td>
+	</tr>
+	<tr class="row51">
+		<td class="col0 centeralign">  disk_space            </td><td class="col1 centeralign">   Control Espacio en FS                   </td><td class="col2 centeralign">   SLES Compatible   </td>
+	</tr>
+	<tr class="row52">
+		<td class="col0 centeralign">  hostname              </td><td class="col1 centeralign">   Nombre de host                          </td><td class="col2 centeralign">   SLES Compatible   </td>
+	</tr>
+	<tr class="row53">
+		<td class="col0 centeralign">  mon_time              </td><td class="col1 centeralign">   Tiempo de Monitorizacion                </td><td class="col2 centeralign">   SLES Compatible   </td>
+	</tr>
+	<tr class="row54">
+		<td class="col0 centeralign">  swap                  </td><td class="col1 centeralign">   Control de estado particion swap        </td><td class="col2 centeralign">   SLES Compatible    </td>
+	</tr>
+	<tr class="row55">
+		<td class="col0 centeralign">  uptime                </td><td class="col1 centeralign">   Control de tiempo funcionamiento        </td><td class="col2 centeralign">   SLES Compatible   </td>
+	</tr>
+	<tr class="row56">
+		<td class="col0 centeralign">  bios_log              </td><td class="col1 centeralign">   deteccion de eventos en bmc             </td><td class="col2 centeralign">   ipmitool compatible   </td>
+	</tr>
+	<tr class="row57">
+		<td class="col0 centeralign">  orphanps              </td><td class="col1 centeralign">   Control de Procesos Huerfanos           </td><td class="col2 centeralign">   SLES Compatible   </td>
+	</tr>
+	<tr class="row58">
+		<td class="col0 centeralign">  slurm_node_status     </td><td class="col1 centeralign">   Control estado nodos slurm              </td><td class="col2 centeralign">   Slurm 2.6 Compatible   </td>
+	</tr>
+	<tr class="row59">
+		<td class="col0 centeralign">  slurm_queue           </td><td class="col1 centeralign">   Control de Jobs Slurm                   </td><td class="col2 centeralign">   Slurm 2.6 Compatible   </td>
+	</tr>
+	<tr class="row60">
+		<td class="col0 centeralign">  smart_disk            </td><td class="col1 centeralign">   Control de estado HD locales            </td><td class="col2 centeralign">   Smart HD Compatible   </td>
+	</tr>
+	<tr class="row61">
+		<td class="col0 centeralign">  z                     </td><td class="col1 centeralign">   Control de Procesos Zombie Activos      </td><td class="col2 centeralign">   SLES Compatible   </td>
+	</tr>
+	<tr class="row62">
+		<td class="col0 centeralign">  ib_net                </td><td class="col1 centeralign">   Control comunicacion red                </td><td class="col2 centeralign">   SLES Compatible           </td>
+	</tr>
+	<tr class="row63">
+		<td class="col0 centeralign">  network               </td><td class="col1 centeralign">   Control estado interfaces Red eth       </td><td class="col2 centeralign">   ifconfig Compatible   </td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [2516-9369] -->
+</div>
+<!-- EDIT5 SECTION "Sensores Disponibles" [2473-] -->

@@ -1,0 +1,104 @@
+
+<h1 class="sectionedit1" id="nodo_espejo">Nodo Espejo</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> En un sistema de cluster y/o supercomputacion se dice de un nodo espejo al equivalente a otro en hardware, sistema operativo, servicios y configuracion, se podria decir tambien su “clon” pero en el caso de nodo espejo tienen una vinculacion, ya sea debido a una configuracion en HA (high Availability) o hardware ( nodos unidos en un Blade )</div>
+</li>
+<li class="level1 node"><div class="li"> Los nodos espejos disponibles en el sistema actual son:</div>
+<ul>
+<li class="level2"><div class="li"> <strong> HA </strong> , aquellos que tienen una configuracion HA y por tanto la caida de uno impide la perdida de servicio al hacerse con el control de los servicios el nodo espejo del que que esta fuera de servicio.</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="table sectionedit2"><table class="inline" style="min-width: 0px; width: 100%;">
+
+	<tr class="row0">
+		<th class="col0 centeralign" colspan="5">  NODOS ESPEJO EN HA ( SERVICIO/OPERACION)                                                                                                                               </th>
+	</tr>
+	<tr class="row1">
+		<th class="col0 centeralign">  NOMBRE                                    </th><th class="col1 centeralign">  FAMILIA       </th><th class="col2 centeralign">  ROL            </th><th class="col3 centeralign">  CRITICIDAD         </th><th class="col4 centeralign">  OBSERVACIONES                                                        </th>
+	</tr>
+	<tr class="row2">
+		<td class="col0 centeralign">  nimbus0                                   </td><td class="col1 centeralign" rowspan="2">  management    </td><td class="col2 centeralign">  Balanceado     </td><td class="col3 centeralign" rowspan="2" bgcolor=#FA5858>Muy Alta  </td><td class="col4 centeralign" rowspan="2">  Servicios criticos del entorno productivo                            </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 centeralign">  nimbus1                                   </td><td class="col1 centeralign">  Espejo         </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">                                            </td><td class="col1 leftalign">                </td><td class="col2 leftalign">                 </td><td class="col3 leftalign">                     </td><td class="col4 leftalign">                                                                       </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 centeralign">  nimbus2                                   </td><td class="col1 centeralign" rowspan="2">  login         </td><td class="col2 centeralign">  Balanceado     </td><td class="col3 centeralign" rowspan="2" bgcolor=#FA5858>Muy Alta  </td><td class="col4 centeralign" rowspan="2">  Aplicativos Cliente del entorno productivo                           </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 centeralign">  nimbus3                                   </td><td class="col1 centeralign">  Espejo         </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign">                                            </td><td class="col1 leftalign">                </td><td class="col2 leftalign">                 </td><td class="col3 leftalign">                     </td><td class="col4 leftalign">                                                                       </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 centeralign">  nimbus4                                   </td><td class="col1 centeralign" rowspan="2">  io            </td><td class="col2 centeralign">  Balanceado     </td><td class="col3 centeralign" rowspan="2" bgcolor=#EAFFD5>Baja      </td><td class="col4 centeralign" rowspan="2">  Aplicativos Cliente en desarrollo                                    </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 centeralign">  nimbus5                                   </td><td class="col1 centeralign">  Espejo         </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign">                                            </td><td class="col1 leftalign">                </td><td class="col2 leftalign">                 </td><td class="col3 leftalign">                     </td><td class="col4 leftalign">                                                                       </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 centeralign">  nimbus6                                   </td><td class="col1 centeralign" rowspan="2">  lustre (mds)  </td><td class="col2 centeralign">  Master/Espejo  </td><td class="col3 centeralign" bgcolor=#FA5858>Muy Alta  </td><td class="col4 centeralign">  Sistema de ficheros, Master de <strong> SCRATCH01 </strong>, espejo de SCRATCH02  </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 centeralign">  nimbus7                                   </td><td class="col1 centeralign">  Master/Espejo  </td><td class="col2 centeralign" bgcolor=#FAAC58>Depende   </td><td class="col3 centeralign">  Sistema de ficheros, Master de SCRATCH02, espejo de <strong> SCRATCH01 </strong>  </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign">                                            </td><td class="col1 leftalign">                </td><td class="col2 leftalign">                 </td><td class="col3 leftalign">                     </td><td class="col4 leftalign">                                                                       </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 centeralign">  nimbus8                                   </td><td class="col1 centeralign" rowspan="2">  lustre (oss)  </td><td class="col2 centeralign">  Balanceado     </td><td class="col3 centeralign" rowspan="2" bgcolor=#FA5858>Muy Alta  </td><td class="col4 centeralign" rowspan="2">  Datos de los sistemas de ficheros <strong> SCRATCH01 </strong> y SCRATCH02        </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0 centeralign">  nimbus9                                   </td><td class="col1 centeralign">  Balanceado     </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0 leftalign">                                            </td><td class="col1 leftalign">                </td><td class="col2 leftalign">                 </td><td class="col3 leftalign">                     </td><td class="col4 leftalign">                                                                       </td>
+	</tr>
+</table></div>
+<!-- EDIT2 TABLE [656-3653] --><ul>
+<li class="level1 node"><div class="li"> Blades, se disponen de una gran cantidad de nodos en formato blade, contenidos en chasis</div>
+<ul>
+<li class="level3"><div class="li"> Nombre del nodo: nimbus[numero de rack][numero de chasis][numero de nodo 01-18]</div>
+</li>
+<li class="level3 node"><div class="li"> Los nodos espejos se calculan de la siguiente manera:</div>
+<ul>
+<li class="level4"><div class="li"> Si los dos ultimos digitos del nombre del nodo son igual o menor de nueve su espejo es la suma de estos dos digitos mas nueve<pre class="code">nimbus4104 -&gt; nimbus41 (04) -&gt; 4 =&lt; 9 -&gt; 4+9 = 13 -&gt; nodo espejo = nimbus4113</pre>
+</div>
+</li>
+<li class="level4"><div class="li"> Si los dos ultimos digitos del nombre del nodo son igual o mayor de diez su espejo es la resta de estos dos digitos menos nueve<pre class="code">nimbus3216 -&gt; nimbus32 (16) -&gt; 16 =&gt; 10 -&gt; 16-9 = 7 -&gt; nodo espejo = nimbus3207</pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="table sectionedit3"><table class="inline" style="min-width: 0px; width: 100%;">
+
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign" colspan="10">  BLADES: Ubicacion en el chasis fisico  </th>
+	</tr>
+	<tr class="row1">
+		<th class="col0 centeralign">  Nº Blade  </th><th class="col1 centeralign">  1   </th><th class="col2 centeralign">  2   </th><th class="col3 centeralign">  3   </th><th class="col4 centeralign">  4   </th><th class="col5 centeralign">  5   </th><th class="col6 centeralign">  6   </th><th class="col7 centeralign">  7   </th><th class="col8 centeralign">  8   </th><th class="col9 centeralign">  9   </th>
+	</tr>
+	</thead>
+	<tr class="row2">
+		<th class="col0 centeralign" rowspan="2">  Nº Nodo   </th><td class="col1 centeralign">  10  </td><td class="col2 centeralign">  11  </td><td class="col3 centeralign">  12  </td><td class="col4 centeralign">  13  </td><td class="col5 centeralign">  14  </td><td class="col6 centeralign">  15  </td><td class="col7 centeralign">  16  </td><td class="col8 centeralign">  17  </td><td class="col9 centeralign">  18  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 centeralign">  1   </td><td class="col1 centeralign">  2   </td><td class="col2 centeralign">  3   </td><td class="col3 centeralign">  4   </td><td class="col4 centeralign">  5   </td><td class="col5 centeralign">  6   </td><td class="col6 centeralign">  7   </td><td class="col7 centeralign">  8   </td><td class="col8 centeralign">  9   </td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [4371-4659] -->
+</div>

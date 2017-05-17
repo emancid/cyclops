@@ -1,0 +1,48 @@
+#!/bin/bash
+
+source /etc/cyclops/global.cfg
+PATH="${PATH}:$_stat_extr_path"
+export PATH
+
+if [ -f "$_config_path_mon/plugin.users.ctrl.cfg" ]
+then
+        source $_config_path_mon/plugin.users.ctrl.cfg
+
+        _cyc_user_ctrl=$( echo "$_pg_usr_ctrl_admin,$_pg_usr_ctrl_l1,$_pg_usr_ctrl_l2,$_pg_usr_ctrl_l3,$_pg_usr_ctrl_other" | tr ',' '\n' | awk -v _u="$USER" '{ if ( $1 == _u ) { print "OK" }}' )
+
+        if [ "$_cyc_user_ctrl" == "OK" ]
+        then
+		PATH="${PATH}:$_script_path:$_tool_path/approved"
+		export PATH
+
+                echo "CYCLOPS: OPERATIVE ENVIRONMENT STATUS"
+                test.productive.env.sh -t pasive -v human 2>/dev/null
+                echo "============================="
+
+                echo "IMPORTANT NOTICE!!"
+                echo "if you will be working in this system out of journal time:"
+                echo "PLEASE, ALERT Monitoring and Support Team"
+                echo "CSR Contact Information:"
+                echo "Tlf: +34 963.93.87.24"
+                echo "email: srv.cgr-es@atos.net"
+                echo "============================="
+                echo
+                echo "CYCLOPS: HELP INFO"
+                echo "-----------------------------"
+                echo "Use Next commands for establish link between system and monitoring team"
+                echo "  cyclops.sh: manage monitoring or get info about system status"
+                echo "  audit.nod.sh: get info about node(s) status or main bitacora data"
+                echo "  test.productive.env.sh: known environment productive status"
+                echo 
+                echo "Use -h for help in those commands"
+                echo "Maybe you need root permissions to manage cyclops, use su or sudo commands"
+                echo            
+                echo "Please connect to https://cyclops.aemet.es to get info about cyclops"
+                echo
+        fi
+
+        _cyc_usr_l_ctrl=$( echo "$_pg_usr_ctrl_l1,$_pg_usr_ctrl_l2,$_pg_usr_ctrl_l3" | tr ',' '\n' | awk -v _u="$USER" '{ if ( $1 == _u ) { print "OK" }}' )                                          
+        [ "$_cyc_usr_l_ctrl" == "OK" ] && audit.nod.sh -i event -e issue -s info -m "User: $USER is login in the system"
+
+fi
+

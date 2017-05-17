@@ -1,0 +1,76 @@
+====== Procedimiento Especial - Acceder por SSH al Sistema ======
+
+
+
+===== Datos Generales  =====
+
+
+|< 50% >|
+^  Código      ^  Nombre Procedimiento                   ^  Verificado   ^  Operativo    ^  Fecha Creación  ^  Fecha Ultima Modificación  ^  Versión  ^
+|  SPXXXX0002  |  Acceder por SSH al Sistema  |  @#EAFFD5:SI  |  @#EAFFD5:SI  |  16/09/2015      |  29/09/2015                 |  0.2      |
+
+===== Alcance  =====
+
+|< 50% >|
+^  ACTOR          ^  EJECUCION                   ^  HORARIO EJECUCION                                                                     ^
+|  BULL MADRID    |  @#EAFFD5:SI                 |  @#FFFF00: INTERVENCION SOLICITADA                                                     |
+
+
+===== Procedimiento =====
+
+==== Alcance ====
+
+=== Servidores Externos - Primera Conexión ( Exterior ) ===
+
+^  Hostname  ^  Direccion IP  ^  Tipo     ^  Funcion  ^
+|  [MANAGEMENT NODES]   |  172.24.29.90  |  Gestion  |  Gestion y Mantenimiento del Sistema  |
+|  [MANAGEMENT NODES]   |  172.24.29.91  |  Gestion  |  Gestion y Mantenimiento del Sistema  |
+|  [LOGIN NODES]   |  172.24.8.221  |  Login    |  Acceso de Usuarios al Sistema        |
+|  [LOGIN NODES]   |  172.24.8.223  |  Login    |  Acceso de Usuarios al Sistema        |
+|  [LOGIN NODES]   |  172.24.8.227  |  IO       |  Pasarela de Sistema de Archivos Lustre al Exterior del Sistema (IP FLotante)  |
+|  [LOGIN NODES]   |  172.24.8.227  |  IO       |  Pasarela de Sistema de Archivos Lustre al Exterior del Sistema (IP FLotante)  |
+
+=== Servidores Internos  - Segunda Conexión ( Interna ) ===
+
+^  Hostname                 ^  BMC Hostname          ^  Tipo            ^  Funcion  ^
+|  MANAGEMENT NODES              |  bmc[0-1]              |  Gestion         |  Gestion y Mantenimiento del Sistema  |
+|  LOGIN NODES (CRITICAL)              |  bmc[2-3]              |  Login           |  Acceso de Usuarios al Sistema        |
+|  LOGIN NODES              |  bmc[4-5]              |  IO              |  Pasarela de Sistema de Archivos Lustre al Exterior del Sistema (IP FLotante)  |
+|  node[RANGE]              |  Lustre          |  Servidores de Sistema de ficheros Lustre  |
+|  node[RANGE]            |  Computo - Aire  |  Nodos de Computo refrigerados por Aire  |
+|  node[RANGE]  |  Computo - Agua  |  Nodos de Computo refrigerados por Agua  |
+==== Primera conexión - Acceso desde el exterior ====
+
+=== Conexión Windows ===
+
+
+{{:operation:procedures:manual-putty-telnet-ssh-01.gif?200|}}
+
+  - Ejecuta PuTTy
+  - En el menú de configuración selecciona la categoría ** Session **
+  - Introduzca la IP del nodo ** externo ** y seleccione el ** protocolo SSH **
+  - Introduzca un nombre para esta conexión en el campo ** Saved Sessions **
+  - Vuelva al menú de configuración y seleccione la categoría ** SSH **
+  - Asegúrese de que está marcada la opción 2 en ** Preferred SSH protocol ** versión
+  - Seleccione nuevamente la categoría ** Session **
+  - Para guardar la configuración pulse ** Save ** (si necesita guardar la sesión para siguientes ocasiones) y  ** Open ** para conectar
+  - Al iniciar la conexión, se abrirá la ventana del terminal. Introduzca su nombre de usuario y pulse Intro, después, introduzca su contraseña y pulse Intro. Si el nombre de usuario y password son correctos podrá iniciar la sesión SSH
+=== Conexión Linux/Unix ===
+
+  * Ejecutar el siguiente comando desde una consola<code>
+ssh -l [usuario] [direccion ip nodo externo]
+</code>
+  * Podria ser necesario disponer de de acceso a las Xwindows para disponer de esa posibilidad ejecutar:<code>
+ssh -l [usuario] [direccion ip nodo externo] -Y
+</code>
+
+==== Segunda conexión - Desde los nodos externos al resto del sistema ====
+
+  - Habra de realizarse una elevacion de privilegios con el comando siguiente:<code>
+su - 
+</code>
+  - Posteriormente se ejecutara:<code>
+ssh [nombre de nodo]
+</code>
+
+<box orange>Donde pone //nombre de nodo// sera el nombre del nodo sobre el que se ha de aplicar las acciones requeridas</box>

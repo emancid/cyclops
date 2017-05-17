@@ -1,0 +1,35 @@
+<span class="co0"># CYCLOPS PROFILE</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#91;</span> <span class="re5">-f</span> <span class="sy0">/</span>etc<span class="sy0">/</span>cyclops<span class="sy0">/</span>monitor<span class="sy0">/</span>plugin.users.ctrl.cfg <span class="br0">&#93;</span>
+<span class="kw1">then</span>
+        <span class="kw3">source</span> <span class="sy0">/</span>etc<span class="sy0">/</span>cyclops<span class="sy0">/</span>monitor<span class="sy0">/</span>plugin.users.ctrl.cfg
+&nbsp;
+        <span class="re2">_cyc_user_ctrl</span>=$<span class="br0">&#40;</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$_pg_usr_ctrl_admin</span>,<span class="es2">$_pg_usr_ctrl_l1_support</span>,<span class="es2">$_pg_usr_ctrl_l2_support</span>,<span class="es2">$_pg_usr_ctrl_l3_support</span>,<span class="es2">$_pg_usr_ctrl_other</span>&quot;</span> <span class="sy0">|</span> <span class="kw2">tr</span> <span class="st_h">','</span> <span class="st_h">'\n'</span> <span class="sy0">|</span> <span class="kw2">awk</span> <span class="re5">-v</span> <span class="re2">_u</span>=<span class="st0">&quot;<span class="es2">$USER</span>&quot;</span> <span class="st_h">'{ if ( $1 == _u ) { print &quot;OK&quot; }}'</span> <span class="br0">&#41;</span>
+&nbsp;
+        <span class="kw1">if</span> <span class="br0">&#91;</span> <span class="st0">&quot;<span class="es2">$_cyc_user_ctrl</span>&quot;</span> == <span class="st0">&quot;OK&quot;</span> <span class="br0">&#93;</span>
+        <span class="kw1">then</span>
+                <span class="kw3">source</span> <span class="sy0">/</span>etc<span class="sy0">/</span>cyclops<span class="sy0">/</span>global.cfg
+                <span class="re2">PATH</span>=<span class="st0">&quot;<span class="es3">${PATH}</span>:/opt/cyclops/scripts:/opt/cyclops/tools/approved&quot;</span>
+                <span class="kw3">export</span> PATH
+&nbsp;
+                <span class="kw3">echo</span> <span class="st0">&quot;CYCLOPS: OPERATIVE ENVIRONMENT STATUS&quot;</span>
+                test.productive.env.sh <span class="re5">-t</span> pasive <span class="re5">-v</span> human <span class="nu0">2</span><span class="sy0">&gt;/</span>dev<span class="sy0">/</span>null
+                <span class="kw3">echo</span> <span class="st0">&quot;=============================&quot;</span>
+&nbsp;
+                <span class="kw3">echo</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;CYCLOPS: HELP INFO&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;-----------------------------&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;Use Next commands for maintenance correct link between system and monitoring team&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;  cyclops.sh: manage monitoring or get info about system status&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;  audit.nod.sh: get info about node(s) status or main bitacora data&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;  test.productive.env.sh: known environment productive status&quot;</span>
+                <span class="kw3">echo</span> 
+                <span class="kw3">echo</span> <span class="st0">&quot;Use -h for help in those commands&quot;</span>
+                <span class="kw3">echo</span> <span class="st0">&quot;Maybe you need root permissions to manage cyclops, use su or sudo commands&quot;</span>
+                <span class="kw3">echo</span>            
+                <span class="kw3">echo</span> <span class="st0">&quot;Please connect to https://cyclops.aemet.es to get info about cyclops&quot;</span>
+                <span class="kw3">echo</span>
+        <span class="kw1">fi</span>
+<span class="kw1">fi</span>
+&nbsp;
+<span class="kw1">fi</span>

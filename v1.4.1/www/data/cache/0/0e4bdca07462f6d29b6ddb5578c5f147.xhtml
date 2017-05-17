@@ -1,0 +1,758 @@
+
+<h1 class="sectionedit1" id="maintenance">Maintenance</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Maintenance" [1-27] -->
+<h2 class="sectionedit2" id="estado_de_la_monitorizacion">Estado de la Monitorización</h2>
+<div class="level2">
+<ul>
+<li class="level1 node"><div class="li"> Existen diversos modos en el sistema de monitorizacion:</div>
+<ul>
+<li class="level2"><div class="li"> <strong> enable </strong> , Activar el sistema de monitorización, el cambio a este estado reseteara las alertas existentes y pondrá a cero el contador de ciclos.</div>
+</li>
+<li class="level2"><div class="li"> <strong> disable </strong> , La monitorización estará completamente parada, tan solo el script de monitorización ejecutara una comprobación sobre si ha cambiado el estado.</div>
+</li>
+<li class="level2"><div class="li"> <strong> drain </strong> , Este modo mantendrá activo el script de monitorización, pero no ejecutara ninguna de las secciones configuradas.</div>
+</li>
+<li class="level2 node"><div class="li"> <strong> testing </strong> , Este modo realizara una monitorización completa pero no generara alertas por email, este estado es el recomendado cuando se esten realizando pruebas sobre el entorno monitorizado.</div>
+<ul>
+<li class="level3 node"><div class="li"> Los siguientes modos realizan las mismas acciones que el modo <strong> testing </strong> , pero su nombre es distinto para hacer referencia a actuaciones concretas sobre el sistema por parte de los tecnicos:</div>
+<ul>
+<li class="level4"><div class="li"> <strong> repair </strong> , los tecnicos estan realizando tareas de reparación de uno o varios componentes hardware o software del sistema monitorizado</div>
+</li>
+<li class="level4"><div class="li"> <strong> intervention </strong> , se esta realizando una intervención por parte de los técnicos sobre el sistema</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Comando /opt/cyclops/cyclops.sh, activa, desactiva y muestra el estado de la monitorización.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Comprobar el estado:<pre class="code">/opt/cyclops/scripts/cyclops.sh -y status</pre>
+</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+ejemplo de salida
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+ejemplo de salida
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">Cyclops Monitoring System MODE IS: TESTING
+Options Status:
+-----------------------------------
+
+Monitor Status
+Monitor Cycles                   Cyclops Status
+1400                             TESTING
+
+Uptime Control Plugin
+Uptime Record Host               Days            Code Description
+nimbus5                          99              UPTIME_RECORD
+
+Audit Status Option
+Code Description                 Status
+AUDIT                            ENABLED
+
+Mail Status Option
+Code Description                 Status
+MAIL                             ENABLED
+
+Web Sound Alerts Status Option
+Code Description                 Status
+SOUND                            ENABLED
+
+HA Status
+Code Description                 Status          Master Host
+HA                               ENABLED         nimbus0</pre>
+</div></div><ul>
+<li class="level1"><div class="li"> Activar la monitorizacion:<pre class="code">/opt/cyclops/scripts/cyclops.sh -y enable</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Desactivar la monitorizacion:<pre class="code">/opt/cyclops/scripts/cyclops.sh -y disable</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Poner la monitorizacion en mantenimiento:<pre class="code">/opt/cyclops/scripts/cyclops.sh -y drain</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Poner la monitorizacion en pruebas:<pre class="code">/opt/cyclops/scripts/cyclops.sh -y testing</pre>
+</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <strong> Sera requerido el parametro -c para aplicar los cambios </strong></div>
+</li>
+<li class="level1"><div class="li"> Usar el parametro <strong> -h </strong> para ayuda en caso de duda </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Estado de la Monitorización" [28-2791] -->
+<h2 class="sectionedit3" id="estado_administrativo_de_nodos">Estado Administrativo de Nodos</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Comando /opt/cyclops/scripts/cyclops.sh, permite especificar con el parametro -n familia, grupo, nodo o conjunto de nodos ( a partir de expresiones regulares).</div>
+</li>
+</ul>
+
+<p>
+<strong> SE RECOMIENDA COMPROBAR LOS CAMBIOS ANTES DE APLICARLOS </strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> Comprobar los cambios de estado de un nodo:<pre class="code">/opt/cyclops/scripts/cyclops.sh   -a [acción] -n [nodo o rango de nodos]</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Cambiar el estado de un nodo:<pre class="code">/opt/cyclops/scripts/cyclops.sh   -a [acción] -n [nodo o rango de nodos] -c</pre>
+</div>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> Los estados disponibles para un nodo son:</div>
+<ul>
+<li class="level2"><div class="li"> <strong> up </strong>: estado activo, estado normal de un nodo, se monitoriza, se generan alertas en caso de estar apagado.</div>
+</li>
+<li class="level2"><div class="li"> <strong> drain </strong>: estado mantenimiento, la monitorizacion excluye el nodo y no se muestran alertas.</div>
+</li>
+<li class="level2"><div class="li"> <strong> diagnose </strong>: estado diagnostico, el nodo se monitoriza pero no genera alertas.</div>
+</li>
+<li class="level2"><div class="li"> <strong> content </strong>: estado contencion, el nodo genera una alerta pero no se monitoriza.</div>
+</li>
+<li class="level2"><div class="li"> <strong> repair </strong>: estado reparacion, el nodo no genera alertas y no se monitoriza, pendiente de reparación.</div>
+</li>
+<li class="level2"><div class="li"> <strong> status </strong>: consultar el estado actual de monitorización de uno o varios nodos de manera pasiva</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Usar el parámetro <strong> -h </strong> para ayuda en caso de duda.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Estado Administrativo de Nodos" [2792-4043] -->
+<h2 class="sectionedit4" id="mensajes_dashboard">Mensajes Dashboard</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Comando /opt/cyclops/scripts/cyclops.sh , permite gestionar los mensajes que se mostraran en la pantalla inicial o “dashboard” de la monitorizacion.</div>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> Los mensajes constan de las siguientes caracteristicas:</div>
+<ul>
+<li class="level2"><div class="li"> Prioridad: Importancia del mensaje (info,low,medium,high) , segun la importancia se mostrara un color para realzar el mensaje</div>
+</li>
+<li class="level2"><div class="li"> Birth: Fecha de alta del mensaje</div>
+</li>
+<li class="level2"><div class="li"> Death: Fecha de caducidad del mensaje, pasada esa fecha este no se mostrara mas (aunque seguirá almacenado hasta su purgado)</div>
+</li>
+<li class="level2"><div class="li"> Mensaje: Contenido del mensaje (este no debe comenzar nunca por las palabras <em>“list”</em>, <em>“death”</em> o <em>Numeros</em> ya que son parametros dentro del comando de gestion.</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Listar mensajes:<pre class="code">/opt/cyclops/scripts/cyclops.sh -m list</pre>
+</div>
+</li>
+<li class="level1 node"><div class="li"> Crear mensaje:<pre class="code">/opt/cyclops/scripts/cyclops.sh -m &quot;[[mensaje]]&quot; [ -p [info|low|medium|high]] [ -d &quot;[YYYYMMDD [HHMM]]&quot; ]</pre>
+</div>
+<ul>
+<li class="level2"><div class="li"> La prioridad es opcional ( -p ) , en caso de no indicarse se creara el mensaje con prioridad info.</div>
+</li>
+<li class="level2"><div class="li"> La fecha de caducidad es opcional ( -d ) , en caso de no indicarse el mensaje caducara a las 23:59 del dia que se creo.</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Purgar mensajes caducados:<pre class="code">/opt/cyclops/scripts/cyclops.sh -m death</pre>
+</div>
+<ul>
+<li class="level2"><div class="li"> Usar el parámetro <strong> -h </strong> para ayuda en caso de duda.</div>
+</li>
+<li class="level2"><div class="li"> Se borraran todos los mensajes que listados aparezcan como “DEATH”</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Borrar un mensaje:<pre class="code">/opt/cyclops/scripts/cyclops.sh -m [indice mensaje] -c</pre>
+</div>
+<ul>
+<li class="level2"><div class="li"> Si no se explicita el parametro -c solo mostrara los mensajes que borraria.</div>
+</li>
+<li class="level2"><div class="li"> [0-9] es el <em>ID</em> del mensaje</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Usar el parámetro <strong> -h </strong> para ayuda en caso de duda.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Mensajes Dashboard" [4044-5704] -->
+<h2 class="sectionedit5" id="conocer_el_estado_de_los_procedimientos">Conocer el estado de los procedimientos</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Con el comando /opt/cyclops/script/cyclops se puede conocer parcialmente el estado de los procedimientos existentes en el sistema.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Comando:<pre class="code">/opt/cyclops/scripts/cyclops.sh -v procedures</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Comando:<pre class="code">/opt/cyclops/scripts/procedures.sh -t [node|env] -v [human|commas|wiki]</pre>
+</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Ejemplo de Salida
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ejemplo de Salida
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">NODE MONITORING IA PROCEDURES
+CODE        DESCRIPTION                              PRIORITY  HOST                             SENSORS                             WIKI FILE       WIKI INDEX  WIKI VER  OPERATIVE  VERIFICATED
+
+FSLUAV0001  Lustre Shutdown                          20        nimbus6,nimbus7,nimbus8,nimbus9  lustre,lustre,lustre,lustre         fsluav0001.txt  YES (1)     0.2       SI         NO
+FSLUAV0002  lustre MDT failure                       40        nimbus6,ALL                      uptime,lustre,lustre                fsluav0002.txt  YES (1)     0.3       SI         NO
+FSLUAV0003  lustre OST failure                       40        nimbus8,nimbus9,ALL              update,lustre,update,lustre,lustre  fsluav0003.txt  YES (1)     0.2       SI         NO
+FSLUAV0004  Client lustre offline                    20        ALL                              lustre                              fsluav0004.txt  YES (1)     0.2       SI         NO
+HRBIAV0001  BIOS Log Trace alert                     50        ALL                              bios_log                            hrbiav0001.txt  YES (1)     0.1       SI         NO
+HRBLAV0002  B7xx Blade Temp alert                    30        ALL                              bld_temp_b7                         hrblav0002.txt  YES (1)     0.2       NO         NO
+HRCPAV0001  CPU Temp alert CPU temperature exceeded  30        ALL                              cpu_temp                            hrcpav0001.txt  YES (1)     0.2       SI         NO
+HRHDAV0001  System disk failure                      10        ALL,ALL                          bios_log,lsidisk                    hrhdav0001.txt  YES (1)     0.1       NO         NO
+HRHDAV0002  Smart Disk Alert                         10        ALL,ALL                          bios_log,smart_disk                 hrhdav0002.txt  YES (1)     0.1       NO         NO
+HRSTAV0001  External Storage Alert                   50        ALL                              external_storage                    hrstav0001.txt  YES (1)     0.1       NO         NO
+NTCSAV0001  Network failure                          20        ALL                              network                             ntcsav0001.txt  YES (1)     0.1       NO         NO
+OSADAV0001  Alert Zombie Process                     40        ALL                              z                                   osadav0001.txt  YES (1)     0.1       NO         NO
+OSADAV0002  Swap Usage Alert                         30        ALL                              swap                                osadav0002.txt  YES (1)     0.1       NO         NO
+OSADAV0003  Alert File System Space                  30        ALL                              disk_space                          osadav0003.txt  YES (1)     0.1       NO         NO
+OSDAAV0002  service httpd failure                    40        ALL                              httpd                               osdaav0002.txt  YES (1)     0.2       SI         NO
+OSDAAV0003  service crond failure                    40        ALL                              crond                               osdaav0003.txt  YES (1)     0.2       SI         NO
+OSDAAV0005  Daemon Status failure                    40        ALL                              daemon_status                       osdaav0005.txt  YES (1)     0.2       SI         NO
+OSRHAV0001  Recovery SSH failure                     40        ALL                              sshd                                osrhav0001.txt  YES (1)     0.2       SI         NO
+OSRHAV0006  node not available                       60        ALL                              uptime                              osrhav0006.txt  YES (1)     0.2       SI         NO
+SFFTAV0001  service vsftpd failure                   30        ALL                              vsftpd                              sfftav0001.txt  YES (1)     0.1       SI         NO
+SFHBAV0001  heartbeat HA failure                     80        ALL,ALL                          daemon_status,heartbeat             sfhbav0001.txt  YES (1)     0.1       NO         NO
+SFMUAV0001  service munge failure                    20        ALL,ALL                          daemon_status,munge                 sfmuav0001.txt  YES (1)     0.1       SI         NO
+SFPMAV0001  Pacemaker service failure                20        ALL                              pacemaker                           sfpmav0001.txt  YES (1)     0.2       SI         NO
+SFPMAV0002  Pacemaker failure                        20        ALL                              corosync                            sfpmav0002.txt  YES (1)     0.2       SI         NO
+SFSLAV0001  Slurm failure                            20        ALL,ALL                          daemon_status,slurm                 sfslav0001.txt  YES (1)     0.1       SI         NO
+SFSLAV0003  Problem slurm node                       18        ALL,ALL                          slurm,slurm_node_status             sfslav0003.txt  YES (1)     0.1       SI         NO
+
+ENVIRONMENT MONITORING IA PROCEDURES
+CODE        DESCRIPTION                 PRIORITY  HOST  SENSORS  WIKI FILE       WIKI INDEX  WIKI VER  OPERATIVE  VERIFICATED
+
+HRCMAV0001  Water Chassis Status alert  50        ALL   state    hrcmav0001.txt  YES (1)     0.1       NO         NO
+HRHYAV0001  HYC Status alert            50        ALL   hyc      hrhyav0001.txt  YES (1)     0.1       NO         NO
+HRRMAV0001  RMC Power Status alert      50        ALL   power    hrrmav0001.txt  YES (1)     0.1       NO         NO</pre>
+</div></div><ul>
+<li class="level1"><div class="li"> El campo <strong> CODE </strong> indica el codigo correspondiente a un fichero rule existente en el directorio de reglas de la monitorizacion de nodos.</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> DESCRIPTION </strong> indica la descripción existente o no (NONE) que se mostrara en caso de detectar una incidencia con procedimiento asociado, el fichero se encuentra en /etc/cyclops</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> PRIORITY </strong> indica la prioridad del procedimiento</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> HOST </strong> indica los nodos/dispositivos sobre los que se aplica</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> SENSORS </strong> muestra los sensores activos en la regla</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> WIKI FILE </strong> indica si existe un documento wiki asociado a la regla y en caso afirmativo muestra el nombre del fichero wiki</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> WIKI INDEX </strong> muestra si esta indexado el procedimiento en el listado de procedimientos existentes en la wiki y si cuantos enlaces al procedimiento existen</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> WIKI VER </strong> muestra la versión del procedimiento wiki asociado</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> OPERATIVE </strong> indica si el procedimiento es operativo</div>
+</li>
+<li class="level1"><div class="li"> El campo <strong> VERIFICATED </strong> indica si el procedimiento esta verificado</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Con la siguiente ejecucion se muestra que sensores tienen un procedimiento asociado activo en cyclops.</div>
+</li>
+<li class="level1"><div class="li"> Comando:<pre class="code">/opt/cyclops/scripts/procedures.sh -t rules -v [human|commas]</pre>
+</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Ejemplo de Salida
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ejemplo de Salida
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">SENSOR             LINK
+bios_log           exist
+bld_temp_b7        exist
+cpu                exist
+cpu_temp_b7        Not exist
+cpu_temp           exist
+daemon_generic     Generic Sensor, Show Specific Config
+daemon_status      exist
+disk_space         exist
+external_storage   exist
+hostname           exist
+ib_if              Not exist
+ib_net             Not exist
+lsidisk            exist
+lustre             exist
+lustre_fs1         Not exist
+lustre_fs2         Not exist
+mon_time           Not exist
+network            exist
+none               Not exist
+orphanps           Not exist
+pacemaker          exist
+sensor             exist
+sensor             exist
+slurm_node_status  exist
+slurm_queue        Not exist
+smart_disk         exist
+swap               exist
+uptime             exist
+z                  exist</pre>
+</div></div><ul>
+<li class="level1"><div class="li"> Usar el parámetro <strong> -h </strong> para ayuda en caso de duda.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Conocer el estado de los procedimientos" [5705-13853] -->
+<h2 class="sectionedit6" id="monitorizar_nodos">Monitorizar Nodos</h2>
+<div class="level2">
+<ul>
+<li class="level1 node"><div class="li"> Con el comando /opt/cyclops/script/sensors.node.mon.sh se puede conocer el estado de los nodos a través de consola de texto.</div>
+<ul>
+<li class="level2"><div class="li"> Parametro -v , permite formatear la salida del comando</div>
+</li>
+<li class="level2"><div class="li"> Parametro -i , activa la IA de la monitorizacion vinculando los errores existentes a procedimientos asociados a reglas de correlacion</div>
+</li>
+<li class="level2"><div class="li"> Parametro -m , especifica el nodo, grupo de nodos o tipos de nodos sobre los que se quiere obtener su estado</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Comando:<pre class="code">/opt/cyclops/scripts/sensors.nodes.mon.sh -v human -i -m [nodo|familia|grupo]</pre>
+</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Ejemplo de Salida
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ejemplo de Salida
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">/opt/cyclops/scripts/sensors.nodes.mon.sh -v human -i -m login
+
+OK NODE STATUS - OPERATIVE
+
+family  hostname    mon_time  uptime       cpu    cpu_temp  swap  disk_space  bios_log  lsidisk  network  daemon_status  lustre    heartbeat  munge  vsftpd  crond  z
+login   UP nimbus2  12.00.46  CHECKING 3d  UP 1%  UP 33%    UP    UP          UP        UP       UP       UP/36/36/      UP mount  UP         UP     UP      UP     UP 
+login   UP nimbus3  12.00.46  CHECKING 3d  UP 1%  UP 36%    UP    UP          UP        UP       UP       UP/36/36/      UP mount  UP         UP     UP      UP     UP</pre>
+</div></div><ul>
+<li class="level1"><div class="li"> Usar el parámetro <strong> -h </strong> para ayuda en caso de duda.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Monitorizar Nodos" [13854-15143] -->
+<h2 class="sectionedit7" id="monitorizar_dispositivos_de_entorno">Monitorizar Dispositivos de Entorno</h2>
+<div class="level2">
+<ul>
+<li class="level1 node"><div class="li"> Con el comando /opt/cyclops/script/sensors.envhard.mon.sh se puede conocer el estado de los nodos a través de consola de texto.</div>
+<ul>
+<li class="level2"><div class="li"> Parametro -v , permite formatear la salida del comando</div>
+</li>
+<li class="level2"><div class="li"> Parametro -i , activa la IA de la monitorizacion vinculando los errores existentes a procedimientos asociados a reglas de correlacion</div>
+</li>
+<li class="level2"><div class="li"> Parametro -m , especifica el dispositivo, grupo o tipos de dispostivos sobre los que se quiere obtener su estado</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Comando:<pre class="code">/opt/cyclops/scripts/sensors.envhard.mon.sh -v human -i -m [[dispositivo]|[grupo]|[tipo]]</pre>
+</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Ejemplo de Salida
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ejemplo de Salida
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">family  name   state  leak  blades  dbb fans  fbb fans  cmb temp  fp temp  ib sw1  ib sw1 temp                                       
+cmc     cmc31  UP     UP    UP      UP        UP        OK 73%    OK 65%   UP      OK 68%                                            
+cmc     cmc32  UP     UP    UP      UP        UP        OK 73%    OK 65%   UP      OK 68%                                            
+cmc     cmc33  UP     UP    UP      UP        UP        OK 78%    OK 69%   UP      OK 68%                                            
+cmc     cmc41  UP     UP    UP      UP        UP        OK 73%    OK 67%   UP      OK 68%                                            
+cmc     cmc42  UP     UP    UP      UP        UP        OK 73%    OK 67%   UP      OK 68%          
+
+  * Usar el parámetro ** -h ** para ayuda en caso de duda.                                  
+cmc     cmc43  UP     UP    UP      UP        UP        OK 76%    OK 69%   UP      OK 70%                                            
+cmc     cmc51  UP     UP    UP      UP        UP        OK 75%    OK 67%   UP      OK 68%                                            
+cmc     cmc52  UP     UP    UP      UP        UP        OK 73%    OK 67%   UP      OK 68%
+
+
+
+family  name   state  hyc    hyc main  hyc bkp       hyc1 temp 0  hyc1 temp 1  hyc1 temp 2  hyc1 temp 3  hyc2 temp 0  hyc2 temp 1  hyc2 temp 2  hyc2 temp 3  hyc1 Pump Pr  hyc2 Pump Pr  hyc1 leak  hyc2 leak  power  temperature  shelf  shelf temps Av  PS temps Av
+rmc     rmc30  UP     OK ok  OK hyc1   UP hyc2       UP 64%       UP 64%       UP 66%       UP 68%       UP 64%       UP 64%       UP 66%       UP 68%       OK 78%        UP 37%        UP         UP         OK ok  UP 54%       OK ok  UP 47%          UP 43%
+rmc     rmc40  UP     OK ok  OK hyc1   UP hyc2       UP 66%       UP 65%       UP 65%       UP 68%       UP 66%       UP 65%       UP 65%       UP 68%       OK 80%        UP 38%        UP         UP         OK ok  UP 54%       OK ok  UP 49%          UP 45%
+rmc     rmc50  UP     OK ok  OK hyc1   UP hyc2       UP 64%       UP 64%       UP 64%       UP 67%       UP 64%       UP 64%       UP 64%       UP 67%       OK 84%        UP 34%        UP         UP         OK ok  UP 65%       OK ok  UP 49%          UP 45%</pre>
+</div></div><ul>
+<li class="level1"><div class="li"> Usar el parámetro <strong> -h </strong> para ayuda en caso de duda.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Monitorizar Dispositivos de Entorno" [15144-18137] -->
+<h2 class="sectionedit8" id="consultar_informacion_de_auditoria_de_nodos">Consultar Información de Auditoria de Nodos</h2>
+<div class="level2">
+<ul>
+<li class="level1 node"><div class="li"> Con el comando audit.nod.sh se puede conocer la informacion hardware/software y el registro automatico de incidencias de monitorizacion asi como la bitacora especifica incluida por los administradores sobre un nodo concreto.</div>
+<ul>
+<li class="level2 node"><div class="li"> Parametro -v [human|commas] , permite visualizar la informacion</div>
+<ul>
+<li class="level3"><div class="li"> human: formato amigable, permite tambien usar la opcion -f para filtrar la información</div>
+</li>
+<li class="level3"><div class="li"> commas: formato para exportar, la informacion esta separada por <em>punto y coma</em></div>
+</li>
+<li class="level3"><div class="li"> eventlog: formato de log de todos los eventos de tipo activity/bitacora en todos los nodos, separados por comas.</div>
+</li>
+</ul>
+</li>
+<li class="level2 node"><div class="li"> Parametro -f [resume,settings,activity,bitacora], filtra la informacion mostrada, solo disponible en <em>-v human</em> actualmente.</div>
+<ul>
+<li class="level3"><div class="li"> resume: muestra la informacion general del nodo</div>
+</li>
+<li class="level3"><div class="li"> settings: muestra la informacion hardware/software del nodo</div>
+</li>
+<li class="level3"><div class="li"> activiy: muestra el registro de actividad del nodo</div>
+</li>
+<li class="level3"><div class="li"> bitacora: muestra el registro de entradas proporcionadas por los administradores y/o tecnicos del sistema.</div>
+</li>
+<li class="level3"><div class="li"> main: muestra la bitacora principal, se ignora el parametro -n</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Parametro -n [nodo], obligatorio, se indica el nodo que se desea consultar.</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Comando:<pre class="code">/opt/cyclops/scripts/audit.nod.sh -v human -n [nodo]</pre>
+</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Ejemplo de Salida (sin filtro)
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ejemplo de Salida (sin filtro)
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">[root@nimbus0 scripts]# audit.nod.sh -n nimbus4 -v human 
+
+INFO: nimbus4
+===================================
+
+host name  host type  host group  host os  host mng status
+nimbus4    io         operation   redhat6  drain
+
+SETTINGS INFO:
+-----------------------------------
+System Information      Manufacturer      Bull SAS
+System Information      Product Name      bullx
+System Information      Serial Number     XAN-SMY-00581
+System Information      Version           R423-E3
+Base Board Information  Manufacturer      Supermicro
+Base Board Information  Product Name      X9DRH-7TF/7F/iTF/iF
+Base Board Information  Serial Number     VM145S016164
+Base Board Information  Version           1234567890
+BIOS Information        BIOS Revision     1.0
+BIOS Information        Release Date      02/27/2014
+BIOS Information        Vendor            American Megatrends Inc.
+BIOS Information        Version           3.1 
+Memory Device           Module P1_DIMMA1  Size                                       16384 MB
+Memory Device           Module P1_DIMMA1  Bank Locator                               Node0_Bank0
+Memory Device           Module P1_DIMMA1  Type                                       DDR3
+Memory Device           Module P1_DIMMA1  Type Detail                                Registered (Buffered)
+Memory Device           Module P1_DIMMA1  Speed                                      1866 MHz
+Memory Device           Module P1_DIMMA1  Manufacturer                               Hynix Semiconducto
+Memory Device           Module P1_DIMMA1  Serial Number                              5059B929
+Memory Device           Module P1_DIMMA1  Part Number                                HMT42GR7AFR4C
+Memory Device           Module P1_DIMMA1  Configured Clock Speed                     1866 MHz
+Memory Device           Module P1_DIMMA2  Size                                       No Module Installed
+Memory Device           Module P1_DIMMA2  Bank Locator                               Node0_Bank0
+Memory Device           Module P1_DIMMA2  Type Detail                                Synchronous
+Memory Device           Module P1_DIMMA2  Manufacturer                               Dimm1_Manufacturer
+Memory Device           Module P1_DIMMA2  Serial Number                              Dimm1_SerNum
+Memory Device           Module P1_DIMMA2  Part Number                                Dimm1_PartNum
+Memory Device           Module P1_DIMMB1  Size                                       16384 MB
+Memory Device           Module P1_DIMMB1  Bank Locator                               Node0_Bank0
+Memory Device           Module P1_DIMMB1  Type                                       DDR3
+Memory Device           Module P1_DIMMB1  Type Detail                                Registered (Buffered)
+Memory Device           Module P1_DIMMB1  Speed                                      1866 MHz
+Memory Device           Module P1_DIMMB1  Manufacturer                               Hynix Semiconducto
+Memory Device           Module P1_DIMMB1  Serial Number                              5059B431
+Memory Device           Module P1_DIMMB1  Part Number                                HMT42GR7AFR4C
+Memory Device           Module P1_DIMMB1  Configured Clock Speed                     1866 MHz
+Memory Device           Module P1_DIMMB2  Size                                       No Module Installed
+Memory Device           Module P1_DIMMB2  Bank Locator                               Node0_Bank0
+Memory Device           Module P1_DIMMB2  Type Detail                                Synchronous
+Memory Device           Module P1_DIMMB2  Manufacturer                               Dimm4_Manufacturer
+Memory Device           Module P1_DIMMB2  Serial Number                              Dimm4_SerNum
+Memory Device           Module P1_DIMMB2  Part Number                                Dimm4_PartNum
+Memory Device           Module P1_DIMMC1  Size                                       16384 MB
+Memory Device           Module P1_DIMMC1  Bank Locator                               Node0_Bank0
+Memory Device           Module P1_DIMMC1  Type                                       DDR3
+Memory Device           Module P1_DIMMC1  Type Detail                                Registered (Buffered)
+Memory Device           Module P1_DIMMC1  Speed                                      1866 MHz
+Memory Device           Module P1_DIMMC1  Manufacturer                               Hynix Semiconducto
+Memory Device           Module P1_DIMMC1  Serial Number                              5059432E
+Memory Device           Module P1_DIMMC1  Part Number                                HMT42GR7AFR4C
+Memory Device           Module P1_DIMMC1  Configured Clock Speed                     1866 MHz
+Memory Device           Module P1_DIMMC2  Size                                       No Module Installed
+Memory Device           Module P1_DIMMC2  Bank Locator                               Node0_Bank0
+Memory Device           Module P1_DIMMC2  Type Detail                                Synchronous
+Memory Device           Module P1_DIMMC2  Manufacturer                               Dimm7_Manufacturer
+Memory Device           Module P1_DIMMC2  Serial Number                              Dimm7_SerNum
+Memory Device           Module P1_DIMMC2  Part Number                                Dimm7_PartNum
+Memory Device           Module P1_DIMMD1  Size                                       16384 MB
+Memory Device           Module P1_DIMMD1  Bank Locator                               Node0_Bank0
+Memory Device           Module P1_DIMMD1  Type                                       DDR3
+Memory Device           Module P1_DIMMD1  Type Detail                                Registered (Buffered)
+Memory Device           Module P1_DIMMD1  Speed                                      1866 MHz
+Memory Device           Module P1_DIMMD1  Manufacturer                               Hynix Semiconducto
+Memory Device           Module P1_DIMMD1  Serial Number                              5059B407
+Memory Device           Module P1_DIMMD1  Part Number                                HMT42GR7AFR4C
+Memory Device           Module P1_DIMMD1  Configured Clock Speed                     1866 MHz
+Memory Device           Module P1_DIMMD2  Size                                       No Module Installed
+Memory Device           Module P1_DIMMD2  Bank Locator                               Node0_Bank0
+Memory Device           Module P1_DIMMD2  Type Detail                                Synchronous
+Memory Device           Module P1_DIMMD2  Manufacturer                               Dimm10_Manufacturer
+Memory Device           Module P1_DIMMD2  Serial Number                              Dimm10_SerNum
+Memory Device           Module P1_DIMMD2  Part Number                                Dimm10_PartNum
+Memory Device           Module P2_DIMME1  Size                                       16384 MB
+Memory Device           Module P2_DIMME1  Bank Locator                               Node1_Bank0
+Memory Device           Module P2_DIMME1  Type                                       DDR3
+Memory Device           Module P2_DIMME1  Type Detail                                Registered (Buffered)
+Memory Device           Module P2_DIMME1  Speed                                      1866 MHz
+Memory Device           Module P2_DIMME1  Manufacturer                               Hynix Semiconducto
+Memory Device           Module P2_DIMME1  Serial Number                              5059B43F
+Memory Device           Module P2_DIMME1  Part Number                                HMT42GR7AFR4C
+Memory Device           Module P2_DIMME1  Configured Clock Speed                     1866 MHz
+Memory Device           Module P2_DIMME2  Size                                       No Module Installed
+Memory Device           Module P2_DIMME2  Bank Locator                               Node1_Bank0
+Memory Device           Module P2_DIMME2  Type Detail                                Synchronous
+Memory Device           Module P2_DIMME2  Manufacturer                               Dimm1_Manufacturer
+Memory Device           Module P2_DIMME2  Serial Number                              Dimm1_SerNum
+Memory Device           Module P2_DIMME2  Part Number                                Dimm1_PartNum
+Memory Device           Module P2_DIMMF1  Size                                       16384 MB
+Memory Device           Module P2_DIMMF1  Bank Locator                               Node1_Bank0
+Memory Device           Module P2_DIMMF1  Type                                       DDR3
+Memory Device           Module P2_DIMMF1  Type Detail                                Registered (Buffered)
+Memory Device           Module P2_DIMMF1  Speed                                      1866 MHz
+Memory Device           Module P2_DIMMF1  Manufacturer                               Hynix Semiconducto
+Memory Device           Module P2_DIMMF1  Serial Number                              5059B513
+Memory Device           Module P2_DIMMF1  Part Number                                HMT42GR7AFR4C
+Memory Device           Module P2_DIMMF1  Configured Clock Speed                     1866 MHz
+Memory Device           Module P2_DIMMF2  Size                                       No Module Installed
+Memory Device           Module P2_DIMMF2  Bank Locator                               Node1_Bank0
+Memory Device           Module P2_DIMMF2  Type Detail                                Synchronous
+Memory Device           Module P2_DIMMF2  Manufacturer                               Dimm4_Manufacturer
+Memory Device           Module P2_DIMMF2  Serial Number                              Dimm4_SerNum
+Memory Device           Module P2_DIMMF2  Part Number                                Dimm4_PartNum
+Memory Device           Module P2_DIMMG1  Size                                       16384 MB
+Memory Device           Module P2_DIMMG1  Bank Locator                               Node1_Bank0
+Memory Device           Module P2_DIMMG1  Type                                       DDR3
+Memory Device           Module P2_DIMMG1  Type Detail                                Registered (Buffered)
+Memory Device           Module P2_DIMMG1  Speed                                      1866 MHz
+Memory Device           Module P2_DIMMG1  Manufacturer                               Hynix Semiconducto
+Memory Device           Module P2_DIMMG1  Serial Number                              9044DB9D
+Memory Device           Module P2_DIMMG1  Part Number                                HMT42GR7AFR4C
+Memory Device           Module P2_DIMMG1  Configured Clock Speed                     1866 MHz
+Memory Device           Module P2_DIMMG2  Size                                       No Module Installed
+Memory Device           Module P2_DIMMG2  Bank Locator                               Node1_Bank0
+Memory Device           Module P2_DIMMG2  Type Detail                                Synchronous
+Memory Device           Module P2_DIMMG2  Manufacturer                               Dimm7_Manufacturer
+Memory Device           Module P2_DIMMG2  Serial Number                              Dimm7_SerNum
+Memory Device           Module P2_DIMMG2  Part Number                                Dimm7_PartNum
+Memory Device           Module P2_DIMMH1  Size                                       16384 MB
+Memory Device           Module P2_DIMMH1  Bank Locator                               Node1_Bank0
+Memory Device           Module P2_DIMMH1  Type                                       DDR3
+Memory Device           Module P2_DIMMH1  Type Detail                                Registered (Buffered)
+Memory Device           Module P2_DIMMH1  Speed                                      1866 MHz
+Memory Device           Module P2_DIMMH1  Manufacturer                               Hynix Semiconducto
+Memory Device           Module P2_DIMMH1  Serial Number                              5059B5EE
+Memory Device           Module P2_DIMMH1  Part Number                                HMT42GR7AFR4C
+Memory Device           Module P2_DIMMH1  Configured Clock Speed                     1866 MHz
+Memory Device           Module P2_DIMMH2  Size                                       No Module Installed
+Memory Device           Module P2_DIMMH2  Bank Locator                               Node1_Bank0
+Memory Device           Module P2_DIMMH2  Type Detail                                Synchronous
+Memory Device           Module P2_DIMMH2  Manufacturer                               Dimm10_Manufacturer
+Memory Device           Module P2_DIMMH2  Serial Number                              Dimm10_SerNum
+Memory Device           Module P2_DIMMH2  Part Number                                Dimm10_PartNum
+cpu info                vendor            GenuineIntel
+cpu info                model             Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz
+cpu info                cores             32
+local disk              sda               Product                                    SMC2208         
+local disk              sda               Revision                                   3.40
+local disk              sda               Serial number                              00f03e6a55f9b5bc1b00c89f18800403
+local disk              sda               User Capacity                              298,999,349,248 bytes [298 GB]
+local disk              sda               Vendor                                     SMC     
+packages                total install     1398
+
+ACTIVITY INFO:
+-----------------------------------
+DATE        TIME      EVENT   ACTIVITY       STATUS
+12-11-2015  08:25:42  STATUS  mon status     drain
+12-11-2015  08:28:04  STATUS  mon status     up
+12-11-2015  08:30:15  ALERT   daemon_status  FAIL
+12-11-2015  08:30:15  ALERT   heartbeat      FAIL
+12-11-2015  08:53:11  STATUS  mon status     drain
+12-11-2015  10:56:29  STATUS  mon status     drain
+
+BITACORA INFO:
+-----------------------------------
+DATE        TIME      EVENT  ACTIVITY                                   STATUS
+12-11-2015  11:47:51  INFO   PRUEBA DE INSERCION DE EVENTO DE BITACORA  INFO</pre>
+</div></div><ul>
+<li class="level1"><div class="li"> Comando con filtro (se pueden añadir distintos filtros separados por comas):<pre class="code">/opt/cyclops/scripts/audit.nod.sh -v human -n [nodo] -f activity</pre>
+</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Ejemplo de Salida (con filtro de actividad)
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ejemplo de Salida (con filtro de actividad)
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">[root@nimbus0 scripts]# audit.nod.sh -n nimbus4 -v human -f activity
+
+INFO: nimbus4
+===================================
+
+ACTIVITY INFO:
+-----------------------------------
+DATE        TIME      EVENT   ACTIVITY       STATUS
+12-11-2015  08:25:42  STATUS  mon status     drain
+12-11-2015  08:28:04  STATUS  mon status     up
+12-11-2015  08:30:15  ALERT   daemon_status  FAIL
+12-11-2015  08:30:15  ALERT   heartbeat      FAIL
+12-11-2015  08:53:11  STATUS  mon status     drain
+12-11-2015  10:56:29  STATUS  mon status     drain</pre>
+</div></div><ul>
+<li class="level1"><div class="li"> Comando para ver todos los eventos en modo log de todos los nodos si no se especifica uno concreto:<pre class="code">/opt/cyclops/scripts/audit.nod.sh -v eventlog | awk -F\; &#039;BEGIN { OFS=&quot;;&quot; } { $1=strftime(&quot;%Y-%m-%d;%H:%M:%S&quot;,$1); print $0}&#039; | sort -n</pre>
+</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Ejemplo de Salida
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ejemplo de Salida
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">2015-12-21;00:00:22;NOD;nimbus4106;ALERT;z;FAIL
+2015-12-21;00:00:22;NOD;nimbus4115;ALERT;z;FAIL
+2015-12-21;00:00:24;NOD;nimbus3203;ALERT;z;FAIL
+2015-12-28;11:53:24;NOD;nimbus4113;INFO;Aplicada Pasta Termica;INFO
+2015-12-28;11:55:29;NOD;nimbus4113;STATUS;mon status;DIAGNOSE
+2015-12-28;11:55:40;NOD;nimbus4104;STATUS;mon status;DIAGNOSE
+2015-12-30;11:43:06;NOD;nimbus4104;STATUS;mon status;UP
+2015-12-30;22:00:15;NOD;nimbus0;ALERT;z;FAIL
+2015-12-31;19:51:32;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
+2016-01-01;02:12:26;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
+2016-01-02;20:33:24;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
+2016-01-03;08:27:22;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
+2016-01-03;14:33:23;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
+2016-01-03;20:21:25;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
+2016-01-03;20:42:22;NOD;nimbus4308;ALERT;bios_log;FAIL
+2016-01-04;01:30:18;NOD;nimbus4308;STATUS;mon status;CONTENT
+2016-01-04;01:44:28;NOD;nimbus4308;STATUS;mon status;UP
+2016-01-04;01:45:22;NOD;nimbus4308;ALERT;slurm_node_status;FAIL
+2016-01-04;01:52:02;NOD;nimbus4308;STATUS;mon status;CONTENT
+2016-01-04;07:28:24;NOD;nimbus4113;STATUS;mon status;UP
+2016-01-04;07:53:03;NOD;nimbus4308;STATUS;mon status;DIAGNOSE
+2016-01-04;08:24:23;NOD;nimbus5111;ALERT;z;FAIL
+2016-01-04;11:21:26;NOD;nimbus4113;ALERT;bios_log;FAIL
+2016-01-04;11:26:51;NOD;nimbus4113;STATUS;mon status;DIAGNOSE
+2016-01-05;00:00:37;NOD;nimbus3118;ALERT;z;FAIL
+2016-01-05;09:19:58;NOD;nimbus4113;STATUS;mon status;REPAIR
+2016-01-05;09:20:10;NOD;nimbus4308;STATUS;mon status;REPAIR
+2016-01-05;09:29:05;NOD;nimbus4317;STATUS;mon status;DRAIN
+2016-01-05;10:14:59;NOD;nimbus4317;STATUS;mon status;UP
+2016-01-05;10:15:04;NOD;nimbus4308;STATUS;mon status;UP
+2016-01-05;13:00:28;NOD;nimbus4308;STATUS;mon status;DIAGNOSE
+2016-01-06;00:00:27;NOD;nimbus4115;ALERT;z;FAIL
+2016-01-07;07:25:56;NOD;nimbus4308;STATUS;mon status;UP
+2016-01-07;16:18:42;NOD;nimbus4113;STATUS;mon status;DIAGNOSE
+2016-01-08;12:12:41;NOD;nimbus4113;STATUS;mon status;REPAIR
+2016-01-11;00:00:27;NOD;nimbus4101;ALERT;z;FAIL</pre>
+</div></div><ul>
+<li class="level1"><div class="li"> Usar el parametro <strong> -h </strong> para acceder a la ayuda</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Consultar Información de Auditoria de Nodos" [18138-36763] -->
+<h2 class="sectionedit9" id="insertar_informacion_de_bitacora_en_la_auditoria_de_nodos">Insertar Información de Bitácora en la Auditoria de Nodos</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Con el comando audit.nod.sh se puede información especifica sobre aquellas tareas, eventos o notas que afecten a un nodo.</div>
+</li>
+<li class="level1 node"><div class="li"> Con el parametro -i <em>bitacora</em> se inserta un mensaje en el diario del nodo, aparte se requieren los siguientes parámetros:</div>
+<ul>
+<li class="level2"><div class="li"> <strong> -m [ información ] </strong> , se incluye con esta opción el mensaje o información que se quiera insertar en el diario, usar comillas para el contenido del mensaje</div>
+</li>
+<li class="level2"><div class="li"> <strong> -n [ nodo/host o rango ] </strong> , nombre del nodo/host o rango de nodos sobre el/los que se quiere hacer la inserción de información. <span style="color: orange">Si no se indica se incorpora a la bitacora central</span></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> También se puede incluir con los siguientes parámetros un mayor detalle sobre la información insertada (opcionales):</div>
+<ul>
+<li class="level2"><div class="li"> <strong> -s [ Estado ] </strong> , se detalla el estado en que se encuentra el nodo cuando se inserta la información (UP/OK/DOWN/FAIL/…), <em>el valor por defecto en caso de no incluirse es INFO</em>.</div>
+</li>
+<li class="level2"><div class="li"> <strong> -e [ Tipo de Evento ] </strong> , se detalla el tipo de evento de bitácora insertado ( INFO/WARNING/STATUS/…), <em>el valor por defecto en caso de no incluirse es INFO</em>.</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+ejemplo de salida
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+ejemplo de salida
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code">audit.nod.sh -i bitacora -m &quot;MENSAJE: prueba de inserción de evento de bitácora&quot; -e INFO -s OK
+
+- Se inserta un evento de bitácora con el siguiente texto ~MENSAJE: prueba de inserción de evento de bitácora~ de tipo INFO y con estado del host/nodo OK.</pre>
+</div></div>
+</div>
+<!-- EDIT9 SECTION "Insertar Información de Bitácora en la Auditoria de Nodos" [36764-] -->

@@ -1,0 +1,54 @@
+====== Procedimientos Técnicos - Básicos ======
+
+** File System - Comunes : Chequeo espacio en disco **  
+
+===== Sistemas Objetivo =====
+
+|< 100% 10% 10% 32% 8% 30% >|
+^  Grupo         ^  Nodos            ^  Descripción                                              ^  Criticidad  ^  Implicación  ^
+|  Todos         |  Todos            |                                                           |  @#EAFFD5: BAJA            |               |
+
+===== Sistemas Colaterales =====
+
+|< 100% 10% 10% 32% 8% 30% >| 
+^  Grupo         ^  Nodos            ^  Descripción                                              ^  Criticidad      ^  Implicación  ^ 
+|  Ninguno       |  Ninguno          |                                                           |  @#EAFFD5: BAJA  |  Ninguna conocida  |
+===== Procedimiento =====
+
+  * El comando **DF** le permite mostrar un informe detallado sobre el uso de espacio de disco del sistema. Para ello, escriba lo siguiente en el intérprete de comandos: <code>
+df
+</code>
+
+<hidden Ejemplo de salida>
+<code>
+[root@[MANAGEMENT NODES] ~]# ssh [LOGIN NODES] df
+
+Filesystem              1K-blocks         Used    Available Use% Mounted on
+/dev/mapper/vg_01-lv_root
+                         10321208      3810452      5986468  39% /
+tmpfs                    65968672            4     65968668   1% /dev/shm
+/dev/sda1                  495844        57066       413178  13% /boot
+/dev/mapper/vg_01-lv_opt
+                         10321208       175916      9621004   2% /opt
+/dev/mapper/vg_01-lv_tmp
+                         10321208       154108      9642812   2% /tmp
+/dev/mapper/vg_01-lv_var
+                         53309964       585736     50016160   2% /var
+nfs-ib-server:/pred     516062208     45506560    465312768   9% /pred
+nfs-ib-server:/expl     619274240     49838080    563144704   9% /expl
+[PATH]
+                     836596323328 434519308800 355180526080  56% /ISILON/backup
+[LUSTRE NODES MDS] -ic0@o2ib0,[LUSTRE NODES MDS] -ic1@o2ib1:[LUSTRE NODES MDS] -ic0@o2ib0,[LUSTRE NODES MDS] -ic1@o2ib1:/scratch
+                     374765704800   1705656200 373060042972   1% /SCRATCH
+</code>
+</hidden>
+
+   * Para cada sistema de archivos en la lista, el comando df muestra :
+     * su nombre ( Filesystem ) 
+     * tamaño (1K-blocks) 
+     * la cantidad de espacio utilizado ( Used) 
+     * la cantidad de cupos disponibles (Available ) 
+     * el porcentaje de uso del espacio ( Use% ) 
+     * donde es el sistema de archivos montado ( Mounted on )
+
+

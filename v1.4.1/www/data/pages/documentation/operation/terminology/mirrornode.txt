@@ -1,0 +1,40 @@
+====== Nodo Espejo ======
+
+  * En un sistema de cluster y/o supercomputacion se dice de un nodo espejo al equivalente a otro en hardware, sistema operativo, servicios y configuracion, se podria decir tambien su "clon" pero en el caso de nodo espejo tienen una vinculacion, ya sea debido a una configuracion en HA (high Availability) o hardware ( nodos unidos en un Blade )
+  * Los nodos espejos disponibles en el sistema actual son:
+    * ** HA ** , aquellos que tienen una configuracion HA y por tanto la caida de uno impide la perdida de servicio al hacerse con el control de los servicios el nodo espejo del que que esta fuera de servicio.
+
+|< 100% >|
+^  NODOS ESPEJO EN HA ( SERVICIO/OPERACION)                                                                                                                               |||||
+^  NOMBRE                                    ^  FAMILIA       ^  ROL            ^  CRITICIDAD         ^  OBSERVACIONES                                                        ^
+|  nimbus0                                   |  management    |  Balanceado     |  @#FA5858:Muy Alta  |  Servicios criticos del entorno productivo                            |
+|  nimbus1                                   | :::            |  Espejo         | :::                 | :::                                                                   |
+|                                            |                |                 |                     |                                                                       |
+|  nimbus2                                   |  login         |  Balanceado     |  @#FA5858:Muy Alta  |  Aplicativos Cliente del entorno productivo                           |
+|  nimbus3                                   | :::            |  Espejo         | :::                 |  :::                                                                     |
+|                                            |                |                 |                     |                                                                       |
+|  nimbus4                                   |  io            |  Balanceado     |  @#EAFFD5:Baja      |  Aplicativos Cliente en desarrollo                                    |
+|  nimbus5                                   | :::            |  Espejo         | :::                 |  :::                                                                     |
+|                                            |                |                 |                     |                                                                       |
+|  nimbus6                                   |  lustre (mds)  |  Master/Espejo  |  @#FA5858:Muy Alta  |  Sistema de ficheros, Master de ** SCRATCH01 **, espejo de SCRATCH02  |
+|  nimbus7                                   | :::            |  Master/Espejo  |  @#FAAC58:Depende   |  Sistema de ficheros, Master de SCRATCH02, espejo de ** SCRATCH01 **  |
+|                                            |                |                 |                     |                                                                       |
+|  nimbus8                                   |  lustre (oss)  |  Balanceado     |  @#FA5858:Muy Alta  |  Datos de los sistemas de ficheros ** SCRATCH01 ** y SCRATCH02        |
+|  nimbus9                                   | :::            |  Balanceado     | :::                 | :::                                                                   |
+|                                            |                |                 |                     |                                                                       |
+
+    * Blades, se disponen de una gran cantidad de nodos en formato blade, contenidos en chasis
+      * Nombre del nodo: nimbus[numero de rack][numero de chasis][numero de nodo 01-18]
+      * Los nodos espejos se calculan de la siguiente manera:
+        * Si los dos ultimos digitos del nombre del nodo son igual o menor de nueve su espejo es la suma de estos dos digitos mas nueve<code>
+nimbus4104 -> nimbus41 (04) -> 4 =< 9 -> 4+9 = 13 -> nodo espejo = nimbus4113</code>
+        * Si los dos ultimos digitos del nombre del nodo son igual o mayor de diez su espejo es la resta de estos dos digitos menos nueve<code>
+nimbus3216 -> nimbus32 (16) -> 16 => 10 -> 16-9 = 7 -> nodo espejo = nimbus3207</code> 
+
+|< 100% >|
+^  BLADES: Ubicacion en el chasis fisico  ^^^^^^^^^^
+^  Nº Blade  ^  1   ^  2   ^  3   ^  4   ^  5   ^  6   ^  7   ^  8   ^  9   ^
+^  Nº Nodo   |  10  |  11  |  12  |  13  |  14  |  15  |  16  |  17  |  18  |
+^  :::       |  1   |  2   |  3   |  4   |  5   |  6   |  7   |  8   |  9   |
+
+

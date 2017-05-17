@@ -1,0 +1,53 @@
+===== Code Standard =====
+
+|< 100% >|
+^  L1:Familia  ^  L2: Sistema  ^  L3: Actuación  ^  L4:ID Procedimiento  ^  Descripcion                                     ^
+|  SP          |  XX           |  XX             |  [0-9]{4}             | Especial                                         |
+|  AD          |               |                 |                       | Administrativo                                   |
+|              |  AE           |  XX             |  [0-9]{4}             | Administrativo: AEMET                            |
+|              |  BV           |  XX             |  [0-9]{4}             | Administrativo: BULL - VALENCIA                  |
+|              |  BA           |  XX             |  [0-9]{4}             | Administrativo: BULL - AEMET                     |
+|              |  BM           |  XX             |  [0-9]{4}             | Administrativo: BULL - MADRID                    |
+|              |  BI           |  XX             |  [0-9]{4}             | Administrativo: BULL - Regrigeracion (MIBAIR)    |
+|  NT          |               |                 |                       | Red                                              |
+|              |  CS           |  BS/AV*         |  [0-9]{4}             | Red: Cisco                                       |
+|              |  IF           |  BS/AV*         |  [0-9]{4}             | Red: Infiniband                                  |
+|              |  BC           |  BS/AV*         |  [0-9]{4}             | Red: Broadcom                                    |
+|              |  AD           |  BS/AV*         |  [0-9]{4}             | Red: Administración                              |
+|  HR          |               |                 |                       | Hardware                                         |
+|              |  ET           |  BS/AV*         |  [0-9]{4}             | Hardware: Ethernet                               |
+|              |  IB           |  BS/AV*         |  [0-9]{4}             | Hardware: Infiniband                             |
+|              |  HD           |  BS/AV*         |  [0-9]{4}             | Hardware: Disco Duro                             |
+|              |  CT           |  BS/AV*         |  [0-9]{4}             | Hardware: Controladora                           |
+|              |  BL           |  BS/AV*         |  [0-9]{4}             | Hardware: Blade                                  |
+|              |  CP           |  BS/AV*         |  [0-9]{4}             | Hardware: CPU                                    |
+|              |  ME           |  BS/AV*         |  [0-9]{4}             | Hardware: Memoria                                |
+|              |  SW           |  BS/AV*         |  [0-9]{4}             | Hardware: Switch                                 |
+|              |  BI           |  BS/AV*         |  [0-9]{4}             | Hardware: BIOS                                   |
+|              |  PW           |  BS/AV*         |  [0-9]{4}             | Hardware: Alimentacion                           |
+|              |  ST           |  BS/AV*         |  [0-9]{4}             | Hardware: Almacenamiento                         |
+|              |  BM           |  BS/AV*         |  [0-9]{4}             | Hardware: BMC                                    |
+|              |  RM           |  BS/AV*         |  [0-9]{4}             | Hardware: RMC - Sistema de Control Electrico     |
+|              |  CM           |  BS/AV*         |  [0-9]{4}             | Hardware: CMC - Chasis para Nodos de Computo     |
+|              |  HY           |  BS/AV*         |  [0-9]{4}             | Hardware: HYC - Refrigeracion Hidraulica RMC     |
+|  FS          |               |                 |                       | Sistema de Ficheros                              |
+|              |  LU           |  BS/AV*         |  [0-9]{4}             | Sistema de Ficheros: Lustre                      |
+|              |  CM           |  BS/AV*         |  [0-9]{4}             | Sistema de Ficheros: Comunes (ext3,ext4,xfs...)  |
+|              |  NF           |  BS/AV*         |  [0-9]{4}             | Sistema de Ficheros: NFS                         |
+|  OS          |               |                 |                       | Sistema Operativo                                |
+|              |  DA           |  BS/AV*         |  [0-9]{4}             | Sistema Operativo: Daemon/Servicios              |
+|              |  AD           |  BS/AV*         |  [0-9]{4}             | Sistema Operativo: Administracion                |
+|              |  AU           |  BS/AV*         |  [0-9]{4}             | Sistema Operativo: Autenticacion                 |
+|  SF          |               |                 |                       | Aplicativo                                       |
+|              |  SL           |  BS/AV*         |  [0-9]{4}             | Aplicativo: Slurm                                |
+|              |  CB           |  BS/AV*         |  [0-9]{4}             | Aplicativo: ClusterDB                            |
+|              |  PM           |  BS/AV*         |  [0-9]{4}             | Aplicativo: Pacemaker                            |
+|              |  HB           |  BS/AV*         |  [0-9]{4}             | Aplicativo: HeartBeat                            |
+|              |  FT           |  BS/AV*         |  [0-9]{4}             | Aplicativo: FTP                                  |
+|              |  MU           |  BS/AV*         |  [0-9]{4}             | Aplicativo: Munge                                |
+|              |  MY           |  BS/AV*         |  [0-9]{4}             | Aplicativo: Mysql                                |
+|              |  CY           |  BS/AV*         |  [0-9]{4}             | Aplicativo: Cyclops (Monitorización)             |
+
+  * (*) El nivel 3 se compone de Basico (BS) o Avanzado (AV)
+    - Basico: Procedimiento minimo que contiene el o los pasos a seguir para realizar una accion.
+    - Avanzado: Conjunto de todos aquellos procedimientos básicos necesarios para afrontar una incidencia.

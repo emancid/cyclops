@@ -1,0 +1,47 @@
+====== Procedimientos Administrativos - BULL (Valencia) ======
+
+===== Notificación =====
+
+|< 50% >|
+^  Código      ^  Nombre Procedimiento  ^  Verificado                           ^  Operativo    ^  Fecha Creación  ^  Fecha Ultima Modificación  ^  Versión  ^
+|  ADBIXX0001  |  Notificación          |  @#FA5858:@#FA5858:<fc white>NO</fc>  |  @#EAFFD5:SI  |  17/09/2015      |  21/12/2015                 |  0.3      |
+===== Procedimiento =====
+
+  * En caso de incidencia, llamar:
+    * En horario de oficina: 93.231.00.09
+    * Fuera del horario de oficina: 607.374.258
+
+
+<hidden Otros datos de interes>
+  * Otros Datos de Contacto (gestion):
+    * Teléfonos: 
+      * FIJO: ** 93 231 00 09 **
+      * FIJO: ** 93 265 94 95 **
+      * MOVIL: ** 670 418 791 **
+    * Correo electronico:
+      * ** jj@mibsa.es **
+
+  * Datos de Contacto:
+  * Juan Justicia Ortega - Jefe de Mantenimiento - Departamento técnico
+
+
+  * Las personas que efectuaran las labores de mantenimiento y el servicio de 24 h :
+ 
+|< 50% >|
+^   Nombre       ^  DNI  ^
+| JOSE FERNANDEZ SERRANO         |  50978308 G  |
+| ALEJANDRO VEGUILLAS FERNANDEZ  |  47218904 L  |
+| MIGUEL VEGUILLAS FERNANDEZ     |  52348403 N  |
+ 
+  * Vehiculos:
+ 
+|< 25% >|
+^  Marca   ^  Matricula  ^
+| Ford     |  3224 DXH   |
+| Renault  |  7408 FJG   |
+
+  * Dirección MIBAIR<code>MIBAIR S.L.
+C/Sardenya, 429-433 bajos
+08025 Barcelona
+</code>
+</hidden>

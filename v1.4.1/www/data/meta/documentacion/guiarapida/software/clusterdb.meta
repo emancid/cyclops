@@ -1,0 +1,14 @@
+a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1420449904;s:8:"modified";i:1420472624;}s:7:"creator";s:23:"david fernandez alvarez";s:4:"user";s:3:"inp";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:3:"inp";s:23:"david fernandez alvarez";}s:5:"title";s:9:"Clusterdb";s:11:"description";a:2:{s:15:"tableofcontents";a:4:{i:0;a:4:{s:3:"hid";s:9:"clusterdb";s:5:"title";s:9:"Clusterdb";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:13:"administacion";s:5:"title";s:15:"Administacion :";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:25:"archivos_de_configuracion";s:5:"title";s:28:"Archivos de configuración :";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:3;a:4:{s:3:"hid";s:8:"comandos";s:5:"title";s:10:"Comandos :";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:261:"Clusterdb
+
+	*  Sistema  de bbdd donde se almacena toda la información del sistema.
+	*  En nodos de Gestión.
+
+Administacion :
+
+	*  Podemos añadir y extraer la información de la bbdd a través de :
+
+
+clusterdb-server/phpPgAdmin/
+
+
+Archivos de configuración :";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1420449904;s:8:"modified";i:1420472624;}s:7:"creator";s:23:"david fernandez alvarez";s:4:"user";s:3:"inp";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:3:"inp";s:23:"david fernandez alvarez";}}}

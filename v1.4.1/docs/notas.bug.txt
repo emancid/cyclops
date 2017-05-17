@@ -1,0 +1,72 @@
+- Fichero global.cfg.template ( punto primero de configure cyclops )
+
+ERR:
+/opt/cyclops/scripts/cyclops.sh: line 1087: /opt/cyclops/tools/approved/test.productive.env.sh: Permission denied
+
+- Fallaron los permisos de ejecucion  al descomprimir
+
+copiar certificados
+crear enlace a los logs de cyclops
+
+SELINUX 
+    - apache
+            chcon -R -t httpd_sys_content_t /opt/cyclops/www
+
+dokuwiki:
+    user: admin
+    pass: cyclops
+
+directorios....
+
+    /opt/cyclops/monitor/sensors/temp
+    /opt/cyclops/www/data/pages/operation/monitoring/history/noindex/1480947483.txt
+
+sensor nuevo:
+sensor.slurm_node_status.sh
+
+#!/bin/bash
+#@HELP@
+#@SCOPY@
+#@LOCAL@
+
+_sensor_name="slurm_node_status"
+_sensor_status="CHECKING"
+
+source /etc/cyclops/global.cfg ## OWN EXEC ##
+
+_hostname=$( hostname -s )
+
+_sensor_status=$(sinfo -n $_hostname | awk '$2 == "up" { print $5 }' 2> /dev/null | sort -u )
+
+case $_sensor_status in
+        *idle*)
+        _sensor_status="UP idle"
+        ;;
+        *drng*)
+        _sensor_status="MARK go to drain"
+        ;;
+        *drain*)
+        _sensor_status="FAIL maintenance"
+        ;;
+        *alloc*|*mix*)
+        _sensor_status="OK working"
+        ;;
+        *comp*)
+        _sensor_status="MARK completing"
+        ;;
+        *down*)
+        _partitions=$(sinfo -n $_hostname | awk '$2 == "up" && $5 ~ "down" { print $1 }' 2> /dev/null  )
+        _sensor_status="DOWN down - "$_partitions
+        ;;
+        *"n/a"*)
+        _sensor_status="DISABLE not configured"
+        ;;
+        "")
+        _sensor_status="FAIL not comm"
+        ;;
+        *)
+        _sensor_status="UNKN unknown status"
+        ;;
+esac
+
+echo $_sensor_name":"$_sensor_status"@"

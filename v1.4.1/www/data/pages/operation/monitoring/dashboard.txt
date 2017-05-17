@@ -1,0 +1,10 @@
+<html>
+<meta http-equiv="refresh" content="120">
+</html>
+
+~~NOTOC~~
+~~NOCACHE~~
+
+<fc red> ** CYCLOPS MONITORING DASHBOARD ** </fc>
+<fc red> ** PLEASE CONFIGURE AND ENABLE CYCLOPS TO GET MONITORING INFO ** </fc> 
+
