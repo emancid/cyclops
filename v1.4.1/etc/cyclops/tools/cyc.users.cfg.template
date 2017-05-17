@@ -6,13 +6,13 @@
 
 ## NIS MASTER SERVER
 
-NIS:nimbus0
+NIS:[hostname]
 
 ## LUSTRE MMS
 
-LUS:nimbus6
-LUS:nimbus7
+LUS:[hostname]
+LUS:[hostname]
 
 ## SLURM CONTROLLER SERVER
 
-SLU:nimbus4
+SLU:[hostname]

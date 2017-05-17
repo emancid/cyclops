@@ -11,7 +11,7 @@
 _profile_name='developers'
 _par_home='/pred/'$_par_user
 _par_shell='/bin/bash'
-_par_pass='$$nimbus$$'$_par_user
+_par_pass='$$[nodeprefixname]$$'$_par_user
 _opt_nis='yes'
 _par_slurm='yes'
 _par_lustre='yes'

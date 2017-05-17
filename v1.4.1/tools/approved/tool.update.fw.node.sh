@@ -16,7 +16,7 @@ fi
 
 _ipmitool="/opt/BSMHW/bin/ipmitool"
 
-_wall_nodes="nimbus[0,1]"
+_wall_nodes="[cyclopshostname]"
 _msg_ok="_________OK."
 _msg_fail="_______FAIL."
 

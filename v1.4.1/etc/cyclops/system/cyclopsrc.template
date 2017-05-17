@@ -37,7 +37,7 @@ then
                 echo "Use -h for help in those commands"
                 echo "Maybe you need root permissions to manage cyclops, use su or sudo commands"
                 echo            
-                echo "Please connect to https://cyclops.aemet.es to get info about cyclops"
+                echo "Please connect to https://[cyclops web server address] to get info about cyclops"
                 echo
         fi
 
