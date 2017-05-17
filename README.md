@@ -194,24 +194,6 @@ CYCLOPS 1.4v INSTALL
             
             change permissions from /etc/cyclops/system/cyclopsrc to 750 
             configure /etc/cyclops/monitor/plugin.users.ctrl.cfg with users to ctrl
-
-        
-NOTES: 
-    - Add apache config, included necesary packages 
-    - Add install page on dashboard or/and disable dashboard page when monitor.cfg is empty
-    - Change default certificate
-    - Cambiar todos los $HOSTNAME por $( hostname -s )
-    - Cambiar o controlar los if numericos por cadenas
-    - Desactivar/Activar plugin critical resources
-    - Pagina principal del interfaz web, standarizarla con las opciones actuales.
-    - purgar ficheros nimbus de la web
-    - permisos en la generacion de las stadisticas generales de auditoria.    
-    - copiar sensores y razor de csic
-    - crear copia de esbirros de audit de redhat6->7
-    - Actualizar ayuda de cyclops, faltan opciones -y
-    
-    
-    
     
     
     
