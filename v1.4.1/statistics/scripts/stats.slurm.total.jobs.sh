@@ -314,9 +314,36 @@ calc_data()
 		}' | sort -n -t\; -k2,2rn
         ;;
         partition)
-                cat $_files | sort -n -t\; | awk -F\; -v _p="$_par_par" -v _u="$_par_usr" -v _c="$_par_sta" -v _ds="$_par_ds" -v _de="$_par_de" '{ if ( $1 >= _ds && $1 <= _de && $3 ~ _u && $4 ~ _p && $14 ~ _c ) { print $4 }}' | sort | uniq -c  | awk '{ print $2";"$1 }'
+                cat $_files | sort -n -t\; |
+		awk -F\; -v _p="$_par_par" -v _u="$_par_usr" -v _c="$_par_sta" -v _ds="$_par_ds" -v _de="$_par_de" '{
+		if ( $1 >= _ds && $1 <= _de && $3 ~ _u && $4 ~ _p && $14 ~ _c ) {
+			p[$4]++ ;
+			n[$4]=n[$4]+$8 ; 
+			j[$4]=j[$4]+$10 ; 
+			w[$4]=w[$4]+$11 ; 
+			s[$4]=s[$4]+$12 
+			}
+		} END { for ( i in p ) { 
+			print i";"p[i]";"j[i]";"w[i]";"n[i]";"s[i]/3600 
+			}
+		}' | sort -n -t\; -k2,2rn
         ;;
-        state)
+	state)
+                cat $_files | sort -n -t\; |
+		awk -F\; -v _p="$_par_par" -v _u="$_par_usr" -v _c="$_par_sta" -v _ds="$_par_ds" -v _de="$_par_de" '{
+		if ( $1 >= _ds && $1 <= _de && $3 ~ _u && $4 ~ _p && $14 ~ _c ) {
+			t[$14]++ ;
+			n[$14]=n[$14]+$8 ; 
+			j[$14]=j[$14]+$10 ; 
+			w[$14]=w[$14]+$11 ; 
+			s[$14]=s[$14]+$12 
+			}
+		} END { for ( i in t ) { 
+			print i";"t[i]";"j[i]";"w[i]";"n[i]";"s[i]/3600 
+			}
+		}' | sort -n -t\; -k2,2rn
+	;;
+        state_old)
                 cat $_files | sort -n -t\; | awk -F\; -v _p="$_par_par" -v _u="$_par_usr" -v _c="$_par_sta" -v _ds="$_par_ds" -v _de="$_par_de" '{ if ( $1 >= _ds && $1 <= _de && $3 ~ _u && $4 ~ _p && $14 ~ _c ) { print $14 }}' | sed -e 's/ /_/g' | sort | uniq -c  | awk '{ print $2";"$1 }'
 	;;
         esac
@@ -417,7 +444,7 @@ format_output()
 					print _te ;
 				}' | sed '/^$/d'
 		;;
-		user)
+		user|partition|state)
 			if [ "$_opt_dbg" == "yes" ]
 			then
 				echo 
@@ -428,9 +455,11 @@ format_output()
 				echo
 			fi
 
-			echo "${_output}" | awk -F\; -v _ch="$_color_header" -v _ct="$_color_title" -v _gcj="$_gcolor_job" -v _gcn="$_gcolor_nod" -v _gce="$_gcolor_ete" '
+			echo "${_output}" | awk -F\; -v _dr="$_par_grp" -v _ch="$_color_header" -v _ct="$_color_title" -v _gcj="$_gcolor_job" -v _gcn="$_gcolor_nod" -v _gce="$_gcolor_ete" '
 				BEGIN {
-					_tu="|  "_ct" ** Users **  |  " 
+					if ( _dr == "user" ) {  _tu="|  "_ct" ** Users **  |  " } 
+					if ( _dr == "partition" ) {  _tp="|  "_ct" ** Partitions **  |  " } 
+					if ( _dr == "state" ) { _ts="|  "_ct" ** States **  |  " } 
 					_tj="|  "_ct" ** Jobs **  |  "
 					_tn="|  "_ct" ** Nodes **  |  "
 					_te="|  "_ct" ** E.T.(h) **  |  "
@@ -438,14 +467,16 @@ format_output()
 					if ( FNR <= 10 ) { 	
 						_jobs=_jobs""$1"="$2"\n"
 						_nodes=_nodes""$1"="$5"\n"
-						_et=_et""$1"="$5"\n"
+						_et=_et""$1"="$6"\n"
 					} else { 
 						_jot=_jot+$2
 						_not=_not+$5
 						_net=_net+$6
 					}
 
-					_tu=_tu" "_ch" ** "$1" **  |  " ;
+					if ( _dr == "user" ) { _tu=_tu" "_ch" ** "$1" **  |  " ; }
+					if ( _dr == "partition" ) { _tp=_tp" "_ch" ** "$1" **  |  " ; }
+					if ( _dr == "state" ) { _ts=_ts" "_ch" ** "$1" **  |  " ; }
 					_tj=_tj""$2"  |  " ;
 					_tn=_tn""$5"  |  " ;
 					_te=_te""$6"  |  " ;
@@ -468,7 +499,9 @@ format_output()
 					print "</gchart>  |" ;
 					print " " ;
 					print "|< 100% >|" ;
-					print _tu ;
+					if ( _dr == "user" ) { print _tu ; }
+					if ( _dr == "partition" ) { print _tp ; }
+					if ( _dr == "state" ) { print _ts ; }
 					print _tj ;
 					print _tn ;
 					print _te ;

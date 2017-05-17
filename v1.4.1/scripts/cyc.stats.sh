@@ -31,6 +31,7 @@ IFS="
 
 _config_path="/etc/cyclops"
 
+
 if [ -f $_config_path/global.cfg ]
 then
         source $_config_path/global.cfg
@@ -40,6 +41,7 @@ else
         echo "Global config don't exits" 
         exit 1
 fi
+
 
 _cyclops_ha=$( awk -F\; '$1 == "CYC" && $2 == "0006" { print $4}' $_sensors_sot )
 
@@ -265,9 +267,9 @@ cyclops_global_calc()
 	_cyc_iss_global_g=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_date_start -f $_date_end -v wiki -g $_date_filter -n $_par_nod -e issues )
 	_cyc_rea_global_g=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_date_start -f $_date_end -v wiki -g $_date_filter -n $_par_nod -c -e reactive )
 
-	_cyc_ava_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r OPER_ENV -d $_date_start -e $_date_end -v wiki -t per -w hidden,Tbar )
-	_cyc_usr_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r USR_LGN -d $_date_start -e $_date_end -v wiki -t max -w hidden,Tline )
-	_cyc_cpu_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r NOD_LOAD -d $_date_start -e $_date_end -v wiki -t per -w hidden,Tline )
+	_cyc_ava_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r OPER_ENV -d $_date_start -e $_date_end -v wiki -t per -w hidden,Tbar,value )
+	_cyc_usr_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r USR_LGN -d $_date_start -e $_date_end -v wiki -t max -w hidden,Tline,value )
+	_cyc_cpu_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r NOD_LOAD -d $_date_start -e $_date_end -v wiki -t per -w hidden,Tline,value )
 
 	#### TREND CALC ####
 
@@ -989,6 +991,7 @@ slurm_init()
 {
 	_slurm_cfg_env=$( cat $_stat_main_cfg_file | awk -F\; '$1 == "0001" && $2 == "slurm" { print $3 }' ) 
 	_slurm_usr_cty="10"
+	_slurm_part_cty="10"
 	_slurm_date_creation=$( date +%Y-%m-%d\ %H:%M:%S )
 	[ -z "$_par_des" ] && _par_des="user don't specific any description"
 
@@ -996,18 +999,19 @@ slurm_init()
 
 slurm_main()
 {
+	_slm_cyc_graph_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r SLURM_LOAD -d $_date_start -e $_date_end -v wiki -t per -w W850 ) 
 	_slm_global_output=$( slurm_global_print )
 
 	for _slurm_env_def in $( cat $_config_path_sta/$_slurm_cfg_env | awk -F\; '$1 ~ "[0-9]+" { print $0 }')
 	do
 		_slurm_src=$( echo $_slurm_env_def | cut -d';' -f4 )
 
-		echo "REPORT: ($_par_typ) Launch $_slurm_src Environment Report"
-		echo "REPORT: ($_par_typ) Launch $_slurm_src Graphs Generation"
+		echo "REPORT: ($_par_typ) Launch $_slurm_src Environment Report "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" )
+		echo "REPORT: ($_par_typ) Launch $_slurm_src Graphs Generation "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" )
 
 		slurm_graphs_env
 
-		echo "REPORT: ($_par_typ) Launch $_slurm_src Output Build"
+		echo "REPORT: ($_par_typ) Launch $_slurm_src Output Build "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" )
 
 		_slm_global_output=$_slm_global_output"\n"$( slurm_print_env )
 	done 
@@ -1017,14 +1021,26 @@ slurm_graphs_env()
 {
 	_slm_main_graph_g=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g $_date_filter -v wiki ) 
 	_slm_user_graph_g=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g user -v wiki )
+	_slm_part_graph_g=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g partition -v wiki )
+
+	_slm_part_list=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g partition -v commas -x | cut -d';' -f1 | head -n $_slurm_part_cty )
+	unset _slm_part_output
+
+	for _slm_part_c in $( echo "${_slm_part_list}" ) 
+	do
+		echo "REPORT: ($_par_typ) Launch $_slurm_src - $_slm_part_c Detailed Report "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" ) 
+
+		_slm_part_graph_c=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g $_date_filter -p $_slm_part_c -v wiki ) 
+		_slm_part_format_output=$( slurm_print_part )
+		_slm_part_output=$_slm_part_output"\n"$_slm_part_format_output
+	done
 
 	_slm_usr_list=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g user -v commas -x | cut -d';' -f1 | head -n $_slurm_usr_cty )
-
 	unset _slm_usr_output
 
 	for _slm_usr_c in $( echo "${_slm_usr_list}" ) 
 	do
-		echo "REPORT: ($_par_typ) Launch $_slurm_src - $_slm_usr_c Detailed Report"
+		echo "REPORT: ($_par_typ) Launch $_slurm_src - $_slm_usr_c Detailed Report "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" )
 
 		_slm_usr_graph_c=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g $_date_filter -u $_slm_usr_c -v wiki ) 
 		_slm_usr_format_output=$( slurm_print_usr )
@@ -1043,6 +1059,11 @@ slurm_global_print()
 	echo "  * ** Environment(s) Included: ** $( cat $_config_path_sta/$_slurm_cfg_env | awk -F\; '$1 ~ "[0-9]+" { print $4 }' | tr '\n' ',' | sed 's/,$//' )"
 	echo 
 	echo "  * ** Short Description: ** $_par_des"
+	echo
+	echo "  * ** Global Cluster Slurm Activity ( Cyclops Sensor Source ): **" 
+	echo
+	echo "${_slm_cyc_graph_g}" 
+	echo
 }
 
 slurm_print_env()
@@ -1068,15 +1089,46 @@ slurm_print_env()
 	echo
 	echo "${_slm_main_graph_g}"
 	echo
+	echo "=== Slurm Partition Data ==="
+	echo
+	echo "${_slm_part_graph_g}"
+	echo
 	echo "=== Slurm Users Data ==="
 	echo
 	echo "${_slm_user_graph_g}"
+	echo
+	echo "==== TOP $_slurm_part_cty PARTITIONS DETAIL GRAPH ===="
+	echo
+	echo -e "${_slm_part_output}" 
 	echo
 	echo "==== TOP $_slurm_usr_cty USERS DETAIL GRAPH ===="
 	echo
 	echo -e "${_slm_usr_output}"
 	echo
 	
+}
+
+slurm_print_part()
+{
+	_slm_part_data_resume=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g $_date_filter -p $_slm_part_c -v commas | awk -F\; '
+		{ 
+			_jobs+=$2 ; 
+			_nodes+=$5 ; 
+			_et+=$6 
+		} END { 
+			print "Jobs Submited;"_jobs"\nNodes Reserved;"_nodes"\nConsumed Time;"_et 
+		}' )
+	echo
+	echo "=== $_slm_part_c ==="
+	echo
+	echo "|< 30% 15% 15% >|"
+	echo "|  $_color_title User Resume Data  ||"
+	echo "${_slm_part_data_resume}" | sed -e "s/^/|  $_color_header /" -e 's/;/  |  /' -e 's/$/  |/' 
+	echo
+	echo "<hidden Graph Info>"
+	echo "${_slm_part_graph_c}"
+	echo "</hidden>"
+	echo 
 }
 
 slurm_print_usr()
@@ -1276,6 +1328,64 @@ output_file()
 
 }
 
+daemon_launch()
+{
+	_dae_launch_state="OK"
+
+	_dae_idx=$( echo $_daemon_line | cut -d';' -f1 )
+	_dae_typ=$( echo $_daemon_line | cut -d';' -f2 )
+	_dae_sdt=$( echo $_daemon_line | cut -d';' -f3 )
+	_dae_nod=$( echo $_daemon_line | cut -d';' -f4 )
+	_dae_lnk=$( echo $_daemon_line | cut -d';' -f5 )			
+	_dae_rcr=$( echo $_daemon_line | cut -d';' -f6 )
+	_dae_nam=$( echo $_daemon_line | cut -d';' -f7 )
+	_dae_des=$( echo $_daemon_line | cut -d';' -f8 )
+
+	[ -z "$_dae_idx" ] && _dae_launch_state="FAIL"
+	[ -z "$_dae_typ" ] && _dae_launch_state="FAIL" || _dae_launch_string=$_dae_launch_string" -t "$_dae_typ
+	[ ! -z "$_dae_nod" ] && _dae_launch_string=$_dae_launch_string" -n "$_dae_nod
+	[ "$_dae_lnk" == "yes" ] && _dae_launch_string=$_dae_launch_string" -k "
+	[ "$_dae_rcr" == "yes" ] && _dae_launch_string=$_dae_launch_string" -r "
+	[ -z "$_dae_nam" ] && _dae_launch_state="FAIL" || _dae_launch_string=$_dae_launch_string" -i "$_dae_nam
+	[ -z "$_dae_des" ] && _dae_launch_state="FAIL" || _dae_launch_string=$_dae_launch_string" -d '"$_dae_des"' "
+	
+	case "$_dae_sdt" in 
+	*Y)
+		_dae_sdt=$( echo $_dae_sdt | awk -F"Y" '{ _d=systime() - ( $1 * 365 * 24 * 3600) ; print strftime("%Y-%m-%d",_d) }' )
+	;;
+	*M)
+		_dae_sdt=$( echo $_dae_sdt | awk -F"Y" '{ _d=systime() - ( $1 * 30 * 24 * 3600) ; print strftime("%Y-%m-%d",_d) }' )
+	;;
+	*D)
+		_dae_sdt=$( echo $_dae_sdt | awk -F"Y" '{ _d=systime() - ( $1 * 24 * 3600) ; print strftime("%Y-%m-%d",_d) }' )
+	;;
+	*)
+		_dae_launch_state="FAIL"
+	;;
+	esac
+
+	echo "$( date +%s ): CYC STATS : ALL SETTINGS FOR LAUNCH ($_dae_nam) $_dae_launch_state : $_dae_idx.$_dae_nam" >> $_cyclops_log 
+
+	if [ "$_dae_launch_state" == "OK" ] 
+	then
+		echo "$( date +%s ): CYC STATS : TRY LAUNCH REPORT ($_dae_nam) [$_dae_launch_string] : $_dae_idx.$_dae_nam" >> $_cyclops_log 
+		_dae_launch_string=$_dae_launch_string" -b "$_dae_sdt
+		eval exec $_script_path/cyc.stats.sh $_dae_launch_string
+		echo "$( date +%s ): CYC STATS : FINISH REPORT ($_dae_nam) : $_dae_idx.$_dae_nam" >> $_cyclops_log 
+
+		if [ "$?" == "0" ] 
+		then
+			echo "$( date +%s ): CYC STATS : DAEMON LAUNCH ($_dae_nam) OK: $_dae_idx.$_dae_nam" >> $_cyclops_log 
+		else
+			echo "$( date +%s ): CYC STATS : DAEMON LAUNCH ($_dae_nam) ERR: $_dae_idx.$_dae_nam" >> $_cyclops_log
+		fi
+	else
+		echo "$( date +%s ): CYC STATS : DAEMON ERR: [$_dae_launch_string] Command generation fail, revise config file" >> $_cyclops_log
+	fi
+
+	echo "$( date +%s ): CYC STATS : FINSH DAEMON REPORT LAUNCH ($_dae_nam) : $_dae_idx.$_dae_nam" >> $_cyclops_log 
+}
+
 ###########################################
 #               MAIN EXEC                 #
 ###########################################
@@ -1472,6 +1582,7 @@ output_file()
 
 				echo -e "REPORT: ($_par_typ) $_par_idx : Processing Subreport $_group_name" 
 			done
+			wait
 
 			for _family_item in $( echo "${_family_list}" | cut -d';' -f1 )
 			do
@@ -1482,6 +1593,7 @@ output_file()
 
 				echo -e "REPORT: ($_par_typ) $_par_idx : Processing Subreport $_family_name"
 			done
+			wait
 		fi
 	
 		output_file	
@@ -1489,15 +1601,17 @@ output_file()
 	slurm)
 		_path_type="slurm"
 
-		echo "REPORT: ($_par_typ) Init Slurm Report"
+		echo "REPORT: ($_par_typ) Init Slurm Report "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" )
 
 		slurm_init
 
-		echo "REPORT: ($_par_typ) Launch Slurm Report"
+		echo "REPORT: ($_par_typ) Launch Slurm Report "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" )
 
 		slurm_main
 
 		output_file
+		
+		echo "REPORT: ($_par_typ) End and Close Slurm Report "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" )
 	;;
 	user)
 		echo "FACTORING"
@@ -1515,60 +1629,9 @@ output_file()
 
 		for _daemon_line in $( cat $_stat_daemon_cfg_file | awk -F\; '$1 ~ "^[0-9]+$" && NF == 8 { print $0}' )
 		do
-
-			_dae_launch_state="OK"
-
-			_dae_idx=$( echo $_daemon_line | cut -d';' -f1 )
-			_dae_typ=$( echo $_daemon_line | cut -d';' -f2 )
-			_dae_sdt=$( echo $_daemon_line | cut -d';' -f3 )
-			_dae_nod=$( echo $_daemon_line | cut -d';' -f4 )
-			_dae_lnk=$( echo $_daemon_line | cut -d';' -f5 )			
-			_dae_rcr=$( echo $_daemon_line | cut -d';' -f6 )
-			_dae_nam=$( echo $_daemon_line | cut -d';' -f7 )
-			_dae_des=$( echo $_daemon_line | cut -d';' -f8 )
-
-			[ -z "$_dae_idx" ] && _dae_launch_state="FAIL"
-			[ -z "$_dae_typ" ] && _dae_launch_state="FAIL" || _dae_launch_string=$_dae_launch_string" -t "$_dae_typ
-			[ ! -z "$_dae_nod" ] && _dae_launch_string=$_dae_launch_string" -n "$_dae_nod
-			[ "$_dae_lnk" == "yes" ] && _dae_launch_string=$_dae_launch_string" -k "
-			[ "$_dae_rcr" == "yes" ] && _dae_launch_string=$_dae_launch_string" -r "
-			[ -z "$_dae_nam" ] && _dae_launch_state="FAIL" || _dae_launch_string=$_dae_launch_string" -i "$_dae_nam
-			[ -z "$_dae_des" ] && _dae_launch_state="FAIL" || _dae_launch_string=$_dae_launch_string" -d '"$_dae_des"' "
-			
-			case "$_dae_sdt" in 
-			*Y)
-				_dae_sdt=$( echo $_dae_sdt | awk -F"Y" '{ _d=systime() - ( $1 * 365 * 24 * 3600) ; print strftime("%Y-%m-%d",_d) }' )
-			;;
-			*M)
-				_dae_sdt=$( echo $_dae_sdt | awk -F"Y" '{ _d=systime() - ( $1 * 30 * 24 * 3600) ; print strftime("%Y-%m-%d",_d) }' )
-			;;
-			*D)
-				_dae_sdt=$( echo $_dae_sdt | awk -F"Y" '{ _d=systime() - ( $1 * 24 * 3600) ; print strftime("%Y-%m-%d",_d) }' )
-			;;
-			*)
-				_dae_launch_state="FAIL"
-			;;
-			esac
-		
-			echo "$( date +%s ): CYC STATS : ALL SETTINGS FOR LAUNCH ($_dae_nam) $_dae_launch_state : $_dae_idx.$_dae_nam" >> $_cyclops_log 
-
-			if [ "$_dae_launch_state" == "OK" ] 
-			then
-				echo "$( date +%s ): CYC STATS : TRY LAUNCH REPORT ($_dae_nam) : $_dae_idx.$_dae_nam" >> $_cyclops_log 
-				_dae_launch_string=$_dae_launch_string" -b "$_dae_sdt
-				eval exec $_script_path/cyc.stats.sh $_dae_launch_string
-				if [ "$?" == "0" ] 
-				then
-					echo "$( date +%s ): CYC STATS : DAEMON LAUNCH ($_dae_nam) OK: $_dae_idx.$_dae_nam" >> $_cyclops_log 
-				else
-					echo "$( date +%s ): CYC STATS : DAEMON LAUNCH ($_dae_nam) ERR: $_dae_idx.$_dae_nam" >> $_cyclops_log
-				fi
-			else
-				echo "$( date +%s ): CYC STATS : DAEMON ERR: [$_dae_launch_string] Command generation fail, revise config file" >> $_cyclops_log
-			fi
-
-			echo "$( date +%s ): CYC STATS : FINSH LAUNCH ($_dae_nam) : $_dae_idx.$_dae_nam" >> $_cyclops_log 
+			daemon_launch &
 		done 
+		wait
 
 		echo "$( date +%s ): CYC STATS : FINSH LAUNCH DAEMON" >> $_cyclops_log 
 	;;

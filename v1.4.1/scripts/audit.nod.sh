@@ -66,7 +66,7 @@ _cyclops_ha=$( awk -F\; '$1 == "CYC" && $2 == "0006" { print $4}' $_sensors_sot 
 
 _command_opts=$( echo "$@" | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^m/ ) { gsub(/^[a-z] /,"&@",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' )
 
-while getopts ":dh:kg:n:i:e:m:s:v:f:x" _optname
+while getopts ":dh:kg:n:i:e:m:s:v:f:xb:" _optname
 do
 
         case "$_optname" in
@@ -1171,6 +1171,147 @@ show_data()
                 ;;
                 esac
 
+}
+
+init_date()
+{
+
+        _date_tsn=$( date +%s )
+
+        case "$_par_date_start" in
+        *[0-9]hour|hour)
+                _hour_count=$( echo $_par_date_start | grep -o ^[0-9]* )
+                _par_date_start="hour"
+
+                [ -z "$_hour_count" ] && _hour_count=1
+
+                let _ts_date=3600*_hour_count
+
+                let _par_ds=_date_tsn-_ts_date
+                _par_de=$_date_tsn
+
+                _date_filter=$_par_date_start
+                _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
+                _par_date_end=$( date +%Y-%m-%d )
+        ;;
+        *[0-9]day|day)
+                _day_count=$( echo $_par_date_start | grep -o [0-9]* )
+                _par_date_start="day"
+
+                [ -z "$_day_count" ] && _day_count=1
+
+                let _ts_date=86400*_day_count
+
+                let _par_ds=_date_tsn-_ts_date
+                _par_de=$_date_tsn
+
+                _date_filter=$_par_date_start
+                _par_date_start=$( date -d @$_ts_date +%Y-%m-%d )
+                _par_date_end=$( date +%Y-%m-%d )
+        ;;
+        week|"")
+                _ts_date=604800
+
+                let _par_ds=_date_tsn-_ts_date
+                _par_de=$_date_tsn
+
+                _date_filter=$_par_date_start
+                _par_date_start=$( date -d "last week" +%Y-%m-%d )
+                _par_date_end=$( date +%Y-%m-%d )
+
+        ;;
+        month)
+                #_ask_date=$( date -d "last month" +%Y-%m-%d )
+                _ts_date=2592000
+
+                let _par_ds=_date_tsn-_ts_date
+                _par_de=$_date_tsn
+
+                _date_filter=$_par_date_start
+                _par_date_start=$( date -d "last month" +%Y-%m-%d )
+                _par_date_end=$( date +%Y-%m-%d )
+        ;;
+        year)
+                #_ask_date=$( date -d "last year" +%Y-%m-%d )
+                _ts_date=31536000
+
+                let _par_ds=_date_tsn-_ts_date
+                _par_de=$_date_tsn
+
+                _date_filter=$_par_date_start
+                _par_date_start=$( date -d "last year" +%Y-%m-%d )
+                _par_date_end=$( date +%Y-%m-%d )
+        ;;
+        "Jan-"*|"Feb-"*|"Mar-"*|"Apr-"*|"May-"*|"Jun-"*|"Jul-"*|"Aug-"*|"Sep-"*|"Oct-"*|"Nov-"*|"Dec-"*)
+                _date_year=$( echo $_par_date_start | cut -d'-' -f2 )
+                _date_month=$( echo $_par_date_start | cut -d'-' -f1 )
+
+                _query_month=$( date -d '1 '$_date_month' '$_date_year +%m | sed 's/^0//' )
+                _par_ds=$( date -d '1 '$_date_month' '$_date_year +%s )
+
+                let "_next_month=_query_month+1"
+                [ "$_next_month" == "13" ] && let "_next_year=_date_year+1" && _next_month="1" || _next_year=$_date_year
+
+                _par_de=$( date -d $_next_year'-'$_next_month'-1' +%s)
+
+                let "_par_de=_par_de-10"
+
+                _date_filter="month"
+                _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
+                _par_date_end=$( date -d @$_par_de +%Y-%m-%d )
+        ;;
+        2[0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9])
+                _par_ds=$( date -d $_par_date_start +%s )
+                if [ -z "$_par_date_end" ]
+                then
+                        _par_de=$( date +%s )
+                        _par_date_end=$( date +%Y-%m-%d )
+                else
+                        _par_de=$( date -d $_par_date_end +%s )
+                fi
+
+                let _day_count=(_par_de-_par_ds )/86400 
+
+                case "$_day_count" in
+                0)
+                        _date_filter="hour"
+                ;;
+                [1-2])
+                        _date_filter="day"
+                ;;
+                [3-9])
+                        _date_filter="week"
+                ;;
+                [1-4][0-9])
+                        _date_filter="month"
+                ;;
+                *)
+                        _date_filter="year"
+                ;;
+                esac
+        ;;
+        2[0-9][0-9][0-9])
+                _par_ds=$( date -d '1 Jan '$_par_date_start +%s )
+                _par_de=$( date -d '31 Dec '$_par_date_start +%s )
+
+                _date_filter="year"
+                _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
+                _par_date_end=$( date -d @$_par_de +%Y-%m-%d )
+        ;;
+        *)
+                ### IF DATE START WRONG... GET DAY BY DEFAULT ####
+                _ts_date=86400
+
+                let _par_ds=_date_tsn-_ts_date
+                _par_de=$_date_tsn
+
+                _date_filter=$_par_date_start
+                _par_date_start=$( date -d "last day" +%Y-%m-%d )
+                _par_date_end=$( date +%Y-%m-%d )
+        ;;
+        esac
+
+        let "_hour_days=((_par_de-_par_ds)/86400)+1"
 }
 
 ###########################################

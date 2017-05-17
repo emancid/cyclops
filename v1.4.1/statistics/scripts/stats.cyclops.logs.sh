@@ -83,6 +83,7 @@ do
 			_opt_hidden=$( echo $_par_vwiki | tr ',' '\n' | awk '$0 ~ "hidden" { print "yes" }' )
                         _opt_with=$( echo $_par_vwiki | tr ',' '\n' | grep "^W" | sed 's/W//' )
                         _opt_gtype=$( echo $_par_vwiki | tr ',' '\n' | awk '$0 ~ "^T" { gsub("T","",$1) ; print $1 }' )
+			_opt_gvalue=$( echo $_par_vwiki | tr ',' '\n' | awk '$0 == "value" { _sw1="value" } $0  ~ "Tpie" { _sw2="pie" } END { if ( _sw1 == "value" && _sw2 != "Tpie" ) { print "value" }}' ) 
 		;;
 		"h")
 			case "$OPTARG" in
@@ -145,6 +146,7 @@ do
                                 echo "			Tbar:   Bar graph"
                                 echo "			Tline:  Line graph"
                                 echo "			Tpie:   Pie graph"
+				echo "			value:  Include values in graph"
 				echo
 				echo "HELP:"
 				echo "	-h [|des] help, this help"
@@ -314,7 +316,7 @@ format_output()
 
 		[ -z "$_sen_graph_color" ] && _sen_graph_color="#"$( echo $_par_itm | hexdump -e '16/1 "%x" "\n"' | sed 's/.*\(......\)$/\1/' )
 
-		_wiki_output=$( echo "<gchart "$_opt_with"x350 $_opt_gtype $_sen_graph_color #ffffff center>" ;
+		_wiki_output=$( echo "<gchart "$_opt_with"x350 $_opt_gvalue $_opt_gtype $_sen_graph_color #ffffff center>" ;
                 echo "${_log_stats_data}" | 
                                 awk -F\; '
                                         { 

@@ -168,6 +168,7 @@ process_extract()
 		if ( NR == 1 ) { _job=j[1] ; _job=j[1] ; _user=$3 ; _part=$4 ; _jobn=$5 ; _rmem=$7 ; _nnod=$8 ;  _stat=$12 ; _et=$11 ; _nod=$13 } ;
 		if ( j[1] != _job ) {
 			gsub(/T|:|-/," ",$1) ;
+			gsub(/ by [0-9]+/,"",$12) ;
 			_jstart=mktime($1) ;
 			print _jstart";"_job";"_user";"_part";"_jobn";"_rcor";"_rmem";"_nnod";"_ntask";"_jl";"_wh";"_jsec";"_et";"_stat";"_nod ;
 			_job=j[1] ; _user=$3 ; _part=$4 ; _jobn=$5 ; _rmem=$7 ; _nnod=$8 ;  _stat=$12 ; _nod=$13 ; 
