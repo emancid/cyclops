@@ -41,7 +41,7 @@ _date_now=$( date +%s )
 _par_grp="day"
 _par_show="human"
 
-while getopts ":c:p:g:s:b:f:v:u:wjntxyh:" _optname
+while getopts ":c:p:g:s:b:f:v:u:xyh:" _optname
 do
         case "$_optname" in
 		"g")
@@ -61,42 +61,16 @@ do
 			# field partition
 			_opt_par="yes"
 			_par_par=$OPTARG
-			_opt_fil="yes"
-			_par_fil=$_par_fil","$_par_par
 		;;
 		"c")
 			# field job status
 			_opt_sta="yes"
 			_par_sta=$OPTARG
-			_opt_fil="yes"
-			_par_fil=$_par_fil","$_par_sta
 		;;
 		"u")
 			# field user 
 			_opt_usr="yes"
 			_par_usr=$OPTARG
-			_opt_fil="yes"
-			_par_fil=$_par_fil","$_par_usr
-		;;
-		"w")
-			# field watt
-			# OPERATION
-			_opt_wat="yes"
-		;;
-		"j")
-			# field julius
-			# OPERATION
-			_opt_jul="yes"
-		;;
-		"n")
-			# field nodes
-			# OPERATION
-			_opt_nod="yes"
-		;;
-		"t")
-			# field elapsed time
-			# OPERATION
-			_opt_et="yes"
 		;;
                 "f")
 			# date end
@@ -160,12 +134,6 @@ do
 				echo "	-c [job state] optional: filter data with a job state"
 				echo "	-p [partition name] optional: filter data for one partition"
 				echo 
-				echo "STATS:"
-				echo "	By default: Number of Jobs [ONLY WIKI SHOW]"
-				echo "	-w Show Consumed Energy: Watt/hour"
-				echo "	-j Show Consumed Energy: Julius"
-				echo "	-n Show Used Nodes"
-				echo 
 				echo "GROUP:"
 				echo "	-g [year|month|day|hour|user|partition|state] optional: group data show"	
 				echo 
@@ -174,12 +142,6 @@ do
 				echo "		human, show command output human friendly"
 				echo "		commas, show command output with ;"
 				echo "		wiki, show command output with dokuwiki format (google graphs plugin)"
-				echo "			By default: Number of Jobs [ONLY WIKI SHOW]"
-				echo "			-w Show Consumed Energy: Watt/hour"
-				echo "			-j Show Consumed Energy: Julius"
-				echo "			-n Show Used Nodes"
-				echo "			-t Elapsed Time"
-				echo "		NOTE: wiki, cant create graphs only with one value, use only one par"
 				echo "	-x Not show header"
 				echo 
 				echo "HELP:"
@@ -389,7 +351,7 @@ format_output()
 		echo "|  $_color_title ** SLURM STATISTICS INFO **  ||||"
 		echo "|  $_color_header SOURCE  |  $_color_header FROM  |  $_color_header TO  |  $_color_header GROUP BY  |" 
 		echo "|  $_par_src  |  $_par_date_start  |  $_par_date_end  |  $_par_grp  |"
-		echo 
+		echo
 
 		case "$_par_grp" in 
 		day|month|year)
@@ -449,7 +411,7 @@ format_output()
 			then
 				echo 
 				echo "-----------------------"
-				echo "FACTORING"
+				echo "DEBUGING"
 				echo "${_output}"
 				echo "-----------------------"
 				echo
@@ -457,12 +419,13 @@ format_output()
 
 			echo "${_output}" | awk -F\; -v _dr="$_par_grp" -v _ch="$_color_header" -v _ct="$_color_title" -v _gcj="$_gcolor_job" -v _gcn="$_gcolor_nod" -v _gce="$_gcolor_ete" '
 				BEGIN {
-					if ( _dr == "user" ) {  _tu="|  "_ct" ** Users **  |  " } 
-					if ( _dr == "partition" ) {  _tp="|  "_ct" ** Partitions **  |  " } 
-					if ( _dr == "state" ) { _ts="|  "_ct" ** States **  |  " } 
-					_tj="|  "_ct" ** Jobs **  |  "
-					_tn="|  "_ct" ** Nodes **  |  "
-					_te="|  "_ct" ** E.T.(h) **  |  "
+					_gf="line" ;
+					if ( _dr == "user" ) {  _tu="|  "_ct" ** Users **  |  " ; _gf="pie2d" } ; 
+					if ( _dr == "partition" ) {  _tp="|  "_ct" ** Partitions **  |  " ; _gf="pie2d" } ; 
+					if ( _dr == "state" ) { _ts="|  "_ct" ** States **  |  " ; _gf="value hbar" } ; 
+					_tj="|  "_ct" ** Jobs **  |  " ; 
+					_tn="|  "_ct" ** Nodes **  |  " ; 
+					_te="|  "_ct" ** E.T.(h) **  |  " ;
 				} {
 					if ( FNR <= 10 ) { 	
 						_jobs=_jobs""$1"="$2"\n"
@@ -488,13 +451,13 @@ format_output()
 					}
 					print "|< 100% >|"
 					print "|  "_ch" Total Jobs  ||"
-					print "|  <gchart 850x350 pie2d "_gcj" #ffffff center>" ; 
+					print "|  <gchart 850x350 "_gf" "_gcj" #ffffff center>" ; 
 					print _jobs
 					print "</gchart>  ||"
 					print "|  "_ch" Nodes Reserved  |  "_ch" Expended Cluster Time (h)  |"
-					print "|  <gchart 650x350 pie2d "_gcn" #ffffff center>" ;
+					print "|  <gchart 650x350 "_gf" "_gcn" #ffffff center>" ;
 					print _nodes
-					print "</gchart>  |  <gchart 650x350 pie2d "_gce" #ffffff center>" ; 
+					print "</gchart>  |  <gchart 650x350 "_gf" "_gce" #ffffff center>" ; 
 					print _et
 					print "</gchart>  |" ;
 					print " " ;

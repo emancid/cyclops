@@ -1022,6 +1022,7 @@ slurm_graphs_env()
 	_slm_main_graph_g=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g $_date_filter -v wiki ) 
 	_slm_user_graph_g=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g user -v wiki )
 	_slm_part_graph_g=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g partition -v wiki )
+	_slm_stat_graph_g=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g state -v wiki )
 
 	_slm_part_list=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g partition -v commas -x | cut -d';' -f1 | head -n $_slurm_part_cty )
 	unset _slm_part_output
@@ -1031,6 +1032,8 @@ slurm_graphs_env()
 		echo "REPORT: ($_par_typ) Launch $_slurm_src - $_slm_part_c Detailed Report "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" ) 
 
 		_slm_part_graph_c=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g $_date_filter -p $_slm_part_c -v wiki ) 
+		_slm_part_stat_graph_c=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g state -p $_slm_part_c -v wiki ) 
+		_slm_part_usrs_graph_c=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g user -p $_slm_part_c -v wiki ) 
 		_slm_part_format_output=$( slurm_print_part )
 		_slm_part_output=$_slm_part_output"\n"$_slm_part_format_output
 	done
@@ -1043,6 +1046,8 @@ slurm_graphs_env()
 		echo "REPORT: ($_par_typ) Launch $_slurm_src - $_slm_usr_c Detailed Report "$( [ "$_opt_idx" == "yes" ] && echo "[$_par_idx]" )
 
 		_slm_usr_graph_c=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g $_date_filter -u $_slm_usr_c -v wiki ) 
+		_slm_usr_stat_graph_c=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g state -u $_slm_usr_c -v wiki ) 
+		_slm_usr_part_graph_c=$( $_stat_extr_path/stats.slurm.total.jobs.sh -s $_slurm_src -b $_date_start -f $_date_end -g partition -u $_slm_usr_c -v wiki ) 
 		_slm_usr_format_output=$( slurm_print_usr )
 		_slm_usr_output=$_slm_usr_output"\n"$_slm_usr_format_output
 	done
@@ -1097,6 +1102,10 @@ slurm_print_env()
 	echo
 	echo "${_slm_user_graph_g}"
 	echo
+	echo "=== Slurm Job State Data ==="
+	echo
+	echo "${_slm_stat_graph_g}"
+	echo
 	echo "==== TOP $_slurm_part_cty PARTITIONS DETAIL GRAPH ===="
 	echo
 	echo -e "${_slm_part_output}" 
@@ -1119,16 +1128,25 @@ slurm_print_part()
 			print "Jobs Submited;"_jobs"\nNodes Reserved;"_nodes"\nConsumed Time;"_et 
 		}' )
 	echo
-	echo "=== $_slm_part_c ==="
+	echo "<hidden $_slm_part_c>"
 	echo
 	echo "|< 30% 15% 15% >|"
 	echo "|  $_color_title User Resume Data  ||"
 	echo "${_slm_part_data_resume}" | sed -e "s/^/|  $_color_header /" -e 's/;/  |  /' -e 's/$/  |/' 
 	echo
-	echo "<hidden Graph Info>"
+	echo "<hidden Jobs General Info>"
 	echo "${_slm_part_graph_c}"
 	echo "</hidden>"
+	echo
+	echo "<hidden User Info>"
+	echo "${_slm_part_usrs_graph_c}"
+	echo "</hidden>"
 	echo 
+	echo "<hidden State Graph Info>" 
+	echo "${_slm_part_stat_graph_c}"
+	echo "</hidden>"
+	echo
+	echo "</hidden>"
 }
 
 slurm_print_usr()
@@ -1143,16 +1161,24 @@ slurm_print_usr()
 		}' )
 
 	echo
-	echo "=== $_slm_usr_c ==="
-	echo
+	echo "<hidden $_slm_usr_c>"
 	echo "|< 30% 15% 15% >|"
 	echo "|  $_color_title User Resume Data  ||"
 	echo "${_slm_usr_data_resume}" | sed -e "s/^/|  $_color_header /" -e 's/;/  |  /' -e 's/$/  |/' 
 	echo
-	echo "<hidden Graph Info>"
+	echo "<hidden Jobs General Info>"
 	echo "${_slm_usr_graph_c}"
 	echo "</hidden>"
+	echo
+	echo "<hidden Partition Use>"
+	echo "${_slm_usr_part_graph_c}"
+	echo "</hidden>"
+	echo
+	echo "<hidden Job State Info>" 
+	echo "${_slm_usr_stat_graph_c}"
+	echo "</hidden>"
 	echo 
+	echo "</hidden>"
 }
 
 index_generation()

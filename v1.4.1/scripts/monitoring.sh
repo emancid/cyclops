@@ -412,23 +412,32 @@ generate_mon_output_dash ()
 		echo "</hidden>" 
 	fi
 
-        ## LAST EVENT LOG ##
-
-#	echo "<hidden Last Node Events>"
-#	echo "${_audit_last_event_msg}"
-#	echo "</hidden>"
-
 	## LAST BITACORA LOG ##
 
 	echo "<hidden Last Bitacora Events>"
 	echo "${_audit_last_bitacora_msg}"
 	echo "</hidden>"
 
-
-#        echo "<hidden last 40 sensors log traces>"
-#        echo "|< 100% >|"
-#        tail -n 40 $_sensors_log | awk -F\: 'BEGIN {OFS=":"} {$1=strftime("%d-%m-%Y %H.%M.%S",$1); print $0}' | sed -e 's/$/\ \ \|/' -e 's/^/\|\ \ /' -e 's/\:/\ \ \|\ \ /g'
-#        echo "</hidden>"
+        echo "<hidden Last 3 Days Alerts>"
+        echo "|< 100% 6% 6% 8% 10% 64% 6% >|"
+	echo "|  $_color_header date  |  $_color_header  time  |  $_color_header  node  |  $_color_header event  |  $_color_header  sensor  |  $_color_header status  |"
+	$_script_path/audit.nod.sh -v eventlog | sort -n -t\; | awk -F\; -v _cd="$_color_down" -v _cf="$_color_fail"  -v _ap="$_wiki_audit_path" '
+		BEGIN {
+			_st=systime()-86400*3
+		} $1 >= _st && $4 == "ALERT" { 
+			_d=strftime("%Y-%m-%d;%H:%M:%S",$1) ; 
+			split(_d,d,";") ; 
+			if ( d[1] != _do ) { 
+				_do=d[1] ; 
+				_dp=d[1] 
+			} else { 
+				_dp=":::" 
+			} ; 
+			if ( $6 ~ /ALERT|FAIL/ ) { $6=_cf" "$6 }
+			if ( $6 == "DOWN" ) { $6=_cd" "$6 } 
+			print "|  "_dp"  |  "d[2]"  |  [["_ap":"$3".audit|"$3"]]  |  "_cf" "$4"  |  "$5"  |  "$6"  |" 
+		}'
+        echo "</hidden>"
 
 #	echo "<hidden DEBUG TESTING OUTPUT>"
 #	echo "<code>"
