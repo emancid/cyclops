@@ -1134,15 +1134,15 @@ slurm_print_part()
 	echo "|  $_color_title User Resume Data  ||"
 	echo "${_slm_part_data_resume}" | sed -e "s/^/|  $_color_header /" -e 's/;/  |  /' -e 's/$/  |/' 
 	echo
-	echo "<hidden Jobs General Info>"
+	echo "<hidden -- Jobs General Info>"
 	echo "${_slm_part_graph_c}"
 	echo "</hidden>"
 	echo
-	echo "<hidden User Info>"
+	echo "<hidden -- User Info>"
 	echo "${_slm_part_usrs_graph_c}"
 	echo "</hidden>"
 	echo 
-	echo "<hidden State Graph Info>" 
+	echo "<hidden -- State Graph Info>" 
 	echo "${_slm_part_stat_graph_c}"
 	echo "</hidden>"
 	echo
@@ -1166,15 +1166,15 @@ slurm_print_usr()
 	echo "|  $_color_title User Resume Data  ||"
 	echo "${_slm_usr_data_resume}" | sed -e "s/^/|  $_color_header /" -e 's/;/  |  /' -e 's/$/  |/' 
 	echo
-	echo "<hidden Jobs General Info>"
+	echo "<hidden -- Jobs General Info>"
 	echo "${_slm_usr_graph_c}"
 	echo "</hidden>"
 	echo
-	echo "<hidden Partition Use>"
+	echo "<hidden -- Partition Use>"
 	echo "${_slm_usr_part_graph_c}"
 	echo "</hidden>"
 	echo
-	echo "<hidden Job State Info>" 
+	echo "<hidden -- Job State Info>" 
 	echo "${_slm_usr_stat_graph_c}"
 	echo "</hidden>"
 	echo 

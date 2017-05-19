@@ -305,7 +305,24 @@ generate_mon_output_dash ()
 	
 	## LAST BITACORA LOG FACTORING -- ## REFACTORY: CREATE A PG IN AUDIT COMMAND LIKE AUDIT_LAST_EVENT_LOG ##
 
-	_audit_last_bitacora_log=$( cat $_audit_data_path/*.bitacora.txt | sort -n | tail -n 10  | awk -F\; '{ $1=strftime("%Y-%m-%d;%H:%M",$1) ; print $1";"$3";"$4";"$5";"$6 }' )
+	_audit_last_bitacora_log=$( cat $_audit_data_path/*.bitacora.txt | sort -n | tail -n 10  | awk -F\; -v _ap="$_wiki_audit_path" '
+		{ 
+			_date=strftime("%Y-%m-%d;%H:%M",$1) ; 
+			split(_date,d,";") ;
+			if ( d[1] != _do ) { 
+				_do=d[1] ;
+				_dp=d[1] 
+			} else {
+				_dp=":::"
+			}
+			if ( $3 != "main" ) {
+				_np="[["_ap":"$3".audit|"$3"]]"
+			} else {
+				_np=$3
+			}
+	
+			print _dp";"d[2]";"_np";"$4";"$5";"$6 
+		}' )
 
 	if [ -z "$_audit_last_bitacora_log" ] 
 	then
