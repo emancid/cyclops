@@ -1,18 +1,16 @@
 CYCLOPS 1.4v INSTALL
 ==============================================================================================================
 
-    1.UNCOMPRESS CYCLOPS TAR
+
+    1.PREPARE NECESARY ENVIRONMENT
     ----------------------------------------------------------------------------------------------------------
 
-    - copy cyclops.[version].tgz and untar in /opt
-    - untar /opt/cyclops/monitor/packs/*.tar from root directory
-
-    2.INSTALL 3rds SOFTWARE
-    ----------------------------------------------------------------------------------------------------------
-
+    - install -> git
+	- yum install git
     - install -> apache + php + php_gd
+        - yum install httpd php php-gd
+    - install -> dokuwiki
          [ REDHAT/CENTOS ] - https://www.dokuwiki.org/install:centos
-            - yum install httpd php php-gd
         * Configure symbolic link or right path for apache access to cyclops web interface ( default /opt/cyclops/www )
 	* You have in /opt/cyclops/docs a file template ( redhat ) for configurate apache site (is usesfull with other distros)    
 	* You can use cyclops default certificates for apache if you want https cryp acces
@@ -28,7 +26,22 @@ CYCLOPS 1.4v INSTALL
             - pdsh
             - sysstat
             - rsync
-    
+
+    2. INSTALL CYCLOPS
+    ----------------------------------------------------------------------------------------------------------
+
+    a.FROM TAR:
+
+    - copy cyclops.[version].tgz and untar in /opt
+    - untar /opt/cyclops/monitor/packs/*.tar from root directory
+
+    b.FROM GITHUB: 
+
+    - create dir /opt/git
+    - cd /opt/git/
+    - git clone https://github.com/ikseth/cyclops.git
+    - create link in /opt/ 
+    - ln -s /opt/git/cyclops/[version] cyclops
     
     3.Create Base Dirs&Files
     ----------------------------------------------------------------------------------------------------------
