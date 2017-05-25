@@ -78,3 +78,62 @@
 1464856624	193.144.150.34	E	documentation:operation:maintenance	ink	[Consultar Información de Auditoria de Nodos] 	
 1464856977	193.144.150.34	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 	
 1464857023	193.144.150.34	E	documentation:operation:maintenance	ink	[Estado Administrativo de Nodos] 	
+1467959299	127.0.0.1	E	documentation:operation:maintenance		editor externo		-3
+1469692444	193.144.150.34	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 		34
+1469692867	193.144.150.34	E	documentation:operation:maintenance	ink	[Integridad de Cyclops] 		893
+1469692958	193.144.150.34	E	documentation:operation:maintenance	ink	[Integridad de Cyclops] 		182
+1473758762	193.144.150.34	E	documentation:operation:maintenance	ink	[Insertar Información de Bitácora en la Auditoria de Nodos] 		214
+1473858883	193.144.150.34	E	documentation:operation:maintenance	ink	[Insertar Información de Bitácora en la Auditoria de Nodos] 		42
+1473858897	193.144.150.34	E	documentation:operation:maintenance	ink	[Generación de Estadisticas] 		4
+1473859792	193.144.150.34	E	documentation:operation:maintenance	ink	[Generación de Estadísticas] 		1448
+1477653002	193.144.150.34	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 		68
+1477653234	193.144.150.34	E	documentation:operation:maintenance	ink	[Configurar o modificar la configuración de los nodos] 		572
+1488450877	172.24.9.114	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 		1585
+1488450948	172.24.9.114	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 		118
+1488451034	172.24.9.114	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 		-1686
+1488451054	172.24.9.114	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 		0
+1488451107	172.24.9.114	E	documentation:operation:maintenance	ink	[Estado Administrativo de Nodos] 		1706
+1488451191	172.24.9.114	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 		50
+1488451843	172.24.9.114	E	documentation:operation:maintenance	ink	[Activar/Desactivar modulos de cyclops] 		1652
+1488451976	172.24.9.114	E	documentation:operation:maintenance	ink	[Estado Administrativo de Nodos] 		86
+1488452583	172.24.9.114	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		1777
+1488452656	172.24.9.114	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		21
+1488452685	172.24.9.114	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		6
+1488452702	172.24.9.114	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		3
+1493278255	172.24.9.110	E	documentation:operation:maintenance	ink	[Estado de la Monitorización] 		8
+1493278311	172.24.9.110	E	documentation:operation:maintenance	ink	[Estado Administrativo de Nodos] 		-13
+1493278350	172.24.9.110	E	documentation:operation:maintenance	ink	[Administrar Nodos] 		13
+1493278417	172.24.9.110	E	documentation:operation:maintenance	ink	[Administrar Nodos] 		22
+1493278454	172.24.9.110	E	documentation:operation:maintenance	ink	[Administrar Nodos] 		34
+1493279144	172.24.9.110	E	documentation:operation:maintenance	ink	[Generación de Estadísticas] 		1348
+1493279276	172.24.9.110	E	documentation:operation:maintenance	ink	[Generación de Informes y Estadísticas Cyclops] 		221
+1493279321	172.24.9.110	E	documentation:operation:maintenance	ink	[Consultar Información de Auditoria de Nodos] 		31
+1493279332	172.24.9.110	E	documentation:operation:maintenance	ink	[Insertar Información de Bitácora en la Auditoria de Nodos] 		-2
+1493279447	172.24.9.110	E	documentation:operation:maintenance	ink	[Monitorizar Nodos] 		153
+1493279460	172.24.9.110	E	documentation:operation:maintenance	ink	[Monitorizar Dispositivos de Entorno] 		-2
+1493279540	172.24.9.110	E	documentation:operation:maintenance	ink	[Gestión de la Monitorización] 		-2
+1493279613	172.24.9.110	E	documentation:operation:maintenance	ink	[Gestión de la Monitorización] 		165
+1493279630	172.24.9.110	E	documentation:operation:maintenance	ink	[Gestión de la Monitorización] 		1
+1493279653	172.24.9.110	E	documentation:operation:maintenance	ink	[Gestión de la Monitorización] 		3
+1493279670	172.24.9.110	E	documentation:operation:maintenance	ink	[Gestión de la Monitorización] 		-3
+1493279700	172.24.9.110	E	documentation:operation:maintenance	ink	[Gestión de la Monitorización] 		30
+1493279725	172.24.9.110	E	documentation:operation:maintenance	ink	[Administrar Nodos] 		-2
+1493279738	172.24.9.110	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		-2
+1493279752	172.24.9.110	E	documentation:operation:maintenance	ink	[Mensajes Dashboard] 		-2
+1493279771	172.24.9.110	E	documentation:operation:maintenance	ink	[Conocer el estado de los procedimientos] 		-2
+1493279801	172.24.9.110	E	documentation:operation:maintenance	ink	[Maintenance] 		6
+1493279870	172.24.9.110	E	documentation:operation:maintenance	ink	[Administrar Nodos] 		23
+1493279951	172.24.9.110	E	documentation:operation:maintenance	ink	[Administrar Nodos] 		1
+1493280171	172.24.9.110	E	documentation:operation:maintenance	ink	[Monitorizar Dispositivos de Entorno] 		-12
+1493282352	172.24.9.110	E	documentation:operation:maintenance	ink	[Estadisticas Cyclops, Fuente Auditoria] 		677
+1493290644	172.24.9.110	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		-1
+1493291235	172.24.9.110	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		751
+1493291533	172.24.9.110	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		2139
+1493291602	172.24.9.110	E	documentation:operation:maintenance	ink	[Conocer el Estado de los recursos controlados y gestionados por cyclops] 		4198
+1493292036	172.24.9.110	E	documentation:operation:maintenance	ink	[Estadísticas Cyclops, Fuente Auditoria] 		1368
+1493292638	172.24.9.110	E	documentation:operation:maintenance	ink	[Estadisticas Cyclops, Fuente Logs] 		2518
+1493293137	172.24.9.110	E	documentation:operation:maintenance	ink	[Estadisticas Slurm, Fuente Extraccion Base de Datos Slurm] 		2913
+1494326950	172.24.9.110	E	documentation:operation:maintenance	ink	[Informes y Estadísticas en el Interfaz web] 		207
+1494506652	172.24.9.110	E	documentation:operation:maintenance	ink	[Informes y Estadísticas en el Interfaz web] 		181
+1494506757	172.24.9.110	E	documentation:operation:maintenance	ink	[Informes y Estadísticas en el Interfaz web] 		82
+1494506956	172.24.9.110	E	documentation:operation:maintenance	ink	[Informes y Estadísticas en el Interfaz web] 		236

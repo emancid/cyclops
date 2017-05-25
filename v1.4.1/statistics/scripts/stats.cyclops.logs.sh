@@ -418,7 +418,7 @@ init_date()
                 _par_date_end=$( date +%Y-%m-%d )
 	;;
         *[0-9]day|day)
-		_day_count=$( echo $_par_date_start | grep -o [0-9]* )
+		_day_count=$( echo $_par_date_start | grep -o ^[0-9]* )
 		_par_date_start="day"
 
 		[ -z "$_day_count" ] && _day_count=1

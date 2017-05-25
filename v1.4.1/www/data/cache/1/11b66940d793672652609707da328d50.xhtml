@@ -1,0 +1,55 @@
+
+<h1 class="sectionedit1" id="procedimientos_tecnicos_-_basicos">Procedimientos Técnicos - Básicos</h1>
+<div class="level1">
+
+<p>
+<strong> Operating System - Daemon : Daemon service failed </strong>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Procedimientos Técnicos - Básicos" [3-112] -->
+<h2 class="sectionedit2" id="sistemas_objetivo">Sistemas Objetivo</h2>
+<div class="level2">
+<div class="table sectionedit3"><table class="inline" style="width: 100%;">
+
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Grupo     </th><th class="col1 centeralign">  Nodos                      </th><th class="col2 centeralign">  Descripción                                                                             </th><th class="col3 centeralign">  Criticidad          </th><th class="col4 centeralign">  Implicación  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  Todos     </td><td class="col1 centeralign">  Todos                      </td><td class="col2 leftalign">                                                                                          </td><td class="col3 centeralign" bgcolor=#FFFF00> MEDIA               </td><td class="col4 centeralign">  Depende del Demonio  </td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [155-525] -->
+</div>
+<!-- EDIT2 SECTION "Sistemas Objetivo" [113-526] -->
+<h2 class="sectionedit4" id="sistemas_colaterales">Sistemas Colaterales</h2>
+<div class="level2">
+<div class="table sectionedit5"><table class="inline" style="width: 100%;">
+
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Grupo         </th><th class="col1 centeralign">  Nodos           </th><th class="col2 centeralign">  Descripción                                                     </th><th class="col3 centeralign">  Criticidad  </th><th class="col4 centeralign">  Implicación  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  Todos         </td><td class="col1 centeralign">  Depende         </td><td class="col2 leftalign">                                                                  </td><td class="col3 centeralign" bgcolor=#FFFF00> MEDIA       </td><td class="col4 centeralign">  Depende del Demonio  </td>
+	</tr>
+</table></div>
+<!-- EDIT5 TABLE [572-865] -->
+</div>
+<!-- EDIT4 SECTION "Sistemas Colaterales" [527-866] -->
+<h2 class="sectionedit6" id="procedimiento">Procedimiento</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Accedemos al nodo afectado:<pre class="code">ssh [Nimbus afectado]</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Vemos el listado de daemon configurados en el arranque del nodo : <pre class="code">for _daemon in $(chkconfig | awk &#039;$5 == &quot;3:on&quot; { print $1}&#039;) ; do echo $_daemon&quot; : &quot;$(service $_daemon status 2&gt;&amp;1 &gt;/dev/null ; echo $?) ; done</pre>
+</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT6 SECTION "Procedimiento" [867-] -->

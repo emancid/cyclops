@@ -37,6 +37,7 @@ then
         exit 1
 else
         source $_config_path/global.cfg
+	source $_color_cfg_file
 fi
 
 # -------------- SCRIPT ------------------#
@@ -177,16 +178,30 @@ case "$_par_show" in
 			if [ ! -z "$_ia_alert" ]
 			then
 				echo '|< 35% 40% 60% >|'
-				echo -e "|  @#C9D6FF: host  |  @#C9D6FF: user  |"
-				echo -e "${_ia_alert}" | sort -u | sed -e 's/^ //' -e 's/@$/;/' -e 's/@/;@#C9D6FF: /g' -e 's/^/\|\ \ /' -e 's/$/\ \ \|/' -e 's/;/\ \ \|\ \ /g' -e 's/DOWN/\@\#FA5858\:/g' -e 's/OK/\@\#A5DF00\:/g' -e 's/UNKNOWN/\@\#E28EFF:&/' -e 's/MARK/\@\#FFFF00\:/g'
+				echo -e "|  $_color_title host  |  $_color_title user  |"
+				echo -e "${_ia_alert}" | sort -u | sed -e 's/^ //' -e 's/@$/;/' -e "s/@/;$_color_title /g" -e 's/^/\|\ \ /' -e 's/$/\ \ \|/' -e 's/;/\ \ \|\ \ /g' -e "s/DOWN/$_color_down/g" -e "s/OK/$_color_ok/g" -e "s/UNKNOWN/$_color_unknow &/" -e "s/MARK/$_color_mark/g"
 			echo
 			fi
 		fi
 		
 		echo "<hidden Users Status $_ia_hidden_state>"
 		echo "|< 100% 10% 10% 15% 10% >|"
-		echo "|  @#C9D6FF: host  |  @#C9D6FF: user  |  @#C9D6FF: source  |  @#C9D6FF: idle_time  |  @#C9D6FF: command  |"
-		echo -e "${_user_status_output}" | sort | awk -F";" 'BEGIN { field1="fea"; field2="feo" } { if ( $1 == field1 ) if ( $2 == field2 ) { print ":::;:::;"$3";@#F5FFE9:"$4";@#F5FFE9:"$5} else { field2=$2 ; print ":::;"$2";"$3";@#F5FFE9:"$4";@#F5FFE9:"$5} else { print $1";"$2";"$3";@#F5FFE9:"$4";@#F5FFE9:"$5 ; field1=$1; field2=$2 }}'  | sed -e 's/|/\%\%\|\%\%/g' -e "s/^/|  /" -e "s/$/  |/" -e "s/;/  |  /g" -e 's/UP/\@\#EAFFD5\:/g' -e 's/DOWN/\@\#FA5858\:/g' -e 's/OK/\@\#A5DF00\:/g' -e 's/FAIL/\@\#FAAC58\:/g' -e 's/UNKN/@\#E28EFF\:/g' -e 's/MARK/\@\#FFFF00\:/g'
+		echo "|  $_color_title host  |  $_color_title user  |  $_color_title source  |  $_color_title idle_time  |  $_color_title command  |"
+		echo -e "${_user_status_output}" | sort | awk -F";" -v _cu="$_color_up" '
+			BEGIN { 
+				field1="fea"; 
+				field2="feo" 
+			} { 
+				if ( $1 == field1 ) if ( $2 == field2 ) { 
+							print ":::;:::;"$3";"_cu":"$4";"_cu" "$5
+						} else { 
+							field2=$2 ; 
+							print ":::;"$2";"$3";"_cu" "$4";"_cu" "$5
+						} else { 
+							print $1";"$2";"$3";"_cu" "$4";"_cu" "$5 ; field1=$1; field2=$2 
+						}
+			}'  | 
+				sed -e 's/|/\%\%\|\%\%/g' -e "s/^/|  /" -e "s/$/  |/" -e "s/;/  |  /g" -e "s/UP/$_color_up/g" -e "s/DOWN/$_color_down/g" -e "s/OK/$_color_ok/g" -e "s/FAIL/$_color_fail/g" -e "s/UNKN/$_color_unk/g" -e "s/MARK/$_color_mark/g"
 		echo "</hidden>"
 	;;
 	"commas")

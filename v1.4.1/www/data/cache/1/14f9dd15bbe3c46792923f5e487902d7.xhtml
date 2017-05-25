@@ -1,0 +1,165 @@
+
+<h1 class="sectionedit1" id="kill_zombie_process">Kill Zombie Process</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Kill Zombie Process" [1-35] -->
+<h2 class="sectionedit2" id="datos_generales">Datos Generales</h2>
+<div class="level2">
+<div class="table sectionedit3"><table class="inline" style="width: 50%;">
+
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Código      </th><th class="col1 centeralign">  Nombre Procedimiento  </th><th class="col2 centeralign">  Verificado                  </th><th class="col3 centeralign">  Operativo    </th><th class="col4 centeralign">  Fecha Creación  </th><th class="col5 centeralign">  Fecha Ultima Modificación  </th><th class="col6 centeralign">  Versión  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  OSADAV0001  </td><td class="col1 centeralign">  Kill Zombie Process   </td><td class="col2 centeralign" bgcolor=#EAFFD5>SI  </td><td class="col3 centeralign" bgcolor=#EAFFD5>SI  </td><td class="col4 centeralign">  22/09/2015      </td><td class="col5 centeralign">  07/10/2015                 </td><td class="col6 centeralign">  0.3      </td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [80-368] -->
+</div>
+<!-- EDIT2 SECTION "Datos Generales" [36-369] -->
+<h2 class="sectionedit4" id="sistemas_objetivo">Sistemas Objetivo</h2>
+<div class="level2">
+<div class="table sectionedit5"><table class="inline" style="width: 100%;">
+<col style="width: 10%" /><col style="width: 10%" /><col style="width: 32%" /><col style="width: 8%" /><col style="width: 30%" />
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Grupo         </th><th class="col1 centeralign">  Nodos                    </th><th class="col2 centeralign">  Descripción         </th><th class="col3 centeralign">  Criticidad            </th><th class="col4 centeralign">  Implicación                                                 </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  all       </td><td class="col1 centeralign">  all    </td><td class="col2 leftalign">                 </td><td class="col3 centeralign" bgcolor=#FA5858><span style="color: white">ALTA</span>        </td><td class="col4 centeralign">  La ejecucion de este procedimiento de manera inadecuada podria generar inestabilidad en todo el entorno  </td>
+	</tr>
+</table></div>
+<!-- EDIT5 TABLE [431-781] -->
+</div>
+<!-- EDIT4 SECTION "Sistemas Objetivo" [370-782] -->
+<h2 class="sectionedit6" id="sistemas_colaterales">Sistemas Colaterales</h2>
+<div class="level2">
+<div class="table sectionedit7"><table class="inline" style="width: 100%;">
+<col style="width: 10%" /><col style="width: 10%" /><col style="width: 32%" /><col style="width: 8%" /><col style="width: 30%" />
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Grupo         </th><th class="col1 centeralign">  Nodos          </th><th class="col2 centeralign">  Descripción                                                     </th><th class="col3 centeralign">  Criticidad  </th><th class="col4 centeralign">  Implicación  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  Todos         </td><td class="col1 centeralign">  Todos          </td><td class="col2 leftalign">                                                                  </td><td class="col3 centeralign" bgcolor=#F3F781> BAJA       </td><td class="col4 centeralign">  Ninguna conocida  </td>
+	</tr>
+</table></div>
+<!-- EDIT7 TABLE [847-1134] -->
+</div>
+<!-- EDIT6 SECTION "Sistemas Colaterales" [783-1136] -->
+<h2 class="sectionedit8" id="procedimiento">Procedimiento</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 SECTION "Procedimiento" [1137-1163] -->
+<h3 class="sectionedit9" id="notificacion_inicial">Notificación Inicial</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Notificar la incidencia:</div>
+<ul>
+<li class="level2"><div class="li"> SI SOY: Valencia → <a href="/cyclops/doku.php?id=operation:procedures:adaexx0002" class="wikilink1" title="operation:procedures:adaexx0002"> ADAEXX0002 : AEMET Notificatión</a></div>
+</li>
+<li class="level2"><div class="li"> SI SOY: AEMET →    <a href="/cyclops/doku.php?id=operation:procedures:adbvxx0001" class="wikilink1" title="operation:procedures:adbvxx0001">ADBVXX0001 : Notificación BULL - Valencia </a></div>
+</li>
+<li class="level2"><div class="li"> SI NO SOY NINGUNO DE LOS ANTERIORES → <a href="/cyclops/doku.php?id=operation:procedures:adbaxx0001" class="wikilink1" title="operation:procedures:adbaxx0001"> ADBAXX0001 : Notificación BULL - AEMET </a></div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+<!-- EDIT9 SECTION "Notificación Inicial" [1164-1555] -->
+<h3 class="sectionedit10" id="alcance">Alcance</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <strong> Este procedimiento solo se ejecutara por los siguientes actores en las siguientes circunstancias: </strong></div>
+</li>
+</ul>
+<div class="table sectionedit11"><table class="inline" style="width: 50%;">
+
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  ACTOR          </th><th class="col1 centeralign">  EJECUCION                   </th><th class="col2 centeralign">  HORARIO EJECUCION                                                                     </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  AEMET          </td><td class="col1 centeralign" bgcolor=#FA5858><span style="color: white">NO</span>  </td><td class="col2 centeralign" bgcolor=#FAAC58> SOLO NOTIFICACIÓN INICIAL                                                   </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 centeralign">  BULL VALENCIA  </td><td class="col1 centeralign" bgcolor=#EAFFD5>SI                 </td><td class="col2 centeralign" bgcolor=#FFFF00> EXCLUIR HORARIO BULL AEMET  ( L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL )  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 centeralign">  BULL AEMET     </td><td class="col1 centeralign" bgcolor=#EAFFD5>SI                 </td><td class="col2 centeralign" bgcolor=#EAFFD5>L-J 08:00-17:30 y V 08:00-14:00 HORA LOCAL                                   </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 centeralign">  BULL MADRID    </td><td class="col1 centeralign" bgcolor=#EAFFD5>SI                 </td><td class="col2 centeralign" bgcolor=#FFFF00> INTERVENCION SOLICITADA                                                     </td>
+	</tr>
+</table></div>
+<!-- EDIT11 TABLE [1694-2394] -->
+</div>
+<!-- EDIT10 SECTION "Alcance" [1556-2395] -->
+<h3 class="sectionedit12" id="ejecucion">Ejecución</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Conectamos desde el exterior a un nodo de gestión <a href="/cyclops/doku.php?id=operation:procedures:spxxxx0002" class="wikilink1" title="operation:procedures:spxxxx0002">SPXXXX0002 : Conexión SSH al Sistema</a></div>
+<ol>
+<li class="level2"><div class="li"> En caso de no poderse conectar realizar: <a href="/cyclops/doku.php?id=operation:procedures:spxxxx0004" class="wikilink1" title="operation:procedures:spxxxx0004">SPXXXX0004 : Perdida de Conexión con la monitorización</a></div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> Comprobar desde el nodo de gestión si hay procesos zombies sobre el nodo afectado: <a href="/cyclops/doku.php?id=operation:procedures:sfcybs0003" class="wikilink1" title="operation:procedures:sfcybs0003">SFCYBS0003 : Comprobar si existen procesos zombie</a> </div>
+<ol>
+<li class="level2"><div class="li"> En caso de confirmar la existencia de procesos Zombie ejecutar sobre el nodo afectado: <a href="/cyclops/doku.php?id=operation:procedures:sfcybs0004" class="wikilink1" title="operation:procedures:sfcybs0004">SFCYBS0004 : Purgar procesos zombie</a></div>
+<ol>
+<li class="level3"><div class="li"> Verificar que se han eliminado: <a href="/cyclops/doku.php?id=operation:procedures:sfcybs0003" class="wikilink1" title="operation:procedures:sfcybs0003">SFCYBS0003 : Comprobar si existen procesos zombie</a></div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> FINAL </div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT12 SECTION "Ejecución" [2396-3165] -->
+<h3 class="sectionedit13" id="notificacion_final">Notificación Final</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Incluir en la notificación la siguiente información</div>
+<ul>
+<li class="level2"><div class="li"> Nodo(s) Afectado(s)</div>
+</li>
+<li class="level2"><div class="li"> Sensor que ha generado la alerta</div>
+</li>
+<li class="level2"><div class="li"> Procedimiento(s) asociado(s) que se han seguido <em>solo aquellos que se hayan ejecutado</em></div>
+<ul>
+<li class="level3"><div class="li"> Resultado de la ejecución del procedimiento, incluyendo aquellos procesos que no se hayan conseguido eliminar.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Estado final del nodo o nodos afectados</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Notificar la incidencia a los siguientes actores:</div>
+<ul>
+<li class="level2"><div class="li"> Solo Valencia → <a href="/cyclops/doku.php?id=operation:procedures:adaexx0002" class="wikilink1" title="operation:procedures:adaexx0002"> ADAEXX0002 : AEMET Notificatión</a></div>
+</li>
+<li class="level2"><div class="li"> Solo AEMET →    <a href="/cyclops/doku.php?id=operation:procedures:adbvxx0001" class="wikilink1" title="operation:procedures:adbvxx0001">ADBVXX0001 : Notificación BULL - Valencia </a></div>
+</li>
+<li class="level2"><div class="li"> Siempre → <a href="/cyclops/doku.php?id=operation:procedures:adbaxx0001" class="wikilink1" title="operation:procedures:adbaxx0001"> ADBAXX0001 : Notificación BULL - AEMET </a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> FINAL</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT13 SECTION "Notificación Final" [3166-] -->

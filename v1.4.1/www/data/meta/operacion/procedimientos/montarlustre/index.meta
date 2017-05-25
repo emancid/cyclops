@@ -1,8 +1,0 @@
-a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1424076061;s:8:"modified";i:1424076080;}s:7:"creator";s:23:"david fernandez alvarez";s:4:"user";s:3:"inp";s:11:"last_change";a:7:{s:4:"date";i:1424076080;s:2:"ip";s:14:"193.144.150.33";s:4:"type";s:1:"E";s:2:"id";s:43:"operacion:procedimientos:montarlustre:index";s:4:"user";s:3:"inp";s:3:"sum";s:17:"[Restart Lustre] ";s:5:"extra";s:0:"";}s:11:"contributor";a:1:{s:3:"inp";s:23:"david fernandez alvarez";}s:5:"title";s:9:"Operacion";s:11:"description";a:2:{s:15:"tableofcontents";a:2:{i:0;a:4:{s:3:"hid";s:9:"operacion";s:5:"title";s:9:"Operacion";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:14:"restart_lustre";s:5:"title";s:14:"Restart Lustre";s:4:"type";s:2:"ul";s:5:"level";i:1;}}s:8:"abstract";s:133:"Operacion
-
-Restart Lustre
-
-	*  Se recupera el montaje mediante el comando desde el nodo de gestión nimbus0:
-
-
-shine mount -n nimbusX";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1424076061;s:8:"modified";i:1424076080;}s:7:"creator";s:23:"david fernandez alvarez";s:4:"user";s:3:"inp";s:11:"last_change";a:7:{s:4:"date";i:1424076080;s:2:"ip";s:14:"193.144.150.33";s:4:"type";s:1:"E";s:2:"id";s:43:"operacion:procedimientos:montarlustre:index";s:4:"user";s:3:"inp";s:3:"sum";s:17:"[Restart Lustre] ";s:5:"extra";s:0:"";}s:11:"contributor";a:1:{s:3:"inp";s:23:"david fernandez alvarez";}}}

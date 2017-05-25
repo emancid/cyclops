@@ -1,0 +1,78 @@
+
+<h1 class="sectionedit1" id="procedimientos_tecnicos_-_basicos">Procedimientos Técnicos - Básicos</h1>
+<div class="level1">
+
+<p>
+<strong> Sistema Operativo - Administración : Conexión Remota a Consola Nodo </strong>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Procedimientos Técnicos - Básicos" [1-130] -->
+<h2 class="sectionedit2" id="sistemas_objetivo">Sistemas Objetivo</h2>
+<div class="level2">
+<!-- table-width 100% -->
+<div class="table sectionedit3"><table class="inline" style="width: 100%;">
+
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Grupo         </th><th class="col1 centeralign">  Nodos          </th><th class="col2 centeralign">  Descripción                                                     </th><th class="col3 centeralign">  Criticidad     </th><th class="col4 centeralign">  Implicación  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  Todos         </td><td class="col1 centeralign">  Todos          </td><td class="col2 leftalign">                                                                  </td><td class="col3 centeralign" bgcolor=#EAFFD5>BAJA  </td><td class="col4 leftalign">               </td>
+	</tr>
+</table></div>
+<!-- EDIT3 TABLE [185-464] -->
+</div>
+<!-- EDIT2 SECTION "Sistemas Objetivo" [131-466] -->
+<h2 class="sectionedit4" id="sistemas_colaterales">Sistemas Colaterales</h2>
+<div class="level2">
+<div class="table sectionedit5"><table class="inline" style="width: 100%;">
+
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Grupo         </th><th class="col1 centeralign">  Nodos          </th><th class="col2 centeralign">  Descripción                                                     </th><th class="col3 centeralign">  Criticidad     </th><th class="col4 centeralign">  Implicación  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  Gestión       </td><td class="col1 centeralign">  Nimbus[0-1]    </td><td class="col2 centeralign">  Permiten la administración del sistema                          </td><td class="col3 centeralign" bgcolor=#EAFFD5>BAJA  </td><td class="col4 centeralign">  El servicio de consola puede quedarse en estado inestable  </td>
+	</tr>
+</table></div>
+<!-- EDIT5 TABLE [512-839] -->
+</div>
+<!-- EDIT4 SECTION "Sistemas Colaterales" [467-840] -->
+<h2 class="sectionedit6" id="procedimiento">Procedimiento</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Se ejecuta desde los nodos de gestión:</div>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> <strong> OPCION A </strong> (Depende de la suit de hpc de bull)</div>
+<ol>
+<li class="level2"><div class="li"> se ejecuta el comando:<pre class="code">conman [nodo objetivo]</pre>
+</div>
+</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li class="level1 node"><div class="li"> <strong> OPCION B </strong> (generica)</div>
+<ol>
+<li class="level2"><div class="li"> se ejecuta el comando:<pre class="code">ipmiconsole -u [usuario] -p [clave] -h bmc[nodo objetivo]</pre>
+</div>
+</li>
+</ol>
+</li>
+</ul>
+
+<p>
+<strong> NOTA </strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> En ocasiones la conexion puede no devolver nada, se puede requerir un reinicio de la maquina o un comando que implique una “impresion” en la consola</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Procedimiento" [841-] -->
