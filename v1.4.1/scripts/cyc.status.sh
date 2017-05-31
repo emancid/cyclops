@@ -261,6 +261,23 @@ critical_env()
 node_real_status()
 {
 
+	_critical_st_simp=$( $_tool_path/approved/test.productive.env.sh -t pasive -v simple 2>/dev/null )
+	_critical_st_time=$( echo "$_critical_st_simp" | awk -F\; -v _g="$_sh_color_green" -v _r="$_sh_color_red" '
+		BEGIN { 
+			_now=systime() 
+		} { 
+			split($1,d,"-") ; 
+			split($2,h,":") ;  
+			_ts=mktime( d[3]" "d[2]" "d[1]" "h[1]" "h[2]" 0" ) 
+			if ( _ts < _now-300 )  { 
+				_s=_r 
+			} else { 
+				_s=_g 
+			}
+		} END { 
+			print _s 
+		}' ) 
+
 	if [ "$_opt_node" == "yes" ]
 	then
 		_node_list=$( node_ungroup $_par_node | tr '\n' ',' | sed 's/,$//' )
@@ -388,7 +405,9 @@ node_real_status()
 	echo -e $_sh_color_bolt"NODE: STATUS"$_sh_color_nformat
 	echo -e $_sh_color_bolt"------------"$_sh_color_nformat
 	echo
-	echo -e $_node_last_st"LAST UPDATE:$_sh_color_nformat $_node_last_up\n"
+	echo -e "LAST UPDATE: $_node_last_st$_node_last_up$_sh_color_nformat"
+	echo -e "CRITICAL ENV STATUS: $_critical_st_time$( echo "${_critical_st_simp}" | cut -d';' -f4  )$_sh_color_nformat"
+	echo
 	[ "$_opt_node" == "yes" ] && echo -e "FILTER: "$_par_node"\n"
 	echo -e "${_new_line}" | column -t -s\; 
 

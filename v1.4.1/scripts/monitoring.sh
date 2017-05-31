@@ -337,6 +337,28 @@ generate_mon_output_dash ()
 		_audit_last_bitacora_msg=$( echo "${_audit_last_bitacora_msg}" | sed '1 i\|< 100% 6% 6% 8% 10% 64% 6%>|' )
 	fi
 
+	_audit_last_events=$( $_script_path/audit.nod.sh -v eventlog | sort -n -t\; | awk -F\; -v _cd="$_color_down" -v _cf="$_color_fail"  -v _cr="$_color_rzr" -v _cc="$_color_fail" -v _cm="$_color_mark" -v _cu="$_color_up" -v _ap="$_wiki_audit_path" '
+                BEGIN {
+                        _st=systime()-86400*3
+                } $1 >= _st && ( $4 == "ALERT" ||  $4 == "REACTIVE" && $6 !~ /REPAIR|OK/ ) { 
+                        _d=strftime("%Y-%m-%d;%H:%M:%S",$1) ; 
+                        split(_d,d,";") ; 
+                        if ( d[1] != _do ) { 
+                                _do=d[1] ; 
+                                _dp=d[1] 
+                        } else { 
+                                _dp=":::" 
+                        } ; 
+                        if ( $6 ~ /ALERT|FAIL/ ) { $6=_cf" "$6 }
+                        if ( $6 == "DOWN" ) { $6=_cd" "$6 } 
+                        if ( $6 == "DIAGNOSE" ) { $6=_cm" "$6 }
+                        if ( $6 == "UP" ) { $6=_cu" "$6 }
+                        if ( $6 == "CONTENT" ) { $6=_cc" "$6 }
+                        if ( $4 == "ALERT" ) { $4=_cf" "$4 }
+                        if ( $4 == "REACTIVE" ) { $4=_cr" "$4 }
+                        print "|  "_dp"  |  "d[2]"  |  [["_ap":"$3".audit|"$3"]]  |  "$4"  |  "$5"  |  "$6"  |" 
+                }' )
+
         ## FACTORING WIKI PAGE ##
         
         ## AUTO REFRESH PAGE -- 
@@ -438,22 +460,7 @@ generate_mon_output_dash ()
         echo "<hidden Last 3 Days Alerts>"
         echo "|< 100% 6% 6% 8% 10% 64% 6% >|"
 	echo "|  $_color_header date  |  $_color_header  time  |  $_color_header  node  |  $_color_header event  |  $_color_header  sensor  |  $_color_header status  |"
-	$_script_path/audit.nod.sh -v eventlog | sort -n -t\; | awk -F\; -v _cd="$_color_down" -v _cf="$_color_fail"  -v _ap="$_wiki_audit_path" '
-		BEGIN {
-			_st=systime()-86400*3
-		} $1 >= _st && $4 == "ALERT" { 
-			_d=strftime("%Y-%m-%d;%H:%M:%S",$1) ; 
-			split(_d,d,";") ; 
-			if ( d[1] != _do ) { 
-				_do=d[1] ; 
-				_dp=d[1] 
-			} else { 
-				_dp=":::" 
-			} ; 
-			if ( $6 ~ /ALERT|FAIL/ ) { $6=_cf" "$6 }
-			if ( $6 == "DOWN" ) { $6=_cd" "$6 } 
-			print "|  "_dp"  |  "d[2]"  |  [["_ap":"$3".audit|"$3"]]  |  "_cf" "$4"  |  "$5"  |  "$6"  |" 
-		}'
+	echo "${_audit_last_events}"
         echo "</hidden>"
 
 #	echo "<hidden DEBUG TESTING OUTPUT>"
@@ -1474,10 +1481,11 @@ mon_env_status_pg()
 
 	for _env_status_pg_line in $( cat $_critical_res | grep -v ^\# )
 	do
-		_env_status_pg_total_nod=$( echo $_env_status_pg_line | cut -d';' -f2 )
-		_env_status_pg_min_nod=$(   echo $_env_status_pg_line | cut -d';' -f3 )
-		_env_status_pg_family=$(    echo $_env_status_pg_line | cut -d';' -f4 )
-		_env_status_pg_res_list=$(  echo $_env_status_pg_line | cut -d';' -f5- )
+		_env_status_pg_total_nod=$(  echo $_env_status_pg_line | cut -d';' -f2 )
+		_env_status_pg_min_nod=$(    echo $_env_status_pg_line | cut -d';' -f3 )
+		_env_status_pg_family=$(     echo $_env_status_pg_line | cut -d';' -f4 )
+		_env_status_pg_res_list=$(   echo $_env_status_pg_line | cut -d';' -f5- )
+		_env_status_pg_total_real=$( awk -F\; -v _f="$_env_status_pg_family" 'BEGIN { _count=0 } $3 == _f { _count++ } END { print _count }' $_type )
 
 		_env_status_pg_input=$(  echo "${_mon_nod_input}" | grep -B 1 "^$_env_status_pg_family;" )
 		_env_status_pg_filter=$( echo "${_env_status_pg_input}" | awk -F\; -v cols="$_env_status_pg_res_list" 'BEGIN { OFS=";" ; split(cols,out,";") } NR==1 { for (i=1;i<=NF;i++) ix[$i]=i } NR>1 { for (i in out) printf "%s%s", $ix[out[i]], OFS ; print "" }' )
@@ -1485,8 +1493,13 @@ mon_env_status_pg()
 
 		if [ "$_env_status_pg_health" -ne 0 ]
 		then
-			_env_status_pg_alert=1
-			let "_env_status_pg_total=_env_status_pg_total_nod - _env_status_pg_health"
+			let "_env_status_pg_total=_env_status_pg_total_real - _env_status_pg_health"
+
+			if [ "$_env_status_pg_total" -lt $_env_status_pg_total_nod ] 
+			then
+				_env_status_pg_status="OPERATIVE"
+				_env_status_pg_color=$_color_fail
+			fi
 
 			if [ "$_env_status_pg_total" -lt $_env_status_pg_min_nod ] 
 			then
@@ -1495,11 +1508,9 @@ mon_env_status_pg()
 				_active_sound="yes" 
 				_env_status_pg_sound="{{mp3play>:wiki:alarm.mp3?autostart&loop}}"
 			fi
+
 		fi
 	done
-
-	[ "$_env_status_pg_status" == "OPERATIVE" ] && [ "$_env_status_pg_alert" -ne 0 ] && _env_status_pg_color=$_color_fail 
-
 }
 
 

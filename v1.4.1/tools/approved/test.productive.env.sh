@@ -148,6 +148,7 @@ mon_analisys()
                 _env_status_pg_min_nod=$(   echo $_env_status_pg_line | cut -d';' -f3 )
                 _env_status_pg_family=$(    echo $_env_status_pg_line | cut -d';' -f4 )
                 _env_status_pg_res_list=$(  echo $_env_status_pg_line | cut -d';' -f5- )
+		_env_status_pg_total_real=$( awk -F\; -v _f="$_env_status_pg_family" 'BEGIN { _count=0 } $3 == _f { _count++ } END { print _count }' $_type )
 
                 _env_status_pg_input=$(  echo "${_mon_nod_input}" | grep -B 1 "^$_env_status_pg_family;" )
                 _env_status_pg_filter=$( echo "${_env_status_pg_input}" | awk -F\; -v cols="$_env_status_pg_res_list" 'BEGIN { OFS=";" ; split(cols,out,";") } NR==1 { for (i=1;i<=NF;i++) ix[$i]=i } NR>1 { for (i in out) printf "%s%s", $ix[out[i]], OFS ; print "" }' )
@@ -156,16 +157,25 @@ mon_analisys()
                 if [ "$_env_status_pg_health" -ne 0 ]
                 then
                         _env_status_pg_alert=1
-                        let "_env_status_pg_total=_env_status_pg_total_nod - _env_status_pg_health"
+                        let "_env_status_pg_total=_env_status_pg_total_real - _env_status_pg_health"
 
-                        if [ "$_env_status_pg_total" -lt $_env_status_pg_min_nod ]
-                        then
+
+                        if [ "$_env_status_pg_total" -lt "$_env_status_pg_min_nod" ]
+			then
                                 _env_status_pg_status="NOT OPERATIVE"
 				_env_array_health[$_analisys_index]="$_env_status_pg_family;NOT OPERATIVE"
 			else
-				_env_array_health[$_analisys_index]="$_env_status_pg_family;OPERATIVE WITH WARNINGS"
-                        fi
+				if [ "$_env_status_pg_total" -lt "$_env_status_pg_total_nod" ]
+				then
+					_env_status_pg_status="OPERATIVE"
+					_env_array_health[$_analisys_index]="$_env_status_pg_family;OPERATIVE WITH WARNINGS"
+				else
+					_env_status_pg_status="OPERATIVE"
+					_env_array_health[$_analisys_index]="$_env_status_pg_family;OPERATIVE"
+				fi
+			fi
 		else
+			_env_status_pg_status="OPERATIVE"
 			_env_array_health[$_analisys_index]="$_env_status_pg_family;OPERATIVE"
                 fi
         done

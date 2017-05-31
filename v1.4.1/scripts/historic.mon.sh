@@ -160,11 +160,16 @@ shift $((OPTIND-1))
 
 relocate_files()
 {
-	_relocate_date=$( date +%s )
+	#_relocate_date=$( date +%s )
 
+	_count=0
+	echo -e "BEGIN:\n"
 
-	for _file in $( ls -1 $_mon_history_path/noindex/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].txt 2>/dev/null 2>/dev/null | awk -F\/ '{ print $NF }' )
+	for _file in $( find $_mon_history_path/noindex/ -name "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].txt" 2>/dev/null | awk -F\/ '{ print $NF }' )
 	do
+		let "_count++"
+		echo -ne $_count"\r"
+
 		_file_date=$( echo $_file | cut -d'.' -f1 )
 		_file_year=$( date -d @$_file_date +%Y )
 		_file_month=$( date -d @$_file_date +%m )
@@ -373,6 +378,7 @@ ha_check()
         else
                 if [ "$_ha_role_me" == "MASTER" ]
                 then
+			echo "ALL OK: EXEC DAEMON"
 			daemon_exec 
 		else
                         echo -e "WARNING: HA CONFIG ON POSIBLE SPLIT BRAIN SITUATION force MASTER on UPDATER node" 
@@ -400,7 +406,7 @@ daemon_exec()
 	then
 		if [ "$_cyclops_ha" == "ENABLED" ] 
 		then
-			ha_check 2>&1 >/dev/null 
+			ha_check 2>/dev/null 
 		else
 			daemon_exec	
 		fi

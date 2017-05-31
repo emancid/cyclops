@@ -184,7 +184,12 @@ mon_sh_create()
 	if [ "$_cyc_razor_status" == "ENABLED" ] 
 	then
 		echo "$_cyc_clt_rzr_scp -a enable"
-		[ -f "$_config_path_nod/$_node_family.rzr.lst" ] && echo "echo -e \"$( cat $_config_path_nod/$_node_family.rzr.lst | egrep -v "^$|^#" | tr '\n' '@' | sed 's/@/\\n/g' )\" >$_cyc_clt_rzr_cfg/$_node_family.rzr.lst"
+		if [ -f "$_config_path_nod/$_node_family.rzr.lst" ] 
+		then
+			echo "echo -e \"$( cat $_config_path_nod/$_node_family.rzr.lst | egrep -v "^$|^#" | tr '\n' '@' | sed 's/@/\\n/g' )\" >$_cyc_clt_rzr_cfg/$_node_family.rzr.lst" 
+		else
+			echo "echo >$_cyc_clt_rzr_cfg/$_node_family.rzr.lst"
+		fi
 	else
 		echo "$_cyc_clt_rzr_scp -a disable"
 	fi
@@ -589,9 +594,10 @@ mon_node()
 			echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/@ uptime:\([0-9a-z ]*\)@/;MARK DIAGNOSE (( node in diagnose mode )) @/' -e 's/\@\ [0-9a-z_-]*\:/; CHECKING /g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
 		;;
 		content)
-			_nodename_tag="MARK"
+			_nodename_tag="FAIL"
 			_node_ia=$( echo $_node_ia | tr '[:upper:]' '[:lower:]' )
-                        echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/@ uptime:\([0-9a-z ]*\)@/;MARK CONTENT (( node waiting for admin diagnose ))@/' -e 's/\@\ [0-9a-z_-]*\:/; CHECKING /g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
+                        #echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/@ uptime:\([0-9a-z ]*\)@/;UNKN CONTENT (( node waiting for admin diagnose ))@/' -e 's/\@\ [0-9a-z_-]*\:/; CHECKING /g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
+			echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/@ uptime:\([0-9a-z ]*\)@/;FAIL CONTENT (( node waiting for attention )) @/' -e 's/\@\ [0-9a-z_-]*\:/; CHECKING /g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
 		;;
 		up_bmc_down)
 			if [ "$_node_err" -eq 3 ]
@@ -613,14 +619,15 @@ mon_node()
 				_nodename_tag="DOWN"
 				_node_ia=$( echo "hostname:$_node_name;$(date +%H.%M.%S)@ uptime: DOWN really power off @\n" )
 				echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/\@\ [a-z_-]*\:/;/g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//' 
-				#echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/@ uptime:/;DOWN really power off @\n/' -e 's/\@\ [0-9a-z_-]*\:/;/g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
 			else
 				echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/@ uptime:[A-Z]* [0-9]*d@/;MARK bmc session err @/' -e 's/\@\ [0-9a-z_-]*\:/;/g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
 			fi
 		;;
 		link|unlink|repair)
 
-			if [ "$_cyc_razor_status" == "ENABLED" ] && [ "$_err" == "0" ] 
+			_ctrl_rzr_active=$( echo $_node_ia | tr '@' '\n' | sed -e 's/^ //' -e '/^$/d' | awk -F\: 'BEGIN { _ctrl=0 } $1 == "rzr" && $2 ~ "[0-9]+" { _ctrl=1 } END { print _ctrl }' )
+
+			if [ "$_cyc_razor_status" == "ENABLED" ] && [ "$_err" == "0" ] && [ "$_ctrl_rzr_active" == "1" ]  
 			then
 				reactive_func &
 			fi
@@ -632,8 +639,11 @@ mon_node()
 
 		;;
 		*)
+
+			_ctrl_rzr_active=$( echo $_node_ia | tr '@' '\n' | sed -e 's/^ //' -e '/^$/d' | awk -F\: 'BEGIN { _ctrl=0 } $1 == "rzr" && $2 ~ "[0-9]+" { _ctrl=1 } END { print _ctrl }' )
+
 			echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/\@\ [0-9a-z_-]*\:/;/g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
-			if [ "$_cyc_razor_status" == "ENABLED" ] && [ "$_cyc_reactive_status" == "ENABLED" ] && [ "$_err" == "0" ] 
+			if [ "$_cyc_razor_status" == "ENABLED" ] && [ "$_cyc_reactive_status" == "ENABLED" ] && [ "$_err" == "0" ] && [ "$_ctrl_rzr_active" == "1" ] 
 			then
 				case "$_nodename_tag" in
 				FAIL|DOWN)
@@ -694,15 +704,19 @@ reactive_func()
 
 				if [ "$_node_rzr_status" == "0" ] || [ "$_node_rzr_status" == "21" ]
 				then
-					$_script_path/cyclops.sh -a diagnose -n $_node_name -c 2>&1 > /dev/null	
-					$_script_path/audit.nod.sh -i event -e reactive -m "repair action" -s UP -n $_node_name 2>>$_mon_log_path/audit.log
+					_msg_insert="repair action ok, please change to up if status is ok"
+					$_script_path/cyclops.sh -a diagnose -n $_node_name -c 2>&1 >/dev/null	
+					$_script_path/audit.nod.sh -i event -e reactive -m $_msg_insert -s UP -n $_node_name 2>>$_mon_log_path/audit.log
+					$_script_path/cyclops.sh -p medium -m $_node_name" : "$_msg_insert -l
 				else
-					$_script_path/cyclops.sh -a content -n $_node_name -c 2>&1 > /dev/null 
-					$_script_path/audit.nod.sh -i event -e reactive -m "repair action" -s CONTENT -n $_node_name 2>>$_mon_log_path/audit.log
+					_msg_insert="repair action fail, please change to drain if status is bad and productive environment is ok"
+					$_script_path/cyclops.sh -a content -n $_node_name -c 2>&1 >/dev/null 
+					$_script_path/audit.nod.sh -i event -e reactive -m $_msg_insert -s CONTENT -n $_node_name 2>>$_mon_log_path/audit.log
+					$_script_path/cyclops.sh -p high -m $_node_name" : "$_msg_insert -l
 				fi
 			else
-				$_script_path/cyclops.sh -a diagnose -n $_node_name -c 2>&1 > /dev/null	
-				$_script_path/audit.nod.sh -i event -e reactive -m "repair action" -s FAIL -n $_node_name 2>>$_mon_log_path/audit.log
+				$_script_path/cyclops.sh -a content -n $_node_name -c 2>&1 > /dev/null	
+				$_script_path/audit.nod.sh -i event -e reactive -m "razor check ok, inconsistency with monitoring module, manually check node status" -s CONTENT -n $_node_name 2>>$_mon_log_path/audit.log
 			fi
 		else
 			$_script_path/cyclops.sh -a up -n $_node_name -c 2>&1 >/dev/null 
@@ -715,8 +729,8 @@ reactive_func()
 	;;
 	*)
 		#### EXTEND CASES ####
-		$_script_path/cyclops.sh -a diagnose -n $_node_name -c 2>&1 > /dev/null 
-		$_script_path/audit.nod.sh -i event -e reactive -m "$_admin_status change to diagnose" -s DIAGNOSE -n $_node_name 2>>$_mon_log_path/audit.log
+		$_script_path/cyclops.sh -a repair -n $_node_name -c 2>&1 > /dev/null 
+		$_script_path/audit.nod.sh -i event -e reactive -m "$_admin_status , generic procedure, change to repair" -s REPAIR -n $_node_name 2>>$_mon_log_path/audit.log
 	;;
 	esac
 }
