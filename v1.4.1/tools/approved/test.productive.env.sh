@@ -163,21 +163,19 @@ mon_analisys()
                         if [ "$_env_status_pg_total" -lt "$_env_status_pg_min_nod" ]
 			then
                                 _env_status_pg_status="NOT OPERATIVE"
-				_env_array_health[$_analisys_index]="$_env_status_pg_family;NOT OPERATIVE"
 			else
 				if [ "$_env_status_pg_total" -lt "$_env_status_pg_total_nod" ]
 				then
-					_env_status_pg_status="OPERATIVE"
-					_env_array_health[$_analisys_index]="$_env_status_pg_family;OPERATIVE WITH WARNINGS"
+					_env_status_pg_status="OPERATIVE WITH WARNINGS"
 				else
 					_env_status_pg_status="OPERATIVE"
-					_env_array_health[$_analisys_index]="$_env_status_pg_family;OPERATIVE"
 				fi
 			fi
 		else
 			_env_status_pg_status="OPERATIVE"
-			_env_array_health[$_analisys_index]="$_env_status_pg_family;OPERATIVE"
                 fi
+
+		_env_array_health[$_analisys_index]="$_env_status_pg_family;$_env_status_pg_status"
         done
 
         [ "$_env_status_pg_status" == "OPERATIVE" ] && [ "$_env_status_pg_alert" -ne 0 ] && _env_status_pg_color=$_color_fail

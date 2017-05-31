@@ -262,21 +262,14 @@ node_real_status()
 {
 
 	_critical_st_simp=$( $_tool_path/approved/test.productive.env.sh -t pasive -v simple 2>/dev/null )
-	_critical_st_time=$( echo "$_critical_st_simp" | awk -F\; -v _g="$_sh_color_green" -v _r="$_sh_color_red" '
-		BEGIN { 
-			_now=systime() 
-		} { 
-			split($1,d,"-") ; 
-			split($2,h,":") ;  
-			_ts=mktime( d[3]" "d[2]" "d[1]" "h[1]" "h[2]" 0" ) 
-			if ( _ts < _now-300 )  { 
-				_s=_r 
-			} else { 
-				_s=_g 
-			}
-		} END { 
-			print _s 
-		}' ) 
+	_critical_st_color=$( echo "$_critical_st_simp" | awk -F\; -v _g="$_sh_color_green" -v _f="$_sh_color_yellow" -v _r="$_sh_color_red" '
+		{ 
+			if ( $4 == "NOT OPERATIVE"  ) { _cs=_r } ;
+			if ( $4 == "OPERATIVE WITH WARNINGS" ) { _cs=_f } ;
+			if ( $4 == "OPERATIVE" ) { _cs=_g } ;
+		} END {
+			print _cs 
+		}'  ) 
 
 	if [ "$_opt_node" == "yes" ]
 	then
@@ -406,7 +399,7 @@ node_real_status()
 	echo -e $_sh_color_bolt"------------"$_sh_color_nformat
 	echo
 	echo -e "LAST UPDATE: $_node_last_st$_node_last_up$_sh_color_nformat"
-	echo -e "CRITICAL ENV STATUS: $_critical_st_time$( echo "${_critical_st_simp}" | cut -d';' -f4  )$_sh_color_nformat"
+	echo -e "CRITICAL ENV STATUS: $_critical_st_color$( echo "${_critical_st_simp}" | cut -d';' -f4  )$_sh_color_nformat"
 	echo
 	[ "$_opt_node" == "yes" ] && echo -e "FILTER: "$_par_node"\n"
 	echo -e "${_new_line}" | column -t -s\; 

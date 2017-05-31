@@ -459,7 +459,7 @@ generate_mon_output_dash ()
 
         echo "<hidden Last 3 Days Alerts>"
         echo "|< 100% 6% 6% 8% 10% 64% 6% >|"
-	echo "|  $_color_header date  |  $_color_header  time  |  $_color_header  node  |  $_color_header event  |  $_color_header  sensor  |  $_color_header status  |"
+	echo "|  $_color_header date  |  $_color_header  time  |  $_color_header  node  |  $_color_header event  |  $_color_header  sensor/message  |  $_color_header status  |"
 	echo "${_audit_last_events}"
         echo "</hidden>"
 
@@ -1389,6 +1389,11 @@ mon_node_operative_pg()
                 _nod_operative_status="CRITICAL $_nod_operative_status%"
 		_active_sound="yes"
                 _nod_operative_sound="{{mp3play>:wiki:craking_system.mp3?autostart&loop}}" ### REFACTORING: CHANGE SOUND
+
+		_msg_insert="Monitoring: Critical resources level, probably not enought for operation"
+
+		$_script_path/audit.nod.sh -i bitacora -e ALERT -s DOWN -m $_msg_insert 
+		$_script_path/cyclops.sh -p high -m "System Status : "$_msg_insert -l
         ;;
 	[4-6][0-9])
                 _nod_operative_color=$_color_mark
@@ -1396,6 +1401,11 @@ mon_node_operative_pg()
                 _nod_operative_status="DANGEROUS $_nod_operative_status%"
 		_active_sound="yes"
                 _nod_operative_sound="{{mp3play>:wiki:craking_system.mp3?autostart&loop}}"
+
+		_msg_insert="Monitoring: Warning resources level so low"
+
+		$_script_path/audit.nod.sh -i bitacora -e ALERT -s INFO -m $_msg_insert 
+		$_script_path/cyclops.sh -p medium -m "System Status : "$_msg_insert -l
         ;;	
 	7[0-9])
                 _nod_operative_color=$_color_check
@@ -1499,6 +1509,12 @@ mon_env_status_pg()
 			then
 				_env_status_pg_status="OPERATIVE"
 				_env_status_pg_color=$_color_fail
+				_active_sound="yes" 
+				_env_status_pg_sound="{{mp3play>:wiki:high_alert.mp3?autostart&loop}}"
+				_msg_insert="Critical Module: dangerous low level of resources, please recovery them as soon as posible"
+
+				$_script_path/audit.nod.sh -i bitacora -e ALERT -s INFO -m $_msg_insert 
+				$_script_path/cyclops.sh -p medium -m "Critical System Status : "$_msg_insert -l
 			fi
 
 			if [ "$_env_status_pg_total" -lt $_env_status_pg_min_nod ] 
@@ -1507,6 +1523,10 @@ mon_env_status_pg()
 				_env_status_pg_color=$_color_down 
 				_active_sound="yes" 
 				_env_status_pg_sound="{{mp3play>:wiki:alarm.mp3?autostart&loop}}"
+
+				_msg_insert="Critical Module: Not enought resource for productive environment, Critical Status"
+				$_script_path/audit.nod.sh -i bitacora -e ALERT -s DOWN -m $_msg_insert 
+				$_script_path/cyclops.sh -p high -m "Critical System Status : "$_msg_insert -l
 			fi
 
 		fi

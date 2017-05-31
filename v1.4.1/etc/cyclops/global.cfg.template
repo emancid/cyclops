@@ -17,6 +17,7 @@ _config_path_srv=$_config_path"/services"					## BASE CFG MONITOR SERVICES PATH
 _config_path_rea=$_config_path"/reactive"					## BASE CFG MONITOR REACTIVE ACTIONS PATH
 _config_path_sta=$_config_path"/statistics"					## BASE CFG STATISTICS CONFIG PATH
 _config_path_too=$_config_path"/tools"						## BASE CFG TOOLS PATH
+_config_path_aud=$_config_path"/audit"						## BASE CFG AUDIT MODULE PATH
 _ia_config_path=$_config_path"/ia"						## BASE CFG MONITOR IA PATH //DEPRECATED??//
 
 _base_path="/opt/cyclops"							## CYCLOPS BASE PATH
