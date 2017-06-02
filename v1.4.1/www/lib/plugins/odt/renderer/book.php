@@ -9,7 +9,9 @@
 if(!defined('DOKU_INC')) die();
 
 /**
- * The Renderer
+ * The Book Renderer.
+ * 
+ * @package DokuWiki\Renderer\Book
  */
 class renderer_plugin_odt_book extends renderer_plugin_odt_page {
 
@@ -78,13 +80,7 @@ class renderer_plugin_odt_book extends renderer_plugin_odt_page {
         // FIXME remove last pagebreak
         // <text:p text:style-name="pagebreak"/>
 
-        $this->meta->setTitle($this->title);
-
-        // Insert Indexes (if required), e.g. Table of Contents
-        $this->insert_indexes();
-
-        // Replace local link placeholders
-        $this->insert_locallinks();
+        $this->document->setTitle($this->title);
 
         parent::finalize_ODTfile();
     }
@@ -137,7 +133,11 @@ class renderer_plugin_odt_book extends renderer_plugin_odt_page {
         $pages = $this->actioninstance->getExportedPages();
         if ( in_array($id, $pages) ) {
             // Yes, create a local link with a name
-            parent::locallink_with_name($hash, $id, $name);
+            if($returnonly) {
+                return $this->locallink_with_text($hash, $id, $name, $returnonly);
+            } else {
+                $this->locallink_with_text($hash, $id, $name, $returnonly);
+            }
             return;
         }
 
@@ -147,15 +147,15 @@ class renderer_plugin_odt_book extends renderer_plugin_odt_page {
 
         if ($ID == $id) {
             if($returnonly) {
-                return $this->reference($hash, $name);
+                return $this->locallink_with_text($hash, $id, $name, $returnonly);
             } else {
-                $this->doc .= $this->reference($hash, $name);
+                $this->locallink_with_text($hash, $id, $name, $returnonly);
             }
         } else {
             if($returnonly) {
-                return $this->_doLink($url,$name);
+                return $this->_doLink($url, $name, $returnonly);
             } else {
-                $this->doc .= $this->_doLink($url,$name);
+                $this->_doLink($url, $name, $returnonly);
             }
         }
     }

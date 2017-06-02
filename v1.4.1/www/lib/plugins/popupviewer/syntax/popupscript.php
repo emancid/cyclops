@@ -27,21 +27,21 @@ class syntax_plugin_popupviewer_popupscript extends DokuWiki_Syntax_Plugin {
         $this->Lexer->addExitPattern('</popupscript>', 'plugin_popupviewer_popupscript');
     }
 
-    function handle($match, $state, $pos, &$handler) {
-    	if ( $state == DOKU_LEXER_UNMATCHED ) {
-	    	return $match;
-    	}
-    	
-    	return false;
+    function handle($match, $state, $pos, Doku_Handler $handler) {
+        if ( $state == DOKU_LEXER_UNMATCHED ) {
+            return $match;
+        }
+        
+        return false;
     }
 
-    function render($mode, &$renderer, $data) {
+    function render($mode, Doku_Renderer $renderer, $data) {
 
-		global $ID;
+        global $ID;
 
-		if ( $mode == "metadata" && $this->getConf('allowpopupscript')) {
-			p_set_metadata($ID, array( 'popupscript' => trim($data)));
-		}
+        if ( $mode == "metadata" && $this->getConf('allowpopupscript')) {
+            p_set_metadata($ID, array( 'popupscript' => trim($data)));
+        }
     }
 }
 // vim:ts=4:sw=4:et:enc=utf-8:

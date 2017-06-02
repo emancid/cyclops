@@ -6,24 +6,22 @@
  * @author     LarsDW223
  */
 
+require_once DOKU_PLUGIN . 'odt/ODT/ODTUnits.php';
+
 // must be run within Dokuwiki
 if (!defined('DOKU_INC')) die();
 
 /**
  * Class helper_plugin_odt_units
+ * 
+ * @package helper\units
  */
 class helper_plugin_odt_units extends DokuWiki_Plugin {
-    // Measure units as defined in "Extensible Stylesheet Language (XSL) Version 1.1"
-    protected static $xsl_units = array('cm', 'mm', 'in', 'pt', 'pc', 'px', 'em');
-    protected static $twips_per_pixel_x = 16;
-    protected static $twips_per_pixel_y = 20;
-    protected static $twips_per_point   = 20;
-    protected static $point_in_cm = 0.035277778;
-    protected static $inch_in_cm = 2.54;
-    protected static $inch_in_pt = 0.089605556;
-    protected static $pc_in_cm = 0.423333336;
-    protected static $pc_in_pt = 12;
-    protected static $px_per_em = 14;
+    protected $internal = NULL;
+
+    public function __construct() {
+        $this->internal = new ODTUnits();
+    }
 
     /**
      * @return array
@@ -45,8 +43,8 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @param int $value The length value string, e.g. '1cm'.
      * @return string The unit of $value, e.g. 'cm'
      */
-    public function stripDigits ($value) {
-        return ltrim ($value, '.0123456789');
+    public static function stripDigits ($value) {
+        return ODTUnits::stripDigits ($value);
     }
 
     /**
@@ -55,16 +53,8 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @param string|int $value The length value string, e.g. '1cm'.
      * @return string The digits of $value, e.g. '1'
      */
-    public function getDigits ($value) {
-        $digits = NULL;
-        $length = strlen ((string)$value);
-        for ($index = 0 ; $index < $length ; $index++ ) {
-            if ( is_numeric ($value [$index]) === false && $value [$index] != '.' ) {
-                break;
-            }
-            $digits .= $value [$index];
-        }
-        return $digits;
+    public static function getDigits ($value) {
+        return ODTUnits::getDigits ($value);
     }
 
     /**
@@ -73,8 +63,8 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @param string $unit The unit string, e.g. 'cm'.
      * @return boolean true if valid, false otherwise
      */
-    public function isValidXSLUnit($unit) {
-        return in_array($unit, self::$xsl_units);
+    public static function isValidXSLUnit($unit) {
+        return ODTUnits::isValidXSLUnit($unit);
     }
 
     /**
@@ -83,8 +73,8 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @param string|int $value The length value string, e.g. '1cm'.
      * @return boolean true if valid, false otherwise
      */
-    public function hasValidXSLUnit($value) {
-        return in_array($this->stripDigits((string)$value), self::$xsl_units);
+    public static function hasValidXSLUnit($value) {
+        return ODTUnits::hasValidXSLUnit($value);
     }
 
     /**
@@ -93,7 +83,7 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @param int $value The value to be set.
      */
     public function setPixelPerEm ($value) {
-        self::$px_per_em = $value;
+        $this->internal->setPixelPerEm ($value);
     }
 
     /**
@@ -102,7 +92,7 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @return int The current value.
      */
     public function getPixelPerEm () {
-        return self::$px_per_em;
+        return $this->internal->getPixelPerEm ();
     }
 
     /**
@@ -111,7 +101,7 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @param int $value The value to be set.
      */
     public function setTwipsPerPixelX ($value) {
-        self::$twips_per_pixel_x = $value;
+        $this->internal->setTwipsPerPixelX ($value);
     }
 
     /**
@@ -120,7 +110,7 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @param int $value The value to be set.
      */
     public function setTwipsPerPixelY ($value) {
-        self::$twips_per_pixel_y = $value;
+        $this->internal->setTwipsPerPixelY ($value);
     }
 
     /**
@@ -129,7 +119,7 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @return int The current value.
      */
     public function getTwipsPerPixelX () {
-        return self::$twips_per_pixel_x;
+        return $this->internal->getTwipsPerPixelX ();
     }
 
     /**
@@ -138,7 +128,7 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @return int The current value.
      */
     public function getTwipsPerPixelY () {
-        return self::$twips_per_pixel_y;
+        return $this->internal->getTwipsPerPixelY();
     }
 
     /**
@@ -148,8 +138,7 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @return string The current value.
      */
     public function pixelToPointsX ($pixel) {
-        $pixel = $this->getDigits ((string)$pixel);
-        return ($pixel * self::$twips_per_pixel_x / self::$twips_per_point).'pt';
+        return $this->internal->pixelToPointsX ($pixel);
     }
 
     /**
@@ -159,8 +148,7 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @return string The current value.
      */
     public function pixelToPointsY ($pixel) {
-        $pixel = $this->getDigits ((string)$pixel);
-        return ($pixel * self::$twips_per_pixel_y / self::$twips_per_point).'pt';
+        return $this->internal->pixelToPointsY ($pixel);
     }
 
     /**
@@ -172,41 +160,10 @@ class helper_plugin_odt_units extends DokuWiki_Plugin {
      * @return string The current value.
      */
     public function toPoints ($value, $axis = 'y') {
-        $unit = $this->stripDigits ($value);
-        if ( $unit == 'pt' ) {
-            return $value;
-        }
+        return $this->internal->toPoints ($value, $axis);
+    }
 
-        if ( $this->isValidXSLUnit ($unit) === false  ) {
-            // Not a vlaid/supported unit. Return original value.
-            return $value;
-        }
-
-        $value = $this->getDigits ($value);
-        switch ($unit) {
-            case 'cm':
-                $value = ($value/self::$point_in_cm).'pt';
-            break;
-            case 'mm':
-                $value = ($value/(10 * self::$point_in_cm)).'pt';
-            break;
-            case 'in':
-                $value = ($value * self::$inch_in_pt).'pt';
-            break;
-            case 'pc':
-                $value = ($value * self::$pc_in_pt).'pt';
-            break;
-            case 'px':
-                if ( $axis == 'x' || $axis == 'X' ) {
-                    $value = $this->pixelToPointsX ($value);
-                } else {
-                    $value = $this->pixelToPointsY ($value);
-                }
-            break;
-            case 'em':
-                $value = $this->pixelToPointsY ($value * $this->getPixelPerEm());
-            break;
-        }
-        return $value;
+    public function getInternal() {
+        return $this->internal;
     }
 }

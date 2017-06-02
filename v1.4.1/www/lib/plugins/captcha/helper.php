@@ -6,9 +6,11 @@
 
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
-if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
+if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-
+/**
+ * Class helper_plugin_captcha
+ */
 class helper_plugin_captcha extends DokuWiki_Plugin {
 
     protected $field_in = 'plugin__captcha';
@@ -41,11 +43,14 @@ class helper_plugin_captcha extends DokuWiki_Plugin {
         global $ID;
 
         $rand = (float) (rand(0, 10000)) / 10000;
+        $this->storeCaptchaCookie($this->_fixedIdent(), $rand);
+
         if($this->getConf('mode') == 'math') {
             $code = $this->_generateMATH($this->_fixedIdent(), $rand);
             $code = $code[0];
             $text = $this->getLang('fillmath');
         } elseif($this->getConf('mode') == 'question') {
+            $code = ''; // not used
             $text = $this->getConf('question');
         } else {
             $code = $this->_generateCAPTCHA($this->_fixedIdent(), $rand);
@@ -67,6 +72,20 @@ class helper_plugin_captcha extends DokuWiki_Plugin {
                 break;
             case 'js':
                 $out .= '<span id="plugin__captcha_code">'.$this->_obfuscateText($code).'</span>';
+                break;
+            case 'svg':
+                $out .= '<span class="svg" style="width:'.$this->getConf('width').'px; height:'.$this->getConf('height').'px">';
+                $out .= $this->_svgCAPTCHA($code);
+                $out .= '</span>';
+                break;
+            case 'svgaudio':
+                $out .= '<span class="svg" style="width:'.$this->getConf('width').'px; height:'.$this->getConf('height').'px">';
+                $out .= $this->_svgCAPTCHA($code);
+                $out .= '</span>';
+                $out .= '<a href="'.DOKU_BASE.'lib/plugins/captcha/wav.php?secret='.rawurlencode($secret).'&amp;id='.$ID.'"'.
+                    ' class="JSnocheck" title="'.$this->getLang('soundlink').'">';
+                $out .= '<img src="'.DOKU_BASE.'lib/plugins/captcha/sound.png" width="16" height="16"'.
+                    ' alt="'.$this->getLang('soundlink').'" /></a>';
                 break;
             case 'image':
                 $out .= '<img src="'.DOKU_BASE.'lib/plugins/captcha/img.php?secret='.rawurlencode($secret).'&amp;id='.$ID.'" '.
@@ -109,7 +128,6 @@ class helper_plugin_captcha extends DokuWiki_Plugin {
     public function check($msg = true) {
         global $INPUT;
 
-        $code = '';
         $field_sec = $INPUT->str($this->field_sec);
         $field_in  = $INPUT->str($this->field_in);
         $field_hp  = $INPUT->str($this->field_hp);
@@ -131,12 +149,79 @@ class helper_plugin_captcha extends DokuWiki_Plugin {
             !$field_in ||
             $rand === false ||
             utf8_strtolower($field_in) != utf8_strtolower($code) ||
-            trim($field_hp) !== ''
+            trim($field_hp) !== '' ||
+            !$this->retrieveCaptchaCookie($this->_fixedIdent(), $rand)
         ) {
             if($msg) msg($this->getLang('testfailed'), -1);
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get the path where a captcha cookie would be stored
+     *
+     * We use a daily temp directory which is easy to clean up
+     *
+     * @param $fixed string the fixed part, any string
+     * @param $rand  float  some random number between 0 and 1
+     * @return string the path to the cookie file
+     */
+    protected function getCaptchaCookiePath($fixed, $rand) {
+        global $conf;
+        $path = $conf['tmpdir'] . '/captcha/' . date('Y-m-d') . '/' . md5($fixed . $rand) . '.cookie';
+        io_makeFileDir($path);
+        return $path;
+    }
+
+    /**
+     * remove all outdated captcha cookies
+     */
+    public function _cleanCaptchaCookies() {
+        global $conf;
+        $path = $conf['tmpdir'] . '/captcha/';
+        $dirs = glob("$path/*", GLOB_ONLYDIR);
+        $today = date('Y-m-d');
+        foreach($dirs as $dir) {
+            if(basename($dir) === $today) continue;
+            if(!preg_match('/\/captcha\//', $dir)) continue; // safety net
+            io_rmdir($dir, true);
+        }
+    }
+
+    /**
+     * Creates a one time captcha cookie
+     *
+     * This is used to prevent replay attacks. It is generated when the captcha form
+     * is shown and checked with the captcha check. Since we can not be sure about the
+     * session state (might be closed or open) we're not using it.
+     *
+     * We're not using the stored values for displaying the captcha image (or audio)
+     * but continue to use our encryption scheme. This way it's still possible to have
+     * multiple captcha checks going on in parallel (eg. with multiple browser tabs)
+     *
+     * @param $fixed string the fixed part, any string
+     * @param $rand  float  some random number between 0 and 1
+     */
+    protected function storeCaptchaCookie($fixed, $rand) {
+        $cache = $this->getCaptchaCookiePath($fixed, $rand);
+        touch($cache);
+    }
+
+    /**
+     * Checks if the captcha cookie exists and deletes it
+     *
+     * @param $fixed string the fixed part, any string
+     * @param $rand  float  some random number between 0 and 1
+     * @return bool true if the cookie existed
+     */
+    protected function retrieveCaptchaCookie($fixed, $rand) {
+        $cache = $this->getCaptchaCookiePath($fixed, $rand);
+        if(file_exists($cache)) {
+            unlink($cache);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -154,9 +239,9 @@ class helper_plugin_captcha extends DokuWiki_Plugin {
         global $ID;
         $lm = @filemtime(wikiFN($ID));
         $td = date('Y-m-d');
-        return auth_browseruid().
-        auth_cookiesalt().
-        $ID.$lm.$td;
+        return auth_browseruid() .
+            auth_cookiesalt() .
+            $ID . $lm . $td;
     }
 
     /**
@@ -305,6 +390,43 @@ class helper_plugin_captcha extends DokuWiki_Plugin {
         header("Content-type: image/png");
         imagepng($img);
         imagedestroy($img);
+    }
+
+    /**
+     * Create an SVG of the given text
+     *
+     * @param string $text
+     * @return string
+     */
+    public function _svgCAPTCHA($text) {
+        require_once(__DIR__ . '/EasySVG.php');
+
+        $fonts = glob(__DIR__ . '/fonts/*.svg');
+
+        $x = 0; // where we start to draw
+        $y = 100; // our max height
+
+        $svg = new EasySVG();
+
+        // draw the letters
+        $txtlen = strlen($text);
+        for($i = 0; $i < $txtlen; $i++) {
+            $char = $text[$i];
+            $size = rand($y / 2, $y - $y * 0.1); // 50-90%
+            $svg->setFontSVG($fonts[array_rand($fonts)]);
+
+            $svg->setFontSize($size);
+            $svg->setLetterSpacing(round(rand(1, 4) / 10, 2)); // 0.1 - 0.4
+            $svg->addText($char, $x, rand(0, round($y - $size))); // random up and down
+
+            list($w) = $svg->textDimensions($char);
+            $x += $w;
+        }
+
+        $svg->addAttribute('width', $x . 'px');
+        $svg->addAttribute('height', $y . 'px');
+        $svg->addAttribute('viewbox', "0 0 $x $y");
+        return $svg->asXML();
     }
 
     /**

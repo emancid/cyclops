@@ -3,15 +3,21 @@
  * Options for the odt plugin
  *
  * @author Andreas Gohr <andi@splitbrain.org>
+ * 
+ * @package DokuWiki\Conf\Metadata
  */
 
 $meta['tpl_dir']   = array('string');
 $meta['odt_template'] = array('string');
 $meta['showexportbutton'] = array('onoff');
+$meta['showpdfexportbutton'] = array('onoff');
 
-$meta['media_sel']    = array('string');
-$meta['css_template'] = array('dirchoice', '_dir' => DOKU_INC . 'lib/tpl/');
-$meta['usestyles']    = array('string');
+$meta['css_usage']     = array('multichoice', '_choices' => array('off (plugins only)', 'basic style import'));
+$meta['media_sel']     = array('string');
+$meta['css_font_size'] = array('numeric');
+$meta['css_template']  = array('dirchoice', '_dir' => DOKU_INC . 'lib/tpl/');
+
+$meta['apply_fs_to_non_css'] = array('onoff');
 
 $meta['twips_per_pixel_x'] = array('numeric');
 $meta['twips_per_pixel_y'] = array('numeric');
@@ -42,5 +48,7 @@ $meta['toc_style']        = array('string');
 $meta['index_in_browser'] = array('multichoice', '_choices' => array('hide', 'display placeholder'));
 
 $meta['outline_list_style'] = array('multichoice', '_choices' => array('Normal', 'Numbers'));
+
+$meta['olist_label_align'] = array('multichoice', '_choices' => array('left', 'center', 'right'));
 
 $meta['convert_to_pdf'] = array('string');

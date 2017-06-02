@@ -1,6 +1,10 @@
 <?php
 /**
+ * Default config settings of the ODT plugin.
+ * 
  * @author Aurelien Bompard <aurelien@bompard.org>
+ * @author LarsDW223
+ * @package DokuWiki\Conf\Default
  */
 
 // Directory of the templates in the media manager
@@ -10,11 +14,16 @@ $conf['tpl_dir'] = 'odt';
 $conf['odt_template'] = '';
 
 $conf['showexportbutton'] = 1;
+$conf['showpdfexportbutton'] = 0;
 
 // Parameters for CSS import
+$conf['css_usage']     = 'off (plugins only)';
 $conf['media_sel']     = 'print';
+$conf['css_font_size'] = '16';
 $conf['css_template']  = 'dokuwiki';
-$conf['usestyles']     = '';
+
+// Parameters CSS/Styles-Interworking
+$conf['apply_fs_to_non_css'] = false;
 
 // Parameters for converting pixel to points
 $conf['twips_per_pixel_x'] = '16';
@@ -41,6 +50,9 @@ $conf['index_in_browser'] = 'hide';
 
 // Outline settings
 $conf['outline_list_style'] = 'Normal';
+
+// List-Label-Alignment (ordered lists)
+$conf['olist_label_align'] = 'right';
 
 // Conversion options
 $conf['convert_to_pdf'] = 'libreoffice --headless --convert-to pdf --outdir %outdir% %sourcefile% 2>&1';

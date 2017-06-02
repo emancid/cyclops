@@ -298,4 +298,39 @@ abstract class ODTStyleSet
         }
         return -1;
     }
+
+    /**
+     * @param null $source
+     */
+    public function getDefaultStyle($family) {
+        // Search for default style with same family.
+        for ($index = 0 ; $index < count($this->styles) ; $index++) {
+            if ($this->styles [$index]->isDefault() &&
+                $this->styles [$index]->getFamily() == $family) {
+                return $this->styles [$index];
+            }
+        }
+        return NULL;
+    }
+
+    /**
+     * Get styles array.
+     */
+    public function getStyles() {
+        return $this->styles;
+    }
+
+    /**
+     * Get automatci/common styles array.
+     */
+    public function getAutomaticStyles() {
+        return $this->auto_styles;
+    }
+
+    /**
+     * Get master styles array.
+     */
+    public function getMasterStyles() {
+        return $this->master_styles;
+    }
 }

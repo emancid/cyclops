@@ -315,14 +315,9 @@ generate_mon_output_dash ()
 			} else {
 				_dp=":::"
 			}
-			if ( $3 != "main" ) {
-				_np="[["_ap":"$3".audit|"$3"]]"
-			} else {
-				_np=$3
-			}
-	
-			print _dp";"d[2]";"_np";"$4";"$5";"$6 
-		}' )
+			_np="[["_ap":"$3".audit|"$3"]]" ;
+			print _dp";"d[2]";"_np";"$4";"$5";"$6 ; 
+		}' 2>/dev/null )
 
 	if [ -z "$_audit_last_bitacora_log" ] 
 	then

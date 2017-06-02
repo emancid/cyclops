@@ -78,17 +78,25 @@ do
 		"n")
                         _opt_node="yes"
                         _par_node=$OPTARG
-			_audit_code_type="NOD"
 
-			if [ "$_par_node" == "all" ] 
+			_check_par_filter=$( awk -F\; -v _ck="$_par_filter" -v _cn="$_par_node" 'BEGIN { _out=0 } $1 == _ck || $1 == _cn { _out=1 } END { print _out }' $_config_path_aud"/bitacoras.cfg" )
+
+			if [ "$_check_par_filter" == "1" ]
 			then
-				_long=$( cat $_type | sed -e '/^#/d' -e '/^$/d' | cut -d';' -f2 )
+				_audit_code_type="GEN"
 			else
-				_name=$( echo $_par_node | cut -d'[' -f1 | sed 's/[0-9]*$//' )
-				_range=$( echo $_par_node | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
-				_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
-				_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
+				_audit_code_type="NOD"
+				if [ "$_par_node" == "all" ] 
+				then
+					_long=$( cat $_type | sed -e '/^#/d' -e '/^$/d' | cut -d';' -f2 )
+				else
+					_name=$( echo $_par_node | cut -d'[' -f1 | sed 's/[0-9]*$//' )
+					_range=$( echo $_par_node | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
+					_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
+					_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
+				fi
 			fi
+
 		;;
 		"i")
 			_opt_insert="yes"
@@ -154,7 +162,8 @@ do
                         _opt_filter="yes"
                         _par_filter=$OPTARG
 
-                        if [ !"$_par_filter" == "activity" ] || [ !"$_par_filter" == "bitacora" ] || [ !"$_par_filter" == "settings" ] || [ !"$_par_filter" == "resume" ] || [ !"$_par_filter" == "main" ]
+
+                        if [ !"$_par_filter" == "activity" ] || [ !"$_par_filter" == "bitacora" ] || [ !"$_par_filter" == "settings" ] || [ !"$_par_filter" == "resume" ] || [ !"$_check_par_filter" == "1" ]
                         then
                                 echo "-f [option] filter Show option info"
                                 echo "          activity: Node Activity Info"
@@ -170,11 +179,12 @@ do
 			_par_gen=$OPTARG
 			_sh_action="gen"
 
-			if [ !"$_par_gen" == "data" ] || [ !"$_par_gen" == "wiki" ] || [ !"$_par_gen" == "index" ] || [ !"$_par_gen" == "all" ]
+			if [ !"$_par_gen" == "bitacoras" ] && [ !"$_par_gen" == "data" ] || [ !"$_par_gen" == "index" ] || [ !"$_par_gen" == "all" ]
 			then
 				echo "-g [option] generate required audit data"
+				echo "		bitacoras: generate index and timeline with diferent available bitacoras"
 				echo "		data: host audit data from diferent sources"
-				echo "		wiki: generate wiki pages from existing data files"
+				echo "		wiki: generate wiki pages from existing data files [BUG DETECTED: DISABLED]"
 				echo "		index: regenerate wiki index"
 				echo "		all: recreate all audit phases"
 				exit 1
@@ -410,9 +420,10 @@ read_data()
 
 	# SHOW HOST DATA FILTER OR NOT # UNDER FACTORING
 
-	if [ "$_par_filter" == "main" ]
+
+	if [ "$_check_par_filter" == "1" ]
 	then
-		_par_node=$_par_filter
+		[ -z "$_par_node" ] && _par_node=$_par_filter
 		_host_node=$_par_node
 		_host_file=$( echo $_host_node | tr '[:upper:]' '[:lower:]' )
 
@@ -558,41 +569,27 @@ generate_wiki_view()
 	echo "|  $_host_name               |  $_host_type          |  $_host_group          |  $_host_os          |  $_host_mng_state           |  $_host_last_upd             |"
 	echo 
 
-	echo "|< 100% >|"
-	echo "|  $_color_header $_host_name Year $_node_gyear events  |"
-	echo "|  ${_node_graph_global}  |"
-	echo
-
-	echo "<hidden Global Graphs>"
+	echo "<tabbox Events Graphs>"
 	echo "|< 100% 50% 50% >|"
+	echo "|  $_color_header $_host_name Year $_node_gyear events  ||"
+	echo "|  ${_node_graph_global}  ||"
 	echo "|  $_color_header Management Activity Last $_node_gdays  ||"
 	echo "|  ${_node_graph_mngt}  ||"
 	echo "|  $_color_header Alerts Activity Last $_node_gdays  |  $_color_header Incident Activity Last $_node_gdays  |"
 	echo "|  ${_node_graph_alerts}  |  ${_node_graph_issues}  |"
-	echo "</hidden>"
-
-	echo "<hidden Sensors Graphs>"
+	echo "<tabbox Sensors Graphs>"
 	echo -e "${_node_graph_sensors}"
-	echo "</hidden>"
-
-	echo "<hidden HOST SETTINGS>"
+	echo "<tabbox Host Settings>"
 	echo "${_output_settings}"
-	echo "</hidden>"
-	echo
-
-	echo "<hidden HOST ACTIVITY>"
+	echo "<tabbox Host Activity Events>"
 	echo "|< 100% 10% 10% 10% 10% 10% 40% 10% >|"
 	echo "|  $_color_header YEAR  |  $_color_header MONTH  |  $_color_header DAY  |  $_color_header HOUR  |  $_color_header EVENT  |  $_color_header  ACTIVITY  |  $_color_header  STATUS  |"
 	echo "${_output_activity}"
-	echo "</hidden>"
-	echo 
-
-	echo "<hidden HOST BITACORA>"
+	echo "<tabbox Host Bitacora>"
 	echo "|< 100% 10% 10% 10% 10% 10% 40% 10% >|"
 	echo "|  $_color_header YEAR  |  $_color_header MONTH  |  $_color_header DAY  |  $_color_header HOUR  |  $_color_header EVENT  |  $_color_header  ACTIVITY  |  $_color_header  STATUS  |"
         echo "${_output_bitacora}"
-	echo "</hidden>"
-	echo
+	echo "</tabbox>"
 	
 }
 
@@ -941,14 +938,16 @@ interactive_event()
 		done
 
 		unset _ask_node
-		_real_node="none"
+		_real_node="0"
 
-		while [ "$_ask_node" != "$_real_node" ]
+		while [ "$_real_node" == "0" ]
 		do
-			echo -n "Node Name ( if blank generic event inserted ) : "
+			echo -n "Node Name/Bitacora Name/help : "
 	                read _ask_node
-			_real_node=$( cat $_type | awk -F\; -v _n="$_ask_node" '$2 == _n { print $2 }' ) 
-			[ "$_ask_node" != "$_real_node" ] && echo "Please Enter a valid nodename"
+			_real_node=$( awk -F\; -v _n="$_ask_node" 'BEGIN { _o="0" } $2 == _n { _o="1" } END { print _o }' $_type ) 
+			[ "$_ask_node" == "help" ] && awk -F\; 'BEGIN { print "bitacora name;description\n-------------;-----------" } $1 !~ "^#" { print $0 }' $_config_path_aud/bitacoras.cfg | column -t -s\; | sed 's/^/\t/' 
+			[ "$_real_node" == "0" ] && _real_node=$( awk -F\; -v _n="$_ask_node" 'BEGIN { _o="0" } $1 == _n { _o="1" } END { print _o }' $_config_path_aud/bitacoras.cfg )
+			[ "$_real_node" == "0" ] && echo "Please enter a valid nodename or bitacora name" 
 		done
 
 		_ask_procedure="blank"
@@ -1090,15 +1089,54 @@ show_data()
                 
                 case "$_par_show" in
                 wiki)   
-                        _host_name=$(  echo "${_output_header}" | tail -n 1 | cut -d';' -f1 )
-                        _host_type=$(  echo "${_output_header}" | tail -n 1 | cut -d';' -f2 )
-                        _host_group=$( echo "${_output_header}" | tail -n 1 | cut -d';' -f3 )
-                        _host_os=$(    echo "${_output_header}" | tail -n 1 | cut -d';' -f4 )
-                        _host_mng_state=$( echo "${_output_header}" | tail -n 1 | cut -d';' -f5 )
-			_host_last_upd=$( echo "${_output_header}" | tail -n 1 | cut -d';' -f6 )
-                        
-			generate_wiki_view > $_audit_wiki_path/$_host_file.audit.txt
-			[ -f "$_audit_wiki_path/$_host_file.audit.txt" ] && chown $_apache_usr:$_apache_grp $_audit_wiki_path/$_host_file.audit.txt
+			if [ "$_check_par_filter" == "0" ]
+			then
+				_host_name=$(  echo "${_output_header}" | tail -n 1 | cut -d';' -f1 )
+				_host_type=$(  echo "${_output_header}" | tail -n 1 | cut -d';' -f2 )
+				_host_group=$( echo "${_output_header}" | tail -n 1 | cut -d';' -f3 )
+				_host_os=$(    echo "${_output_header}" | tail -n 1 | cut -d';' -f4 )
+				_host_mng_state=$( echo "${_output_header}" | tail -n 1 | cut -d';' -f5 )
+				_host_last_upd=$( echo "${_output_header}" | tail -n 1 | cut -d';' -f6 )
+							
+				generate_wiki_view > $_audit_wiki_path/$_host_file.audit.txt
+				[ -f "$_audit_wiki_path/$_host_file.audit.txt" ] && chown $_apache_usr:$_apache_grp $_audit_wiki_path/$_host_file.audit.txt
+			else
+				[ -f "$_host_data.bitacora.txt" ] && _output_gen_bitacora=$( awk -F\; -v _ch="$_color_header" '
+					BEGIN {
+						_title="|< 100% 4% 4% 4% 4% 8% 68% 8% >|"
+						_header="|  "_ch" year  |  "_ch" month  |  "_ch "day   |  "_ch" hour  |  "_ch" event  |  "_ch" message  |  "_ch" status  |"
+					} {
+						_date=strftime("%Y;%b;%d %a;%H:%M:%S",$1) ; 
+						split(_date,d,";") ; 
+						if ( _doy != d[1] ) { 
+								_doy=d[1] ; 
+								_pdoy=_doy ; 
+								if ( NR != 1 ) { print "</hidden>" } ; 
+								print "<hidden "_doy" >" ; 
+								print _title ; 
+								print _header 
+							} else { 
+								_pdoy=":::" 
+							} ; 
+						if ( _dom != d[2] ) { _dom=d[2] ; _pdom=_dom } else { _pdom=":::" } ; 
+						if ( _dod != d[3] ) { _dod=d[3] ; _pdod=_dod } else { _pdod=":::" } ; 
+						print "|  "_pdoy"  |  "_pdom"  |  "_pdod"  |  "d[4]"  |  "$4"  |  "$5"  |  "$6"  |" 
+					} END { 
+						print "</hidden>" 
+					}' $_host_data.bitacora.txt )
+
+				_output_gen_bitacora=$( echo "${_output_gen_bitacora}" | sed -e "s/OK/$_color_ok &/" -e "s/UP/$_color_up &/" -e "s/DOWN/$_color_down &/" -e "s/FAIL/$_color_fail &/" -e "s/DRAIN/$_color_disable &/" -e "s/CONTENT/$_color_unknown &/" ) 
+				_output_gen_bitacora=$( echo "${_output_gen_bitacora}" | sed -e "s/ALERT/$_color_fail &/g" -e "s/INFO/$_color_up &/g" -e "s/REPAIR/$_color_mark &/" -e  "s/DIAGNOSE/$_color_check &/g" -e "s/STATUS/$_color_up &/g" -e "s/SOLVED/$_color_ok &/g" )
+				_output_gen_bitacora=$( echo "${_output_gen_bitacora}" | sed -e "s/UNLINK/$_color_mark &/" -e "s/LINK/$_color_mark &/" -e "s/REACTIVE/$_color_rzr &/" -e "s/CONTENT/$_color_down &/" -e "s/DISABLE/$_color_disable &/g" )
+				_output_gen_bitacora=$( echo "${_output_gen_bitacora}" | sed -e "s/TESTING/$_color_check &/g" -e "s/UPGRADE/$_color_mark &/" -e "s/ENABLE/$_color_ok &/g" -e "s/INTERVENTION/$_color_mark &/g" -e "s/ISSUE/$_color_fail &/" )
+
+				echo "====== $( echo $_par_node | tr [:lower:] [:upper:] ) BITACORA ======"
+				echo
+				echo "  * $( awk -F\; -v _pn="$_par_node" 'BEGIN { _des="No Description Available" } $1 == _pn { _des=$2 } END { print _des }' $_config_path_aud/bitacoras.cfg)"
+				echo
+
+				echo "${_output_gen_bitacora}"
+			fi
 
                 ;;
                 commas) 
@@ -1106,7 +1144,7 @@ show_data()
                         [ "$_par_filter" == "none" ] || [[ $_par_filter == *"settings"* ]] && [ ! "$_output_settings" == "NO DATA EXTRACTED" ] && echo "${_output_settings}" | sort -t\; -k1,1n -k2,2 -k3,3n | cut -d';' -f4-
                         [ "$_par_filter" == "none" ] || [[ $_par_filter == *"activity"* ]] && [ ! "$_output_activity" == "NO ACTIVITY DATA" ] && echo "${_output_activity}" | awk -F\; 'BEGIN { OFS=";" } {$1=strftime("%Y-%m-%d;%H:%M:%S",$1); print $0 }'
                         [ "$_par_filter" == "none" ] || [[ $_par_filter == *"bitacora"* ]] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}" | awk -F\; 'BEGIN { OFS=";" } {$1=strftime("%Y-%m-%d;%H:%M:%S",$1); print $0 }'
-			[ "$_par_filter" == "main" ] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}" | awk -F\; 'BEGIN { OFS=";" } {$1=strftime("%Y-%m-%d;%H:%M:%S",$1); print $0 }'
+			[ "$_check_par_filter" == "1" ] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}" | awk -F\; 'BEGIN { OFS=";" } {$1=strftime("%Y-%m-%d;%H:%M:%S",$1); print $0 }'
                 ;;
                 human)  
                         echo
@@ -1142,7 +1180,7 @@ show_data()
                                 fi
                         fi
                         
-                        if [ "$_par_filter" == "none" ] || [[ $_par_filter == *"bitacora"* ]] || [ "$_par_filter" == "main" ]
+                        if [ "$_par_filter" == "none" ] || [[ $_par_filter == *"bitacora"* ]] || [ "$_check_par_filter" == "1" ]
                         then    
                                 if [ "$_output_bitacora" == "NO BITACORA DATA" ]
                                 then    
@@ -1164,13 +1202,33 @@ show_data()
                 eventlog) 
                         [ "$_par_filter" == "none" ] || [[ $_par_filter == *"activity"* ]] && [ ! "$_output_activity" == "NO ACTIVITY DATA" ] && echo "${_output_activity}"
                         [ "$_par_filter" == "none" ] || [[ $_par_filter == *"bitacora"* ]] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}"
-                        [ "$_par_filter" == "main" ] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}"
+                        [ "$_check_par_filter" == "1" ] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}"
                 ;;
                 debug)  
                         echo "${_output_settings}"
                 ;;
                 esac
 
+}
+
+main_bitacoras()
+{
+
+		echo "====== MAIN BITACORAS ======"
+		echo
+		echo "|< 50% >|"
+		echo "|  $_color_header Name  |  $_color_header Description  |  $_color_header Last Updated  |"	
+
+
+		for _gen_bit in $( awk -F\; '$1 !~ "^#" && NF == "2" { print $1 }' $_config_path_aud/bitacoras.cfg )
+		do
+			$_script_path/audit.nod.sh -v wiki -n $_gen_bit > $_audit_wiki_path/$_gen_bit.audit.txt & 
+
+			_des_bit=$( awk -F\; -v _b="$_gen_bit" '$1 == _b { print $2 }' $_config_path_aud/bitacoras.cfg )
+			_lst_bit=$( tail -n 1 $_audit_data_path/$_gen_bit.bitacora.txt | awk -F\; '{ $1=strftime("%Y-%m-%d %H:%M:%S",$1) ; print $1 }' )
+
+			echo "|  ** [[$_wiki_audit_path:$_gen_bit.audit|$_gen_bit]] **  |  $_des_bit  |  $_lst_bit  |" 
+		done
 }
 
 init_date()
@@ -1318,9 +1376,14 @@ init_date()
 #              MAIN EXEC                  #
 ###########################################
 
+
 	case $_sh_action in
 	gen)
 		case $_par_gen in 
+		bitacoras)
+			[ "$_cyclops_ha" == "ENABLED" ] && ha_check
+			main_bitacoras > $_audit_wiki_path/bitacoras.txt 
+		;;
 		data)
 			[ "$_cyclops_ha" == "ENABLED" ] && ha_check
 			extract_static_data
@@ -1369,7 +1432,7 @@ init_date()
 
 		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check
 
-		[ -z $_par_node ] && _par_node="main" && _audit_code_type="GEN" 
+		[ -z $_par_node ] && _par_node="main" && _audit_code_type="GEN" && _check_par_filter="1" 
 		[ -z $_opt_msg ] && [ "$_par_insert" != "issue" ] && echo "ERR: Need a Message to insert in bitacora node" && exit 1 
 		[ -z $_par_event ] && _par_event="INFO"
 		[ -z $_par_stat ] && _par_stat="INFO" 
@@ -1379,6 +1442,7 @@ init_date()
 	daemon)
 		_par_show="wiki"
 		_opt_graph="yes"
+		_check_par_filter="0"
 
 		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check
 
@@ -1388,8 +1452,12 @@ init_date()
 		extract_static_data
 		read_data
 		#### ^^^^ ####
+		
+		main_bitacoras > $_audit_wiki_path/bitacoras.txt
 
 		last_log_pg >$_last_event_log
+
+		wait
 
 	;;
 	debug)

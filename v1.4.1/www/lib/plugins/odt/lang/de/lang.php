@@ -4,11 +4,14 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
  * @author Florian Lamml <info@florian-lamml.de>
+ * 
+ * @package DokuWiki\lang\de\lang
  */
 $lang['encoding']              = 'utf-8';
 $lang['direction']             = 'ltr';
 $lang['view']                  = 'Ins Open-Document-Format exportieren';
 $lang['export_odt_button']     = 'ODT exportieren';
+$lang['export_odt_pdf_button'] = 'ODT=>PDF exportieren';
 $lang['tpl_not_found']         = 'FEHLER: Die ODT Vorlage "%s" konnte im Vorlagenverzeichnis "%s" nicht gefunden werden. Der Export wurde abgebrochen.';
 $lang['toc_title']             = 'Inhaltsverzeichnis';
 $lang['chapter_title']         = 'Kapitelinhalt';
@@ -39,3 +42,14 @@ Fehlerausgabe:
 <code>%errormessage%</code>
 
 [[%pageid%|Zurück zur vorherigen Seite]]';
+
+// Error message for failed conversion.
+$lang['init_failed_msg'] =
+'====== Ein Fehler ist bei der Initialisierung des ODT-Dokuments aufgetreten: ======
+
+Ist Ihre DokuWiki-Version kompatibel zum ODT-Plugin?
+
+Seit Release 2017-02-11 benötigt das ODT-Plugin DokuWiki-Release “Detritus” oder neuer!
+Für detailierte Informationen lesen Sie bitte den [[https://www.dokuwiki.org/plugin:odt#requirements|Abschnitt "Requirements"]] auf der ODT-Plugin Seite auf DokuWiki.org.
+
+(Ihr DokuWiki-Release ist %DWVERSION%)';

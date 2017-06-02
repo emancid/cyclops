@@ -1,4 +1,8 @@
-====== Permission Denied ======
+{{ :public:maincyclopstitle.png?450&nolink |}}
 
-Sorry, you don't have enough rights to continue.
+
+|< 100% >|
+|  @#942724:  |
+|{{:public:restrictarea.png?150&nolink | }}  |
+|  @#942724:  |
 

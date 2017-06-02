@@ -19,14 +19,16 @@ require_once(dirname(__FILE__)."/mpdf/mpdf.php");
  */
 class DokuPDF extends mpdf {
 
-    function __construct($pagesize='A4', $orientation='portrait'){
+    function __construct($pagesize='A4', $orientation='portrait', $fontsize){
         global $conf;
 
         io_mkdir_p(_MPDF_TTFONTDATAPATH);
         io_mkdir_p(_MPDF_TEMP_PATH);
 
         $format = $pagesize;
-        if($orientation == 'landscape') $format .= '-L';
+        if($orientation == 'landscape') {
+            $format .= '-L';
+        }
 
         switch($conf['lang']) {
             case 'zh':
@@ -41,8 +43,13 @@ class DokuPDF extends mpdf {
         }
 
         // we're always UTF-8
-        parent::__construct($mode, $format);
-        $this->SetAutoFont(AUTOFONT_ALL);
+        parent::__construct($mode, $format, $fontsize);
+        $this->autoScriptToLang = true;
+        $this->baseScript = 1;
+        $this->autoVietnamese = true;
+        $this->autoArabic = true;
+        $this->autoLangToFont = true;
+
         $this->ignore_invalid_utf8 = true;
         $this->tabSpaces = 4;
     }
@@ -51,22 +58,7 @@ class DokuPDF extends mpdf {
      * Cleanup temp dir
      */
     function __destruct(){
-        $this->deletedir(_MPDF_TEMP_PATH);
-    }
-
-    /**
-     * Recursively delete a directory and its contents
-     *
-     * @link http://de3.php.net/manual/en/function.rmdir.php#108113
-     */
-    function deletedir($dir){
-        foreach(glob($dir . '/*') as $file) {
-            if(is_dir($file))
-                $this->deletedir($file);
-            else
-                @unlink($file);
-        }
-        @rmdir($dir);
+        io_rmdir(_MPDF_TEMP_PATH, true);
     }
 
     /**
@@ -85,7 +77,7 @@ class DokuPDF extends mpdf {
      * making sure that only cached file paths are passed to mpdf. It also
      * takes care of checking image ACls.
      */
-    function _getImage(&$file, $firsttime=true, $allowvector=true, $orig_srcpath=false){
+    function _getImage(&$file, $firsttime=true, $allowvector=true, $orig_srcpath=false, $interpolation = false){
         global $conf;
 
         // build regex to parse URL back to media info
@@ -119,7 +111,7 @@ class DokuPDF extends mpdf {
                 if(preg_match('/[\?&]w=(\d+)/',$file, $m)) $w = $m[1];
                 if(preg_match('/[\?&]h=(\d+)/',$file, $m)) $h = $m[1];
 
-                if(preg_match('/^(https?|ftp):\/\//',$media)){
+                if(media_isexternal($media)){
                     $local = media_get_from_URL($media,$ext,-1);
                     if(!$local) $local = $media; // let mpdf try again
                 }else{
@@ -139,7 +131,7 @@ class DokuPDF extends mpdf {
                         $local = media_resize_image($local,$ext,$w,$h);
                     }
                 }
-            }elseif(preg_match('/^(https?|ftp):\/\//',$file)){ // fixed external URLs
+            }elseif(media_isexternal($file)){ // fixed external URLs
                 $local = media_get_from_URL($file,$ext,$conf['cachetime']);
             }
 
@@ -149,7 +141,7 @@ class DokuPDF extends mpdf {
             }
         }
 
-        return parent::_getImage($file, $firsttime, $allowvector, $orig_srcpath);
+        return parent::_getImage($file, $firsttime, $allowvector, $orig_srcpath, $interpolation);
     }
 
 }

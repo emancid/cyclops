@@ -19,9 +19,9 @@ class syntax_plugin_popupviewer_viewer extends DokuWiki_Syntax_Plugin {
 
     function getInfo(){
         return array_merge(confToHash(dirname(__FILE__).'/plugin.info.txt'), array(
-				'name' => 'PopUpViewer Linking Component',
-				'desc' => 'Takes a Page to be diplayed in an overlay pop-out'
-				));
+                'name' => 'PopUpViewer Linking Component',
+                'desc' => 'Takes a Page to be diplayed in an overlay pop-out'
+                ));
     }
 
     function getType() { return 'substition'; }
@@ -36,7 +36,7 @@ class syntax_plugin_popupviewer_viewer extends DokuWiki_Syntax_Plugin {
         $this->Lexer->addSpecialPattern('{{popupclose>[^}]+}}', $mode, 'plugin_popupviewer_viewer');
     }
 
-    function handle($match, $state, $pos, &$handler) {
+    function handle($match, $state, $pos, Doku_Handler $handler) {
 
         $close = strstr( $match, "{{popupclose>") !== false;
 
@@ -58,15 +58,25 @@ class syntax_plugin_popupviewer_viewer extends DokuWiki_Syntax_Plugin {
         return array(trim($id), $name, $title, $w, $h, $orig, $close, null, $keepOpen);
     }
 
-    function render($mode, &$renderer, $data) {
+    function render($mode, Doku_Renderer $renderer, $data) {
         global $ID, $conf, $JSINFO;
 
+        if ( $mode != 'xhtml' && $mode != 'metadata' ) { return true; }
+
         list($id, $name, $title, $w, $h, $orig, $close, $isImageMap, $keepOpen) = $data;
-        if ( empty($id) ) { $exists = false; } else
-        {
-            $page   = resolve_id(getNS($ID),$id);
-            $file   = mediaFN($page);
-            $exists = @file_exists($file) && @is_file($file);
+
+        $exists = false;
+        if ( !empty($id) ) {
+            $origID = $id;
+            resolve_mediaid(getNS($ID),$id,$exists);
+            if ( !$exists ) {
+                $id = $origID;
+            }
+        }
+
+        if($mode === 'metadata') {
+            $renderer->internalmedia($id,$title);
+            return;
         }
 
         $scID = sectionID(noNs($id), $this->headers);
@@ -78,19 +88,24 @@ class syntax_plugin_popupviewer_viewer extends DokuWiki_Syntax_Plugin {
 
             $p1 = Doku_Handler_Parse_Media($orig);
 
-            $p = array();
-            $p['alt'] = $id;
-            $p['class'] = 'popupimage';
-            $p['title'] = $title;
-            $p['id'] = 'popupimage_' . $scID;
-            if ($p1['width']) $p['width'] = $p1['width'];
-            if ($p1['height']) $p['height'] = $p1['height'];
-            if ($p1['title'] && !$p['title']) { $p['title'] = $p1['title']; $p['alt'] = $p1['title']; }
-            if ($p1['align']) $p['class'] .= ' media' . $p1['align'];
-
-            $p2 = buildAttributes($p);
             if ( empty($name) ) {
-                $name = '<img src="' . ml($id, array( 'w' => $p['width'], 'h' => $p['height'] ) ) . '" '.$p2.'/>';
+                
+                if ( !method_exists($renderer, '_media') ) {
+                    $p = array();
+                    $p['alt'] = $id;
+                    $p['class'] = 'popupimage';
+                    $p['title'] = $title;
+                    $p['id'] = 'popupimage_' . $scID;
+                    if ($p1['width']) $p['width'] = $p1['width'];
+                    if ($p1['height']) $p['height'] = $p1['height'];
+                    if ($p1['title'] && !$p['title']) { $p['title'] = $p1['title']; $p['alt'] = $p1['title']; }
+                    if ($p1['align']) $p['class'] .= ' media' . $p1['align'];
+    
+                    $p2 = buildAttributes($p);
+                    $name = '<img src="' . ml($id, array( 'w' => $p['width'], 'h' => $p['height'] ) ) . '" '.$p2.'/>';
+                } else {
+                    $name = $renderer->_media($id, ($title ? $title : ($p1['title'] ? $p1['title'] : $id) ), ' popupimage' . ($p1['align'] ? ' media' . $p1['align'] : '' ), $p1['width'], $p1['height']);
+                }
             } else {
                 $name = trim(p_render($mode, p_get_instructions(trim($name)), $info));
                 $name = trim(preg_replace("%^(\s|\r|\n)*?<a.+?>(.*)?</a>(\s|\r|\n)*?$%is", "$2", preg_replace("%^(\s|\r|\n)*?<p.*?>(.*)?</p>(\s|\r|\n)*?$%is", "$2", $name)));
@@ -116,15 +131,15 @@ class syntax_plugin_popupviewer_viewer extends DokuWiki_Syntax_Plugin {
                 $name = trim(p_render($mode, p_get_instructions(trim($name)), $info));
             }
 
-			$data = array(
-				'width' => $w,
-				'height' => $h,
-				'id' => $id
-			);
-			
-			if ( $keepOpen ) {
-    			$data['keepOpen'] = true;
-			}
+            $data = array(
+                'width' => $w,
+                'height' => $h,
+                'id' => $id
+            );
+            
+            if ( $keepOpen ) {
+                $data['keepOpen'] = true;
+            }
 
             // Add ID for AJAX - this.href for offline versions
             $more = $this->_getOnClickHandler($close, $data);
@@ -160,9 +175,9 @@ class syntax_plugin_popupviewer_viewer extends DokuWiki_Syntax_Plugin {
         }
     }
 
-	/**
-	 * Implements API from imagemap
-	 */
+    /**
+     * Implements API from imagemap
+     */
     function convertToImageMapArea($imagemap, $data, $pos) {
 
         list($id, $name, $title, $w, $h, $orig, $close) = $data;
@@ -181,7 +196,7 @@ class syntax_plugin_popupviewer_viewer extends DokuWiki_Syntax_Plugin {
         } else {
             return;
         }
-        
+                
         $coords = array_map('trim', $coords);
         $name = trim($match[1]);
         $imagemap->CallWriter->writeCall(array('plugin', array('popupviewer_viewer', array($id, $name, $title, $w, $h, $orig, $close, array('shape' => $shape, 'coords' => join(',',$coords))), DOKU_LEXER_MATCHED), $pos));

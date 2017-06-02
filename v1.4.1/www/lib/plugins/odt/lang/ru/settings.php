@@ -4,12 +4,13 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
  * @author Anotheroneuser <w20151222@ya.ru>
+ * @author Wirbel78 <bryanskmap@yandex.ru>
  */
 $lang['tpl_dir']               = 'Подкатегория для шаблонов в организаторе аудиовизуальной информации. ';
+$lang['odt_template']          = 'Шаблон стиля импорта (файл ODT CSS)';
 $lang['showexportbutton']      = 'Высветить кнопку преобразования в формат ODT';
 $lang['media_sel']             = 'Какой @media переключатель должен быть использован для запроса свойств CSS? ';
 $lang['css_template']          = 'Какой шаблон должен быть использован для форматирования материалов ODT? ';
-$lang['usestyles']             = 'Вы можете задать разделённый запятыми список расширений, где <code>style.css</code> или <code>screen.css</code> должно быть использовано для образования ODT';
 $lang['format']                = 'Формат страницы';
 $lang['orientation']           = 'Ориентация страницы';
 $lang['margin_top']            = 'Верхняя граница страницы в сантиметрах';

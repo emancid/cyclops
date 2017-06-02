@@ -1,0 +1,7 @@
+#### IA SENSORS TEMPLATE ####
+
+# file_name = [Priority].[Advance Procedure Code].rule
+
+# fields definition = [ height value ];[sensors quantity];[hostname];[sensor1;sensor2;sensor?...]
+
+100;1;;bios_log

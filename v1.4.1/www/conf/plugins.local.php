@@ -9,3 +9,4 @@
 $plugins['authad'] = 0;
 $plugins['authldap'] = 0;
 $plugins['discussion'] = 0;
+$plugins['gallery'] = 0;
