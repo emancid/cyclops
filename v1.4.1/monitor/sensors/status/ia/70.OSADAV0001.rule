@@ -1,7 +1,0 @@
-#### IA SENSORS TEMPLATE ####
-
-# file_name = [Priority].[Advance Procedure Code].ia.cfg
-
-# fields definition = [ height value ];[sensors quantity];[hostname];[sensor1;sensor2;sensor?...]
-
-10;1;;z

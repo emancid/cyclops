@@ -1057,18 +1057,16 @@ slurm_global_print()
 {
 	echo "====== SLURM GLOBAL STATS ======"
 	echo
-	echo "===== REPORT SUMMARY ====="
+	echo "<tabbox Report Summary>"
 	echo 
 	echo "  * ** Created: ** $_slurm_date_creation"  
 	echo "  * ** Date Threshold: ** $_date_start to $_date_end"
 	echo "  * ** Environment(s) Included: ** $( cat $_config_path_sta/$_slurm_cfg_env | awk -F\; '$1 ~ "[0-9]+" { print $4 }' | tr '\n' ',' | sed 's/,$//' )"
 	echo 
 	echo "  * ** Short Description: ** $_par_des"
-	echo
-	echo "  * ** Global Cluster Slurm Activity ( Cyclops Sensor Source ): **" 
-	echo
+	echo "<tabbox Slurm Activity>"
 	echo "${_slm_cyc_graph_g}" 
-	echo
+	echo "</tabbox>"
 }
 
 slurm_print_env()
@@ -1082,7 +1080,7 @@ slurm_print_env()
 			print "Jobs Submited;"_jobs"\nNodes Reserved;"_nodes"\nConsumed Time;"_et 
 		}' )
 
-	echo "===== SOURCE [$_slurm_src] ====="
+	echo "===== $( echo $_slurm_src | tr [:lower:] [:upper:] ) SOURCE ====="
 	echo
 	echo "==== SUMMARY ===="
 	echo
@@ -1090,30 +1088,19 @@ slurm_print_env()
 	echo "|  $_color_title ** Environment Data Resume **  ||"
 	echo "${_slm_data_resume}" | sed -e "s/^/|  $_color_header /" -e 's/;/  |  /' -e 's/$/  |/' 
 	echo
-	echo "=== Slurm General Data ==="
-	echo
+	echo "<tabbox General Data>"
 	echo "${_slm_main_graph_g}"
-	echo
-	echo "=== Slurm Partition Data ==="
-	echo
+	echo "<tabbox Partition Data>"
 	echo "${_slm_part_graph_g}"
-	echo
-	echo "=== Slurm Users Data ==="
-	echo
+	echo "<tabbox Users Data>"
 	echo "${_slm_user_graph_g}"
-	echo
-	echo "=== Slurm Job State Data ==="
-	echo
+	echo "<tabbox Job State Data>"
 	echo "${_slm_stat_graph_g}"
-	echo
-	echo "==== TOP $_slurm_part_cty PARTITIONS DETAIL GRAPH ===="
-	echo
+	echo "<tabbox Top $_slurm_part_cty Partitions detail charts>"
 	echo -e "${_slm_part_output}" 
-	echo
-	echo "==== TOP $_slurm_usr_cty USERS DETAIL GRAPH ===="
-	echo
+	echo "<tabbox Top $_slurm_usr_cty Users detail charts>"
 	echo -e "${_slm_usr_output}"
-	echo
+	echo "</tabbox>"
 	
 }
 

@@ -1816,7 +1816,7 @@ mng_cyclops_pkg()
 	echo -e "$_msg_pkg" | column -t -s\; 
 	echo -e "\n\n"
 
-	[ "$_opt_changes" == "yes" ] && echo "APPLY CHANGES IN CYCLOPS GLOBAL SUIT" && mng_cyclops_sum
+#	[ "$_opt_changes" == "yes" ] && echo "APPLY CHANGES IN CYCLOPS GLOBAL SUIT" && mng_cyclops_sum
 }
 
 config_cyclops()
