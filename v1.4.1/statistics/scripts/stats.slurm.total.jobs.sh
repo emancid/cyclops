@@ -242,7 +242,24 @@ calc_data()
 				for ( i in h ) { 
 					split(h[i],eo,";") ; 
 					print i";"eo[1]";"eo[2]";"eo[3]";"eo[4]";"eo[5]/3600 }
-			}' | sort -t\; -n
+			}' | awk -F\; -v _ds="$_par_ds" -v _de="$_par_de" '
+                        BEGIN { 
+                                for ( i=_ds;i<_de;i+=86400 ) {
+                                        _rd=strftime("%Y-%m_%b",i) ; 
+                                        _dp=strftime("%Y %m",i) ;
+                                        d[_rd]=mktime( _dp" 1 0 0 0" ) ; 
+                                        }
+                        } { 
+                                _do[$1]=$2";"$3";"$4";"$5";"$6
+                        } END {
+                                for ( a in d ) {
+                                        if ( _do[a] == "" ) { 
+                                                print a";0;0;0;0;0" ;
+                                        } else {
+                                                print a";"_do[a] ;
+                                        }
+                                }
+                        }' | sort -t\; -n 
 	;;
         year)
 		cat $_files | awk -F\; -v _p="$_par_par" -v _u="$_par_usr" -v _c="$_par_sta" -v _ds="$_par_ds" -v _de="$_par_de" '
@@ -488,7 +505,7 @@ init_date()
                 let _par_ds=_date_tsn-_ts_date
                 _par_de=$_date_tsn
                 
-                _date_filter=$_par_dat
+                _date_filter="hour"
                 _par_date_start=$( date -d "last day" +%Y-%m-%d )
                 _par_date_end=$( date +%Y-%m-%d )
         ;;
@@ -499,7 +516,7 @@ init_date()
                 let _par_ds=_date_tsn-_ts_date
                 _par_de=$_date_tsn
                 
-                _date_filter=$_par_dat
+                _date_filter="day"
                 _par_date_start=$( date -d "last week" +%Y-%m-%d )
                 _par_date_end=$( date +%Y-%m-%d )
         
@@ -511,7 +528,7 @@ init_date()
                 let _par_ds=_date_tsn-_ts_date
                 _par_de=$_date_tsn
                 
-                _date_filter=$_par_dat
+                _date_filter="day"
                 _par_date_start=$( date -d "last month" +%Y-%m-%d )
                 _par_date_end=$( date +%Y-%m-%d )
         ;;
@@ -522,7 +539,7 @@ init_date()
                 let _par_ds=_date_tsn-_ts_date
                 _par_de=$_date_tsn
                 
-                _date_filter=$_par_dat
+                _date_filter="month"
                 _par_date_start=$( date -d "last year" +%Y-%m-%d )
                 _par_date_end=$( date +%Y-%m-%d )
         ;;
@@ -545,6 +562,9 @@ init_date()
                 _par_date_end=$( date -d @$_par_de +%Y-%m-%d )
         ;;
 	2[0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9])
+		
+		_date_filter="day"
+
 		_par_ds=$( date -d $_par_date_start +%s )
 		if [ -z "$_par_date_end" ] 
 		then
@@ -555,10 +575,10 @@ init_date()
 		fi
 	;;
         2[0-9][0-9][0-9])
-                _par_ds=$( date -d '1 Jan '$_par_dat +%s )
-                _par_de=$( date -d '31 Dec '$_par_dat +%s )
+                _par_ds=$( date -d '1 Jan '$_par_date_start +%s )
+                _par_de=$( date -d '31 Dec '$_par_date_start +%s )
                 
-                _date_filter="year"
+                _date_filter="month"
                 _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
                 _par_date_end=$( date -d @$_par_de +%Y-%m-%d )
         ;;
@@ -573,7 +593,6 @@ init_date()
 
 	[ -z "$_par_src" ] && echo -e "\nNeed Slurm Data Source\nUse -h for help\n" && exit 1
 
-	[ "$_opt_dbg" == "yes" ] && echo -e "\n\nDEBUG:\n Thrershold betwen:\nStart Data: $_par_date_start 00:00:00 ($_par_ds)\nEnd Data: $_par_date_end 23:59:59 ($_par_de)\nParameters:$@\nBase Dir: $_stat_slurm_data_dir/$_par_src\nFiles:\n${_files}\n\n"
 	
 	#### DATE PROCESSING ####
 
@@ -581,12 +600,28 @@ init_date()
 
 	#### FILE PROCESSING ####
 
-	_files=$( ls -1 $_stat_slurm_data_dir/$_par_src/*.txt | awk -F\/ -v _ds="$_par_ds" -v _de="$_par_de" '{ split ($NF,a,".") ; _date=mktime(" "a[1]" "a[2]" 1 0 0 0") ; if ( _date >= _ds || _date <= _de ) { print $0 }}' )
+	#_files=$( ls -1 $_stat_slurm_data_dir/$_par_src/*.txt | awk -F\/ -v _ds="$_par_ds" -v _de="$_par_de" '{ split ($NF,a,".") ; _date=mktime(" "a[1]" "a[2]" 1 0 0 0") ; if ( _date >= _ds || _date <= _de ) { print $0 }}' )
+	_files=$( ls -1 $_stat_slurm_data_dir/$_par_src/*.txt | awk -F\/ -v _ds="$_par_ds" -v _de="$_par_de" '
+		{ 
+			split ($NF,a,".") ; 
+			if ( a[2] != "12" ) { 
+				_next_m=a[2]+1 ; 
+				_next_date=mktime(" "a[1]" "_next_m" 1 0 0 0" ) ; 
+				_last_day=_next_date-3600 ; 
+				_last_day=strftime("%d",_last_day) ; 
+			} else { 
+				_last_day="31" ; 
+			} 
+			_date_s=mktime(" "a[1]" "a[2]" "_last_day" 0 0 0") ; 
+			_date_e=mktime(" "a[1]" "a[2]" 1 0 0 0") ; 
+			if ( _date_s >= _ds && _date_e <= _de ) { print $0 }
+		}' )
+
 	[ -z "$_files" ] && echo -e "Thrershold betwen:\nStart Data: $_par_date_start 00:00:00 ($_par_ds)\nEnd Data: $_par_date_end 23:59:59 ($_par_de)\nBase Dir: $_stat_slurm_data_dir/$_par_src\nERR: No data files finding" && exit 1
 
+	[ "$_opt_dbg" == "yes" ] && echo -e "\n\nDEBUG:\n Thrershold betwen:\nStart Data: $_par_date_start 00:00:00 ($_par_ds)\nEnd Data: $_par_date_end 23:59:59 ($_par_de)\nParameters:$@\nBase Dir: $_stat_slurm_data_dir/$_par_src\nFiles:\n${_files}\n\n"
 
-	_par_ds=$( date -d "$_par_date_start 00:00:00" +%s )
+	[ -z "$_par_ds" ] && _par_ds=$( date -d "$_par_date_start 00:00:00" +%s )
 	_output=$( calc_data )
-
 
 	format_output

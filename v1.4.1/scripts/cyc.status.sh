@@ -318,8 +318,10 @@ node_real_status()
 					if ( $i ~ "FAIL" || $i ~ "DOWN" ) { _sens=_sens""a[i]"," } ;
 				} ;
 				if ( _sq != "0" ) { 
-					split($_sq,ss," ")
-					if ( ss[2] != "" ) { _wn=ss[2] } else { _wn="n/a" } ;
+					split($_sq,ss," ") ;
+					_sls=$_sq ;
+					gsub(/^[A-Za-z]+ /,"",_sls) ;
+					if ( ss[2] != "" ) { _wn=_sls } else { _wn="n/a" } ;
 				} else { 
 					_wn="n/a" ; 
 				} ;
