@@ -1,3 +1,4 @@
+#!/bin/bash
 ######################################################
 #             CYCLOPS MONITORING SYSTEM              #
 #						     #
@@ -17,7 +18,7 @@ _config_path_srv=$_config_path"/services"					## BASE CFG MONITOR SERVICES PATH
 _config_path_rea=$_config_path"/reactive"					## BASE CFG MONITOR REACTIVE ACTIONS PATH
 _config_path_sta=$_config_path"/statistics"					## BASE CFG STATISTICS CONFIG PATH
 _config_path_too=$_config_path"/tools"						## BASE CFG TOOLS PATH
-_config_path_aud=$_config_path"/audit"						## BASE CFG AUDIT MODULE PATH
+_config_path_aud=$_config_path"/audit"                                          ## BASE CFG AUDIT MODULE PATH
 _ia_config_path=$_config_path"/ia"						## BASE CFG MONITOR IA PATH //DEPRECATED??//
 
 _base_path="/opt/cyclops"							## CYCLOPS BASE PATH
@@ -36,8 +37,8 @@ _cyclops_temp_path=$_base_path"/temp"						## CYCLOPS MAIN TEMP PATH
 
 # CYCLOPS CLIENT PATHS
 
-_cyc_clt_base_path=$_base_path"/local"						## CYCLOPS LOCAL CLIENT BASE PATH
-_cyc_clt_etc_path=$_cyc_clt_base_path"/etc"					## CYCLOPS LOCAL CLIENT ETC PATH
+_cyc_clt_base_path=$_base_path"/local"                                          ## CYCLOPS LOCAL CLIENT BASE PATH             
+_cyc_clt_etc_path=$_cyc_clt_base_path"/etc"					## CYCLOPS LOCAL CLIENT BASE PATH 
 
 source $_cyc_clt_etc_path/local.main.cfg					## LOAD LOCAL MAIN VARS
 
@@ -63,11 +64,11 @@ _sensors_pkg_dir=$_monitor_path"/packs"
 
 # WIKI PATHs
 
-#_wiki_path="/var/www/html/cyclops" 						# REDHAT APACHE PATH
-_wiki_path="/opt/cyclops/www" 							# WIKI WEB PAGES PATH
+#_wiki_path="/var/www/html/cyclops" # REDHAT APACHE PATH
+_wiki_path="/opt/cyclops/www" # AEMET HA WEB PATH
 _pages_path=$_wiki_path"/data/pages"
 _mon_path=$_pages_path"/operation/monitoring" 
-_dst_pages_mon_path=$_mon_path"/systemstatus/now" 				## ALERT: CONFIRM VARIABLE!!
+_dst_pages_mon_path=$_mon_path"/systemstatus/now" # ALERT: CONFIRM VARIABLE!!
 _mon_history_path=$_mon_path"/history"
 _audit_wiki_path=$_pages_path"/audit"
 _stat_wiki_path=$_pages_path"/operation/statistics"
@@ -107,8 +108,9 @@ _pg_dashboard_log=$_mon_log_path"/dashboard.plugin.log"				## MONITORING DASHBOA
 
 # REMOTE MONITOR SCRIPT PATH
 
-#_sensor_remote_path="/root/cyclops/sensors"					## DEPRECATED OLD PATH
-_sensor_remote_path=$_cyc_clt_data_path"/sensors"				## NEW CLIENT SENSOR MON PATH
+#_sensor_remote_path="/root/cyclops/sensors"
+_sensor_remote_path=$_cyc_clt_data_path"/sensors"                               ## NEW CLIENT SENSOR MON PATH
+#_sensor_remote_path="/opt/cyclops/local/data/sensors"
 
 # CONFIG FILEs
 
@@ -127,8 +129,8 @@ _critical_res=$_config_path_nod"/critical.res.cfg"				## CRITICAL NODES RESOURCE
 
 _stat_main_cfg_file=$_config_path_sta"/main.ext.cfg"				## STATISTICS MAIN EXTRACTORS CONFIG FILE
 _stat_wiki_cfg_file=$_config_path_sta"/wiki.stat.cfg"				## STATISTICS WIKI GRAPHS CONFIG FILE
-_stat_daemon_cfg_file=$_config_path_sta"/global.stat.report.cfg"		## STATISTICS GLOBAL DAEMON REPORT GENERATION FILE
-_stat_sensor_cfg_file=$_config_path_sta"/sensors.report.cfg"                    ## REPORT NODE SENSOR DEFINITION
+_stat_daemon_cfg_file=$_config_path_sta"/global.stat.report.cfg"                ## STATISTICS GLOBAL DAEMON REPORT GENERATION FILE
+_stat_sensor_cfg_file=$_config_path_sta"/sensors.report.cfg"			## REPORT NODE SENSOR DEFINITION
 
 _cyc_module_screen_cfg=$_config_path_sys"/screen.module.cfg"			## CYCLOPS SCREEN CONTROL MODULE CONFIG FILE
 
@@ -158,7 +160,7 @@ _sensors_users_ia_script_file=$_script_path"/sensors.users.ia.sh"
 
 _sensors_ia_env_script_file=$_script_path"/sensors.envhard.ia.sh"
 
-_sensors_email_script_file=$_script_path"/sensors.ia.alerts.sh" 		## DEPRECATED??!
+_sensors_email_script_file=$_script_path"/sensors.ia.alerts.sh" ## DEPRECATED??!
 
 _sensors_sot=$_sensors_data_status_path"/stateofthings.cyc"
 _sensors_sot_codes_file=$_config_path_sys"/cyc.codes.cfg"			## CYCLOPS SYSTEM MON CODES FILE 
