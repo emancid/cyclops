@@ -65,7 +65,7 @@ _sensors_pkg_dir=$_monitor_path"/packs"
 # WIKI PATHs
 
 #_wiki_path="/var/www/html/cyclops" # REDHAT APACHE PATH
-_wiki_path="/opt/cyclops/www" # AEMET HA WEB PATH
+_wiki_path="/opt/cyclops/www" # CYCLOPS WEB PATH
 _pages_path=$_wiki_path"/data/pages"
 _mon_path=$_pages_path"/operation/monitoring" 
 _dst_pages_mon_path=$_mon_path"/systemstatus/now" # ALERT: CONFIRM VARIABLE!!
