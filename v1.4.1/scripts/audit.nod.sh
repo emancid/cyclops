@@ -444,19 +444,17 @@ read_data()
 
 			_host_file=$( echo $_host_node | tr '[:upper:]' '[:lower:]' )
 			_host_data=$_audit_data_path"/"$_host_file
-			if [ "$_par_show" == "wiki" ] 
-			then
-				show_data &
-			else
-				show_data
-			fi
 	
 			if [ "$_par_show" == "wiki" ]
 			then
+				show_data &
 				let _count++ 
-				[ "$_count" -ge "$_server_proc" ] && _count=0 && sleep $_par_wait_time 
+				[ "$_count" -ge "$_server_proc" ] && _count=0 && wait 
+			else
+				show_data
 			fi
 		done
+		[ "$_par_show" == "wiki" ] && wait
 	fi
 
 
@@ -1003,7 +1001,7 @@ interactive_event()
 			[ -z "$_ask_msg" ] && echo "Please don't leave blank this field, put a descriptive message"
 		done
 
-		_ask_msg=$( echo "$_ask_msg" | tr '[:upper:]' '[:lower:]' | sed -e 's/\;/,/g'  )
+		_ask_msg=$( echo "$_ask_msg" | tr '[:upper:]' '[:lower:]' | sed -e 's/\;/,/g' | grep -o "[A-Za-z0-9\,\.\_\-\ ]*" | tr -d '\n' | iconv -f utf8 -t ascii//TRANSLIT )
 
 		echo -n "Want to send informative mail (Y/N)? : "
                 while read -r -n 1 -s _ask_email

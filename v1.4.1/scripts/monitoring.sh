@@ -1452,15 +1452,15 @@ mon_node_operative_pg()
                 echo
 		echo "|< 100% 50% 50% >|"
                 echo "|  $_color_title LAST HOUR  |  $_color_title LAST 24H  |"
-                echo "|  <gchart 600x350 line @#A5DF00 #FFFFFF center>"
+                echo "|  <gchart 600x350 value bar @#A5DF00 #FFFFFF center>"
                 echo "${_mon_no_pg_stats_hour}"
-                echo "</gchart>  |  <gchart 600x350 line @#A5DF00 #FFFFFF center>"
+                echo "</gchart>  |  <gchart 600x350 value bar @#A5DF00 #FFFFFF center>"
                 echo "${_mon_no_pg_stats_day}"
                 echo "</gchart>  |"     
                 echo "|  $_color_title LAST SEVEN DAYS  |  $_color_title LAST 30 DAYs  |"
-                echo "|<gchart 600x350 bar @#A5DF00 #FFFFFF center>"
+                echo "|<gchart 600x350 value bar @#A5DF00 #FFFFFF center>"
                 echo "${_mon_no_pg_stats_week}"
-                echo "</gchart>  |  <gchart 600x350 bar @#A5DF00 #FFFFFF center>"
+                echo "</gchart>  |  <gchart 600x350 value bar @#A5DF00 #FFFFFF center>"
                 echo "${_mon_no_pg_stats_month}"
                 echo "</gchart>  |"
                 echo "|  $_color_title LAST 6 MONTH  |  $_color_title LAST 12 MONTH  |"
@@ -1506,10 +1506,6 @@ mon_env_status_pg()
 				_env_status_pg_color=$_color_fail
 				_active_sound="yes" 
 				_env_status_pg_sound="{{mp3play>:wiki:high_alert.mp3?autostart&loop}}"
-				_msg_insert="Critical Module: dangerous low level of resources, please recovery them as soon as posible"
-
-				$_script_path/audit.nod.sh -i bitacora -e ALERT -s INFO -m $_msg_insert 
-				$_script_path/cyclops.sh -p medium -m "Critical System Status : "$_msg_insert -l
 			fi
 
 			if [ "$_env_status_pg_total" -lt $_env_status_pg_min_nod ] 
@@ -1518,10 +1514,6 @@ mon_env_status_pg()
 				_env_status_pg_color=$_color_down 
 				_active_sound="yes" 
 				_env_status_pg_sound="{{mp3play>:wiki:alarm.mp3?autostart&loop}}"
-
-				_msg_insert="Critical Module: Not enought resource for productive environment, Critical Status"
-				$_script_path/audit.nod.sh -i bitacora -e ALERT -s DOWN -m $_msg_insert 
-				$_script_path/cyclops.sh -p high -m "Critical System Status : "$_msg_insert -l
 			fi
 
 		fi

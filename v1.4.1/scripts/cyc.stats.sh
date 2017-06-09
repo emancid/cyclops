@@ -658,7 +658,8 @@ cyclops_global_print()
 
 	echo "====== CYCLOPS GLOBAL STATS ($_date_title) ======"
 	echo
-	echo "===== REPORT SUMMARY ====="
+	echo "===== MAIN DATA ====="
+	echo "<tabbox Report Summary>"
 	echo "  * ** Created: ** $( date +%Y-%m-%d\ %H:%M:%S )"
 	echo "  * ** Date Threshold: ** $_date_title //( $_date_start to $_date_end )//"
 	echo "  * ** System Threshold: ** $_node_title"
@@ -666,68 +667,55 @@ cyclops_global_print()
 	echo "  * ** Families included: ** $( echo "${_family_list}" | cut -d';' -f1 | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//' )"
 	echo 
 	echo "  * ** Short Description: ** "$_par_des
-
-	echo "===== SYSTEM STATUS ====="
-	echo
+	echo "<tabbox System Status>"
 	echo "  * ** System Availability: ** Node/Host Availability Percent"
 	echo "  * ** System CPU Average: ** Average with all cpu use in the system" 
 	echo "  * ** User Activity: ** Max User Conected to the system" 
-
-	echo
-	echo "<hidden System Graphs>"
+	echo 
 	echo "|< 100% >|" 
-	echo "|  $_color_title ** System Status Graphs **  ||"
-	echo "|  $_color_header Global System - Availibility  ||"
+	echo "|  $_color_header  Availibility  ||"
 	echo "|  ${_cyc_ava_global_g}  ||"
-	echo "|  $_color_header Global System - CPU Average  |  $_color_header  Global System - User Activity  |"
+	echo "|  $_color_header CPU Average  |  $_color_header  User Activity  |"
 	echo "|  ${_cyc_cpu_global_g}  |  ${_cyc_usr_global_g}  |"
-	echo "</hidden>"
-	echo
-
 	if [ "$_opt_lnk" == "yes" ]
 	then
-		echo "===== NODE LIST ====="
+		echo "<tabbox Node List>"
 		echo
 		echo "* ** Audit Node Detailed Info: **If node has had an alert event in last $_check_days days it is mark" 
         	echo 
         	echo "|< 100% 10% 10% 10% 10% 10% 10% 10% 10% 10% 10% >|"
         	echo -e "$_host_wiki_group"
-        	echo
 	fi
-
-        echo "===== AUDIT GRAPH INFO ====="
+	echo "</tabbox>"
 	echo
+	echo "===== GLOBAL AUDIT CHARTS ====="	
+        echo "<tabbox Total Events >"
 	echo "|< 100% >|"
-	echo "|  $_color_header  ** Global Audit Events Graph $_date_title **  |"
+	echo "|  $_color_header $_date_title |"
 	echo "|  ${_cyc_eve_global_g}  |"
-	echo 
-	echo "<hidden Global Audit Management Activity $_date_title >"
+	echo "<tabbox Management Activity >"
 	echo "|< 100% >|"
+	echo "|  $_color_header $_date_title |"
 	echo "|  ${_cyc_mng_global_g}  |"
-	echo "</hidden>"
-	echo
-	echo "<hidden Global Audit Alerts $_date_title >"
+	echo "<tabbox Alerts >"
 	echo "|< 100% >|"
+	echo "|  $_color_header $_date_title |"
 	echo "|  ${_cyc_ale_global_g}  |"
-	echo "</hidden>"
-	echo
-	echo "<hidden Global Audit Incidents $_date_title >"
+	echo "<tabbox Incidents >"
 	echo "|< 100% >|"
+	echo "|  $_color_header $_date_title |"
 	echo "|  ${_cyc_iss_global_g}  |"
-	echo "</hidden>"
-	echo
-	echo "<hidden Global Razor Actions $_date_title >"
+	echo "<tabbox Razor Actions >"
 	echo "|< 100% >|"
+	echo "|  $_color_header $_date_title |"
 	echo "|  ${_cyc_rea_global_g}  |"
-	echo "</hidden>"
+	echo "</tabbox>"
 	echo
 
-        echo "===== RISK ANALISYS ====="
-        echo
+	echo "===== RISK ANALISYS ====="
         echo "  * This information are little gauge and trend to knows resources or moments with more or less risk in the system could be in troubles"
         echo
-	
-	echo "==== TREND ANALISYS ===="
+        echo "<tabbox Trend>"
 	echo
 	echo "  * Trend are calculated to predict next month events, and mark if is trend is positive ( <fc red> red </fc> ) or negative ( <fc green> green </fc> )" 
 	echo 
@@ -739,26 +727,34 @@ cyclops_global_print()
 	echo "|  ** Alert Events **   |  $( echo $_cyc_ale_global_trend | awk -F\; '{ if ( $3 > 0 ) { print "<fc red> "$1" </fc>  |  <fc red> ** INCREASE ** </fc>  |" } else { print "<fc green> "$1" </fc>  |  <fc green> ** DECREASE ** </fc>  |" }}' )" 
 	echo "|  ** Issue Events **   |  $( echo $_cyc_iss_global_trend | awk -F\; '{ if ( $3 > 0 ) { print "<fc red> "$1" </fc>  |  <fc red> ** INCREASE ** </fc>  |" } else { print "<fc green> "$1" </fc>  |  <fc green> ** DECREASE ** </fc>  |" }}' )" 
 	echo "|  ** Razor Actions **  |  $( echo $_cyc_rea_global_trend | awk -F\; '{ if ( $3 > 0 ) { print "<fc red> "$1" </fc>  |  <fc red> ** INCREASE ** </fc>  |" } else { print "<fc green> "$1" </fc>  |  <fc green> ** DECREASE ** </fc>  |" }}' )" 
-	echo
-	
-	echo "==== RISK GAUGE ===="
-	echo
+	echo "<tabbox Month Gauge>"
         echo "|< 100% >|"
-        echo "|  $_color_title ** RISK ANALISYS CYC GAUGEs - $_date_title **  ||"
-        echo "|  $_color_header MONTH DAY (%)  ||"
-        echo "|  <gchart 850x350 bar #0040FF #ffffff center>" ; echo "${_cyc_mdy_global_r}" | sed 's/;/=/' ; echo "</gchart>  ||"
-        echo "|  $_color_header WEEK DAY (%)  |  $_color_header HOUR (%)  |"
-        echo "|  <gchart 700x350 bar #F7BE81 #ffffff center>" ; echo "${_cyc_wdy_global_r}"  | sed 's/;/=/' ; echo "</gchart>  |  <gchart 700x350 bar #FA5856 #ffffff center>" ; echo "${_cyc_hou_global_r}" | sed 's/;/=/' ; echo "</gchart>  |"
-        echo "|  ||"
-        echo "|  $_color_header TOP RISK NODES (STANDARD DEVIATION (SD) - ONLY TOP 20 AVERAGE DEVIATION NODES)  |  $_color_header TOP RISK SENSORS (STANDARD DEVIATION)  |"
-        echo "|  <gchart 700x350 hbar #FA5858 #ffffff value center>" ; echo "${_cyc_nod_global_r}" | sed 's/;/=/' | head -n 30 ; echo "</gchart>  |  <gchart 700x350 hbar #F7BE81 #ffffff value center>" ; echo "${_cyc_sen_global_r}" | sed 's/;/=/' ; echo "</gchart>  |"
-        echo
+        echo "|  $_color_header ** RISK ANALISYS CYC GAUGEs - $_date_title **  |"
+        echo "|  <gchart 850x350 bar #0040FF #ffffff center>" ; echo "${_cyc_mdy_global_r}" | sed 's/;/=/' ; echo "</gchart>  |"
+	echo "<tabbox Week Day Gauge>" 
+	echo "|< 100% >|"
+        echo "|  $_color_header WEEK DAY (%)  |" 
+        echo "|  <gchart 700x350 bar #F7BE81 #ffffff center>" ; echo "${_cyc_wdy_global_r}"  | sed 's/;/=/' ; echo "</gchart>  |"
+	echo "<tabbox Hour Gauge>" 
+	echo "|< 100% >|"
+	echo "|  $_color_header HOUR (%)  |"
+	echo "|  <gchart 700x350 bar #FA5856 #ffffff center>" ; echo "${_cyc_hou_global_r}" | sed 's/;/=/' ; echo "</gchart>  |"
+	echo "<tabbox Node Gauge>"
+	echo "|< 100% >|"
+        echo "|  $_color_header TOP RISK NODES (STANDARD DEVIATION (SD) - ONLY TOP 20 AVERAGE DEVIATION NODES)  |" 
+        echo "|  <gchart 700x350 hbar #FA5858 #ffffff value center>" ; echo "${_cyc_nod_global_r}" | sed 's/;/=/' | head -n 30 ; echo "</gchart>  |"
+	echo "<tabbox Sensors Gauge>"
+	echo "|< 100% >|"
+	echo "|  $_color_header TOP RISK SENSORS (STANDARD DEVIATION)  |"
+	echo "|  <gchart 700x350 hbar #F7BE81 #ffffff value center>" ; echo "${_cyc_sen_global_r}" | sed 's/;/=/' ; echo "</gchart>  |"
+        echo "</tabbox>"
+	echo
 
 	echo "===== DATA INFO ====="
         echo
 	echo "  * Total of cyclops events, this data are node referenced for comparative purpuoses"
 	echo
-	echo "==== GLOBAL ===="
+	echo "==== Global ===="
 	echo
         echo "|< 100% 8%>|"
 	echo "|  $_color_title ** $_date_title **  "$( echo $_date_title_str | grep -o ";" | tr -d '\n' | sed -e s'/;/|/g' )"|"
@@ -790,17 +786,15 @@ cyclops_global_print()
 	echo "|  $_color_title ** $_date_title **  "$( echo $_date_title_str | grep -o ";" | tr -d '\n' | sed -e s'/;/|/g' )"|" 
 	echo $_date_title_str | sed -e "s/^/|  $_color_title/" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"  
 	echo "<fc white> Issues </fc>;"$_cyc_iss_global_t | sed -e "s/^/|  $_color_down/" -e 's/$/  |/' -e "s/;/  |  /g"
-	echo
 
 	#### DATA DETAIL PRINT ####
 
-	echo "==== DETAIL ====" 
 	echo
-	echo "=== Sort by Group ==="
+	echo "==== Sort by Group ===="
 	echo
 	echo "${_output_group}"
 	echo
-	echo "=== Sort by Family ==="
+	echo "==== Sort by Family ===="
 	echo
 	echo "${_output_family}"
 	echo
@@ -819,12 +813,10 @@ cyclops_global_print()
 
 cyclops_data_detail_print()
 {
-	echo "== All Events =="
+	echo "<tabbox All Events >"
         echo
         echo "  * All event data are referenciated per node, for comparative reasons betwen different groups"
         echo
-
-	echo "<hidden All events data>"
         echo "|< 100% 15%>|"
 	echo "|  $_color_title ** $_date_title **  "$( echo $_date_title_str | grep -o ";" | tr -d '\n' | sed -e s'/;/|/g' )"|"
 	echo $_date_title_str | sed -e "s/^/|  $_color_graph <fc white> ALL EVENTs <\/fc>/" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"
@@ -845,16 +837,12 @@ cyclops_data_detail_print()
 				} ; 
 			print "|  "$0"  |" 
 			}' | sort 
-	echo "</hidden>"
-        echo
 
-	echo
-        echo "== Management Activity =="
+        echo "<tabbox Management Activity >"
         echo
         echo "  * This events are register when human activity is detected"
         echo "  * This information is referenciated per node, for compartive reasons"
         echo
-	echo "<hidden Management Activity Data>"
         echo "|< 100% 15% >|"
 	echo "|  $_color_title ** $_date_title **  "$( echo $_date_title_str | grep -o ";" | tr -d '\n' | sed -e s'/;/|/g' )"|"
 	echo $_date_title_str | sed -e "s/^/|  $_color_ok MNGT EVENTs /" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"
@@ -875,15 +863,12 @@ cyclops_data_detail_print()
 				} ; 
 			print "|  "$0"  |" 
 			}' | sort 
-	echo "</hidden>"
-        echo
 
-        echo "== Alerts =="
+        echo "<tabbox Alerts >"
         echo
         echo "  * This data are generated when cyclops detect alert in a sensor or administrator register a manual alert"
         echo "  * This information is referenciated per node, for compartive reason"
         echo
-	echo "<hidden Alert Data>"
         echo "|< 100% 15% >|"
         echo "|  $_color_title ** $_date_title **  "$( echo $_date_title_str | grep -o ";" | tr -d '\n' | sed -e s'/;/|/g' )"|"
         echo $_date_title_str | sed -e "s/^/|  $_color_fail ALERT EVENTs /" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"
@@ -904,16 +889,13 @@ cyclops_data_detail_print()
 				} ; 
 			print "|  "$0"  |" 
 			}' | sort 
-	echo "</hidden>"
-        echo
 
-        echo "== Issues =="
+        echo "<tabbox Issues >"
         echo
         echo "  * This data are filter for issue cyclops register type (commonly manual register)"
         echo "  * Show the relevants incidents in the system" 
         echo "  * This information ** NOT ** referenciated per node"
         echo
-	echo "<hidden Issues>"
         echo "|< 100% 15% >|"
         echo "|  $_color_title ** $_date_title **  "$( echo $_date_title_str | grep -o ";" | tr -d '\n' | sed -e s'/;/|/g' )"|"
         echo $_date_title_str | sed -e "s/^/|  $_color_down <fc white> ISSUE EVENTs <\/fc>/" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"
@@ -934,15 +916,12 @@ cyclops_data_detail_print()
 				} ; 
 			print "|  "$0"  |" 
 			}' | sort 
-	echo "</hidden>"
-        echo
 
-        echo "== Razor Actions =="
+        echo "<tabbox Razor Actions >"
         echo
         echo "  * This data are filter for Reactive and Razor cyclops module register type"
         echo "  * Show the automatic actions by cyclops modules" 
         echo
-	echo "<hidden Razor Actions>"
         echo "|< 100% 15% >|"
         echo "|  $_color_title ** $_date_title **  "$( echo $_date_title_str | grep -o ";" | tr -d '\n' | sed -e s'/;/|/g' )"|"
         echo $_date_title_str | sed -e "s/^/|  $_color_rzr <fc white> RAZOR ACTIONs <\/fc>/" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"
@@ -963,8 +942,7 @@ cyclops_data_detail_print()
 				} ; 
 			print "|  "$0"  |" 
 			}' | sort 
-	echo "</hidden>"
-        echo
+        echo "</tabbox>"
 }
 
 users_global_calc()
