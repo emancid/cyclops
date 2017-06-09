@@ -1,9 +1,0 @@
-a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1421838907;s:8:"modified";i:1423570693;}s:7:"creator";s:23:"david fernandez alvarez";s:4:"user";s:3:"inp";s:11:"last_change";a:7:{s:4:"date";i:1423570693;s:2:"ip";s:15:"193.144.150.169";s:4:"type";s:1:"E";s:2:"id";s:36:"documentacion:guiarapida:redes:cisco";s:4:"user";s:3:"ink";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:2:{s:3:"inp";s:23:"david fernandez alvarez";s:3:"ink";s:20:"ignacio garcia hoyos";}s:5:"title";s:5:"Cisco";s:11:"description";a:2:{s:15:"tableofcontents";a:3:{i:0;a:4:{s:3:"hid";s:5:"cisco";s:5:"title";s:5:"Cisco";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:12:"conectividad";s:5:"title";s:12:"Conectividad";s:4:"type";s:2:"ul";s:5:"level";i:2;}i:2;a:4:{s:3:"hid";s:8:"comandos";s:5:"title";s:8:"Comandos";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:230:"Cisco
-
-Conectividad
-
-	*  Mediante conexiones ssh o telnet a la ip de gestion
-	*  Mediante puerto serie (minicom para linux):
-  9600 baud    8 data bits    1 stop bit    No parity  
-Comandos
- Comando                     Descripcion";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:8:"relation";a:1:{s:10:"firstimage";s:0:"";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1421838907;s:8:"modified";i:1423570693;}s:7:"creator";s:23:"david fernandez alvarez";s:4:"user";s:3:"inp";s:11:"last_change";a:7:{s:4:"date";i:1423570693;s:2:"ip";s:15:"193.144.150.169";s:4:"type";s:1:"E";s:2:"id";s:36:"documentacion:guiarapida:redes:cisco";s:4:"user";s:3:"ink";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:2:{s:3:"inp";s:23:"david fernandez alvarez";s:3:"ink";s:20:"ignacio garcia hoyos";}}}

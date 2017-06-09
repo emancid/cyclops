@@ -1,5 +1,0 @@
-a:2:{s:7:"current";a:9:{s:4:"date";a:2:{s:7:"created";i:1415879061;s:8:"modified";i:1415956366;}s:7:"creator";s:11:"admin bullx";s:4:"user";s:5:"admin";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:5:"admin";s:11:"admin bullx";}s:5:"title";s:17:"Soporte: Recursos";s:11:"description";a:2:{s:15:"tableofcontents";a:2:{i:0;a:4:{s:3:"hid";s:15:"soporterecursos";s:5:"title";s:17:"Soporte: Recursos";s:4:"type";s:2:"ul";s:5:"level";i:1;}i:1;a:4:{s:3:"hid";s:3:"vpn";s:5:"title";s:3:"VPN";s:4:"type";s:2:"ul";s:5:"level";i:2;}}s:8:"abstract";s:128:"Soporte: Recursos
-
-VPN
-
-	*  Los procedimientos de configuracion para el uso de la VPN estan incluidos en el siguiente documento:";}s:8:"relation";a:2:{s:5:"media";a:1:{s:43:"soporte:procedimiento_vpn_paloalto_v1.1.pdf";b:1;}s:10:"firstimage";s:0:"";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1415879061;s:8:"modified";i:1415956366;}s:7:"creator";s:11:"admin bullx";s:4:"user";s:5:"admin";s:11:"last_change";b:0;s:11:"contributor";a:1:{s:5:"admin";s:11:"admin bullx";}}}

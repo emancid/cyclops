@@ -1,9 +1,0 @@
-a:2:{s:7:"current";a:8:{s:4:"date";a:2:{s:7:"created";i:1415722841;s:8:"modified";i:1423832966;}s:7:"creator";s:20:"ignacio garcia hoyos";s:4:"user";s:3:"ink";s:11:"last_change";a:7:{s:4:"date";i:1423832966;s:2:"ip";s:15:"193.144.150.169";s:4:"type";s:1:"E";s:2:"id";s:7:"sidebar";s:4:"user";s:5:"admin";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:2:{s:3:"ink";s:20:"ignacio garcia hoyos";s:5:"admin";s:11:"admin bullx";}s:8:"relation";a:2:{s:10:"references";a:8:{s:5:"start";b:1;s:18:"arquitectura:index";b:1;s:23:"notasdedespliegue:index";b:1;s:13:"soporte:index";b:0;s:15:"operacion:index";b:1;s:19:"configuracion:index";b:0;s:19:"documentacion:index";b:0;s:14:"dokuwiki:index";b:0;}s:10:"firstimage";s:0:"";}s:8:"internal";a:2:{s:5:"cache";b:1;s:3:"toc";b:1;}s:11:"description";a:1:{s:8:"abstract";s:128:"Inicio
-
-	*  Arquitectura
-	*  Notas de Despliegue
-	*  Soporte
-	*  Operacion
-	*  Configuracion
-	*  Documentacion
-	*  Dokuwiki Info";}}s:10:"persistent";a:5:{s:4:"date";a:2:{s:7:"created";i:1415722841;s:8:"modified";i:1423832966;}s:7:"creator";s:20:"ignacio garcia hoyos";s:4:"user";s:3:"ink";s:11:"last_change";a:7:{s:4:"date";i:1423832966;s:2:"ip";s:15:"193.144.150.169";s:4:"type";s:1:"E";s:2:"id";s:7:"sidebar";s:4:"user";s:5:"admin";s:3:"sum";s:0:"";s:5:"extra";s:0:"";}s:11:"contributor";a:2:{s:3:"ink";s:20:"ignacio garcia hoyos";s:5:"admin";s:11:"admin bullx";}}}
