@@ -1894,11 +1894,18 @@ mon_log_node()
 				if ( t[i] == "hostname" ) { 
 					split($i,n," ") ; 
 					_node=n[2] ; 
-					_status=n[1] 
-				} else { 
-					_log=_log" : "t[i]"="$i 
+				} else {
+					_log=_log" : "t[i]"="$i ; 
 				}
-			} ; 
+				if ( t[i] == "uptime" ) {
+					split($i,u," ") ; 
+					if ( u[2] ~ "^[A-Z]+$" ) { 
+						_status=u[2] ; 
+					} else {
+						_status="UP" ;
+					}
+				} 
+			}  
 			print systime()" : "_node" : "_status""_log >> _lp"/"_node".pg.mon.log" ; 
 			_log="" 
 		}' 2>/dev/null

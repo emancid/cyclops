@@ -32,7 +32,7 @@ fi
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":r:d:e:t:f:n:v:w:xh:" _optname
+while getopts ":r:d:e:t:f:n:v:w:k:xh:" _optname
 do
         case "$_optname" in
 		"n")
@@ -59,6 +59,10 @@ do
 			# log data source
 			_opt_src="yes"
 			_par_src=$OPTARG	
+		;;
+		"k")
+			_opt_ref="yes"
+			_par_ref=$OPTARG
 		;;
 		"r")
 			_opt_itm="yes"
@@ -186,6 +190,7 @@ calc_data()
                                                 if ( _dr == "week" ) { _time=strftime("%Y-%m;%d_%a",$1) } ; 
                                                 if ( _dr == "day" ) { _time=strftime("%Y-%m-%d;%Hh",$1) } ; 
                                                 if ( _dr == "hour" ) { _time=strftime("%Y-%m-%d;%H:%M",$1) } ; 
+						if ( $3 == "DIAGNOSE" ) { gsub(/CHECK /,"",$0) } ;
                                                 for (i=3;i<=NF;i++) { 
 							split($i,d,"=") ; 
 							if ( d[1] == _sf ) { 
@@ -260,7 +265,7 @@ format_output()
         graph)      
 		[ "$_opt_report" == "yes" ] && echo -e "\nSensor $_par_itm - $_date_filter\n-------------------"
                 echo "${_log_stats_data}" | 
-                                awk -F\; -v _g="$_sh_color_green" -v _r="$_sh_color_red" -v _y="$_sh_color_yellow" -v _n="$_sh_color_nformat"  -v _tc="$_par_typ" '
+                                awk -F\; -v _g="$_sh_color_green" -v _r="$_sh_color_red" -v _y="$_sh_color_yellow" -v _n="$_sh_color_nformat"  -v _tc="$_par_typ" -v _vr="$_par_ref" '
 					BEGIN { 
 						if ( _tc == "per" ) { _us="%" }
 					}
@@ -274,9 +279,10 @@ format_output()
                                                         y[1]=20
                                                         r[1]=40
                                                 }
-                                                if ( b[1] <= 50 ) { _tp=_g""b[1]_us""_n ; hp=a[1] } ;
-                                                if ( b[1] > 50 ) { _tp=_y""b[1]_us""_n ; hp=a[1] } ; 
-                                                if ( b[1] > 75 ) { _tp=_r""b[1]_us""_n ; hp=_r""a[1]_n } ; 
+						if ( _tc == "per" && _vr ~ "[0-9]+" ) { _ref=(b[1]*_vr)/100 ; _ref="["_ref"]" } ;
+                                                if ( b[1] <= 50 ) { _tp=_g""b[1]_us" "_ref" "_n ; hp=a[1] } ;
+                                                if ( b[1] > 50 ) { _tp=_y""b[1]_us" "_ref" "_n ; hp=a[1] } ; 
+                                                if ( b[1] > 75 ) { _tp=_r""b[1]_us" "_ref" "_n ; hp=_r""a[1]_n } ; 
                                                 for (i=1;i<=b[1];i++) { 
                                                         if ( i == 1 ) { _t=_g } ;
                                                         if ( i == y[1] ) { _t=_t""_n""_y } ;
