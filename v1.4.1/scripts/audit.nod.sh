@@ -1460,6 +1460,7 @@ init_date()
 	;;
 	debug)
 		echo "DEBUG: MODE"
+		set | grep "^_"
 		echo 
 		echo "COOL OUTPUT"
 		echo
