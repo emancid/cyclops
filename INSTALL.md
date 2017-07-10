@@ -54,7 +54,7 @@ CYCLOPS 1.4.1v INSTALL
     ----------------------------------------------------------------------------------------------------------
 
         chown -R cyclops:cyclops /opt/cyclops
-        chown -R apache /opt/cyclops/www
+        chown -R apache /opt/cyclops/www   ## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
         
         chmod -R g+w,o-rwx /opt/cyclops/www/
 
