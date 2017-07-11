@@ -5,90 +5,20 @@
 ==== Compatibilidad ====
 
 |< 100% >|
-^  Sistema Operativo   ^  Certficado  |  Redhat 6 / CentOS 6                                                              ||
+^  Operating System   ^  Certificated  |  Redhat/Centos 6 & 7                                                             ||
 | :::                  | :::          |  Opensuse 12/13                                                                   ||
 | :::                  | :::          |  SLES 11/12                                                                       ||
-| :::                  ^  Compatible  |  Debian/Ubuntu                         |  servidor monitorizacion 100% compatible  |
-| :::                  | :::          | :::                                    |  minimal base sensors compatible          |
-| :::                  | :::          |  SLES 9                                |  minimal base sensors compatible          |
+| :::                  ^  Compatible  |  Debian/Ubuntu                         |  Cyclops Server, and base sensors compatible |
+| :::                  | :::          |  SLES 9                                |  Only Client base sensors compatible          |
 |                      |              |                                                                                   ||
 ^  FileSystem          ^  Compatible  |  Linux Base ( ext2,3,4 )                                                          ||
-| :::                  | :::          |  Lustre                                |  shine compatible                         |
+| :::                  | :::          |  Lustre                                |  Opensource and Bull Suit SCS4 (shine compatible)   |
 | :::                  | :::          |  DRBD                                                                             ||
 |                      |              |                                                                                   ||
-^  Hardware            ^  Compatible  ^  Control Servidores                    |  ipmitool compatible                      |
-| :::                  | :::          ^  Discos duros                          |  smart & lsi (MegaCli64 compatible)       |
-| :::                  | :::          ^  Chasis y elementos electricos         |  ipmitool compatible                      |
-| :::                  | :::          ^  Almacenamiento                        |  ioadm compatible                         |
+^  Hardware            ^  Compatible  ^  Server Control                    |  ipmitool compatible                      |
+| :::                  | :::          ^  Hard Disk                          |  smart & lsi (MegaCli64 compatible)       |
+| :::                  | :::          ^  Environment Devices         |  ipmitool compatible                      |
 |                      |              |                                                                                   ||
-^  Electronica de red  ^  Compatible  |  Ninguna ( Monitorizacion indirecta )                                             ||
+^  Networking  ^  Compatible  |  None ( Indirect Status Monitoring )                                             ||
 |                      |              |                                                                                   ||
 ^  Software            ^  Compatible  |  Slurm 2.6/14.x                                                                   ||
-
-==== Sensores Disponibles ====
-
-|< 100% >|
-^  Sistema Operativo  ^  Nombre Sensor  ^  Descripción  ^  Compatibilidad  ^
-^  Redhat6  |  bios_log          |   deteccion de eventos en bmc             |   ipmitool compatible  |  
-^:::        |  bld_temp_b7       |   temperatura blade                       |   Bullx B710/B720 Blade Compatible    |  
-^:::        |  cpu               |   Uso de cpu                              |   Redhat Compatible   |  
-^:::        |  cpu_temp_b7       |   Temperatura CPU                         |   Bullx B710/B720 Blade Compatible   |  
-^:::        |  cpu_temp          |   Temperatura CPU                         |   ipmitool Compatible   |  
-^:::        |  daemon_generic    |   Control Servicios Sistema               |   Redhat Compatible   |  
-^:::        |  daemon_status     |   Control Servicios en el Arranque        |   Redhat Compatible   |  
-^:::        |  disk_space        |   Control Espacio en FS                   |   Redhat Compatible   |  
-^:::        |  external_storage  |   Control Cabina de discos                |   ioadm compatible   |  
-^:::        |  hostname          |   Nombre de host                          |   Redhat Compatible   |  
-^:::        |  ib_if             |   Control Link interfaz Infiniband        |   Redhat Compatible   |  
-^:::        |  ib_net            |   Control comunicacion red                |   Redhat Compatible   |  
-^:::        |  lsidisk           |   Control estado HD                       |   LSI Compatible   |  
-^:::        |  lustre            |   Control estado FS lustre                |   shine compatible    |  
-^:::        |  mon_time          |   Tiempo de Monitorizacion                |   Redhat Compatible   |  
-^:::        |  network           |   Control estado interfaces Red eth       |   ifconfig Compatible   |  
-^:::        |  none              |   Sensor Null   ||  
-^:::        |  orphanps          |   Control de Procesos Huerfanos           |   Redhat Compatible   |  
-^:::        |  pacemaker         |   Control de Servicios Gestionados HA     |   haresl compatible    |  
-^:::        |  slurm_node_status  |   Control estado nodos slurm              |   Slurm 2.6 Compatible   |  
-^:::        |  slurm_queue       |   Control de Jobs Slurm                   |   Slurm 2.6 Compatible   |  
-^:::        |  smart_disk        |   Control de estado HD locales            |   Smart HD Compatible   |  
-^:::        |  swap              |   Control de estado particion swap        |   Redhat Compatible   |  
-^:::        |  uptime            |   Control de tiempo funcionamiento        |   Redhat Compatible   |  
-^:::        |  z                 |   Control de Procesos Zombie Activos      |   Redhat Compatible   |  
-|           |                    |                                           |                       |  
-^  Debian   |  cpu                   |   Uso de cpu                              |   Debian Compatible   |  
-^:::        |  daemon_generic        |   Control Servicios Sistema               |   Debian Compatible   |  
-^:::        |  disk_space            |   Control Espacio en FS                   |   Debian Compatible   |  
-^:::        |  hostname              |   Nombre de host                          |   Debian Compatible   |  
-^:::        |  mon_time              |   Tiempo de Monitorizacion                |   Debian Compatible   |  
-^:::        |  swap                  |   Control de estado particion swap        |   Debian Compatible    |  
-^:::        |  uptime                |   Control de tiempo funcionamiento        |   Debian Compatible   |  
-|           |                    |                                           |                       |
-^  Opensuse  |  cpu                   |   Uso de cpu                              |   Opensuse Compatible   |  
-^:::        |  daemon_generic        |   Control Servicios Sistema               |   Opensuse Compatible   |  
-^:::        |  disk_space            |   Control Espacio en FS                   |   Opensuse Compatible   |  
-^:::        |  hostname              |   Nombre de host                          |   Opensuse Compatible   |  
-^:::        |  mon_time              |   Tiempo de Monitorizacion                |   Opensuse Compatible   |  
-^:::        |  swap                  |   Control de estado particion swap        |   Opensuse Compatible    |  
-^:::        |  uptime                |   Control de tiempo funcionamiento        |   Opensuse Compatible   |  
-^:::        |  bios_log              |   deteccion de eventos en bmc             |   ipmitool compatible   |  
-^:::        |  orphanps              |   Control de Procesos Huerfanos           |   Opensuse Compatible   |  
-^:::        |  slurm_node_status     |   Control estado nodos slurm              |   Slurm 2.6 Compatible   |  
-^:::        |  slurm_queue           |   Control de Jobs Slurm                   |   Slurm 2.6 Compatible   |  
-^:::        |  smart_disk            |   Control de estado HD locales            |   Smart HD Compatible   |  
-^:::        |  z                     |   Control de Procesos Zombie Activos      |   Opensuse Compatible   |  
-|           |                    |                                           |                       |
-^  SLES     |  cpu                   |   Uso de cpu                              |   SLES Compatible   |  
-^:::        |  daemon_generic        |   Control Servicios Sistema               |   SLES Compatible   |  
-^:::        |  disk_space            |   Control Espacio en FS                   |   SLES Compatible   |  
-^:::        |  hostname              |   Nombre de host                          |   SLES Compatible   |  
-^:::        |  mon_time              |   Tiempo de Monitorizacion                |   SLES Compatible   |  
-^:::        |  swap                  |   Control de estado particion swap        |   SLES Compatible    |  
-^:::        |  uptime                |   Control de tiempo funcionamiento        |   SLES Compatible   |  
-^:::        |  bios_log              |   deteccion de eventos en bmc             |   ipmitool compatible   |  
-^:::        |  orphanps              |   Control de Procesos Huerfanos           |   SLES Compatible   |  
-^:::        |  slurm_node_status     |   Control estado nodos slurm              |   Slurm 2.6 Compatible   |  
-^:::        |  slurm_queue           |   Control de Jobs Slurm                   |   Slurm 2.6 Compatible   |  
-^:::        |  smart_disk            |   Control de estado HD locales            |   Smart HD Compatible   |  
-^:::        |  z                     |   Control de Procesos Zombie Activos      |   SLES Compatible   |  
-^:::        |  ib_net                |   Control comunicacion red                |   SLES Compatible           |  
-^:::        |  network               |   Control estado interfaces Red eth       |   ifconfig Compatible   |  
