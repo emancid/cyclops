@@ -10,7 +10,7 @@
 
 
 |< 100% 34% 33% 33% 33% >|                                                                                                                                                                                                                                                    
-|  [[http://www.aemet.es|{{public:aemet4.png}}]]             |  {{ :public:publicaccess.png?100&nolink |  }}                                                                                            ||                                                                   
+|  ** Company Link or logo **             |  {{ :public:publicaccess.png?100&nolink |  }}                                                                                            ||                                                                   
 |  @#7a8c5a:                                                                                                                                                                                           |||                                                                   
 |  [[:public:users:start|{{ :public:userarea.png?200 | }}]]  |  [[:public:cluster:start|{{ :public:clusterstatus.png?200 }}]]  |  [[:public:users:statistics:start|{{ :public:statistics.png?200 | }}]]  |                                                                   
 |  @#7a8c5a:                                                                                                                                                                                           |||                                                                   

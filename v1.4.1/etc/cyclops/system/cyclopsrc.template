@@ -4,45 +4,133 @@ source /etc/cyclops/global.cfg
 PATH="${PATH}:$_stat_extr_path"
 export PATH
 
-if [ -f "$_config_path_mon/plugin.users.ctrl.cfg" ]
-then
-        source $_config_path_mon/plugin.users.ctrl.cfg
+#### CONSOLE COLORS ####
+
+_red_blink="\033[5;31m"
+_red="\e[31m"
+_green="\e[32m"
+_bolt="\e[1m"
+_under="\e[4m"
+_nformat="\033[0m"
+
+#### CYCLOPS USERS - WELLCOME MODULE ####
+
+cyc_module_welcome()
+{
+	PATH=${PATH}":"$_script_path":"$_tool_path"/approved"
+	export PATH
+	#test.productive.env.sh -t pasive -v human 2>/dev/null
+	_sys_status=$( $_tool_path/approved/test.productive.env.sh -t pasive -v simple 2>/dev/null | cut -d';' -f4 )
+
+	echo -e "${_red}=============================${_nformat}"
+	echo -e "CYCLOPS:"
+	echo -e "${_red}-----------------------------${_nformat}"
+
+	case "$_sys_status" in
+	"OPERATIVE")
+		echo -e "PRODUCTIVE ENVIRONMENT STATUS: ${_green}OPERATIVE${_nformat}"
+	;;
+	"NOT OPERATIVE")
+		echo -e "PRODUCTIVE ENVIRONMENT STATUS: ${_red_blink}NOT OPERATIVE${_nformat}"
+	;;
+	"")
+		echo -e "PRODUCTIVE ENVIRONMENT STATUS: ${_red_blink}ERR: UNKNOWN ENVIRONMENT STATUS${_nformat}"
+	;;	
+	"*")
+		echo -e "PRODUCTIVE ENVIRONMENT STATUS: ${_red_blink}$_sys_status${_nformat}"
+	;;
+	esac
+	echo -e "${_red}=============================${_nformat}"
+
+	echo 
+
+	echo -e "${_red}=============================${_nformat}"
+	echo -e "${_red}IMPORTANT NOTICE!!${_nformat}"
+	echo -e "${_red}-----------------------------${_nformat}"
+	echo -e "!!!! CUSTOMIZE MESSAGE !!!!"
+	echo -e "${_red}=============================${_nformat}"
+	echo
+	echo -e "${_green}=============================${_nformat}"
+	echo -e "${_green}CYCLOPS: HELP INFO${_nformat}"
+	echo -e "${_green}-----------------------------${_nformat}"
+	echo "Use Next commands for establish link between system and monitoring team"
+	echo -e "  ${_under}cyclops.sh${_nformat}: manage monitoring or get info about system status"
+	echo -e "  ${_under}audit.nod.sh${_nformat}: get info about node(s) status or main bitacora data"
+	echo -e "  ${_under}cyc.status.sh${_nformat}: known all about cyclops status"
+	echo 
+	echo "Use -h for help in those commands"
+	echo "Maybe you need root permissions to manage cyclops, use su or sudo commands"
+	echo            
+	echo "Please connect to https://[CUSTOMIZE LINK] to get info about cyclops"
+	echo
+	echo -e "${_green}-----------------------------${_nformat}"
+	echo -e "${_red}NOTICE:${_nformat}"
+	echo -e "USE ${_red_blink}audit.nod.sh -i issue${_nformat} TO REGISTER YOUR ACTIONS IN THE SYSTEM"
+	echo -e "${_green}=============================${_nformat}"
+	echo
+}
+
+cyc_module_screen()
+{
+
+	source $_cyc_module_screen_cfg
+	_user_exits=$( awk -v _u="$USER" '$1 == _u { _count++ } END { if ( _count > 0 ) { print "OK" } else { print "FALSE" }}' $_screen_users_file )
+
+	if [ "$_user_exits" == "OK" ]
+	then
+		if [ "$_cyc_wel_status" == "ENABLED" ] 
+		then
+			export SYSSCREENRC=$_screen_users_cfg 
+		else
+			SYSSCREENRC=$_screen_users_cfg_simple 
+		fi
+
+		export _screen_session=$USER"_"$( date +%s )
+
+		if [ "${STARTED_SCREEN:-x}" = x -a "${SSH_TTY:-x}" != x ]
+		then
+			STARTED_SCREEN=1 ; export STARTED_SCREEN
+			screen -A -S  $_screen_session && exit 0
+		fi
+	else
+		if [ "$_cyc_wel_status" == "ENABLED" ]
+		then
+			echo "${_screen_wel_msg}"
+		fi
+	fi
+}
+
+#### MAIN EXEC ####
+
+	#- USER REGISTER -#
+
+	[ -f "$_config_path_mon/plugin.users.ctrl.cfg" ] && source $_config_path_mon/plugin.users.ctrl.cfg || exit  
 
         _cyc_user_ctrl=$( echo "$_pg_usr_ctrl_admin,$_pg_usr_ctrl_l1,$_pg_usr_ctrl_l2,$_pg_usr_ctrl_l3,$_pg_usr_ctrl_other" | tr ',' '\n' | awk -v _u="$USER" '{ if ( $1 == _u ) { print "OK" }}' )
 
-        if [ "$_cyc_user_ctrl" == "OK" ]
-        then
-		PATH="${PATH}:$_script_path:$_tool_path/approved"
-		export PATH
+	_cyc_usr_l_ctrl=$( echo "$_pg_usr_ctrl_l1,$_pg_usr_ctrl_l2,$_pg_usr_ctrl_l3" | tr ',' '\n' | awk -v _u="$USER" '{ if ( $1 == _u ) { print "OK" }}' )                                          
+	[ "$_cyc_usr_l_ctrl" == "OK" ] && $_script_path/audit.nod.sh -i bitacora -e issue -s info -n security -m "$HOSTNAME : $USER : support action in progress" && export _cyc_ask_activity="yes"
 
-                echo "CYCLOPS: OPERATIVE ENVIRONMENT STATUS"
-                test.productive.env.sh -t pasive -v human 2>/dev/null
-                echo "============================="
+	_cyc_usr_o_ctrl=$( echo "$_pg_usr_ctrl_other" | tr ',' '\n' | awk -v _u="$USER" '{ if ( $1 == _u ) { print "OK" }}' )
+	[ "$_cyc_usr_o_ctrl" == "OK" ] && $_script_path/audit.nod.sh -i bitacora -e info -s info -n security -m "$HOSTNAME : $USER : deploy task or unusual support action in progress"
 
-                echo "IMPORTANT NOTICE!!"
-                echo "if you will be working in this system out of journal time:"
-                echo "PLEASE, ALERT Monitoring and Support Team"
-                echo "CSR Contact Information:"
-                echo "Tlf: +34 963.93.87.24"
-                echo "email: srv.cgr-es@atos.net"
-                echo "============================="
-                echo
-                echo "CYCLOPS: HELP INFO"
-                echo "-----------------------------"
-                echo "Use Next commands for establish link between system and monitoring team"
-                echo "  cyclops.sh: manage monitoring or get info about system status"
-                echo "  audit.nod.sh: get info about node(s) status or main bitacora data"
-                echo "  test.productive.env.sh: known environment productive status"
-                echo 
-                echo "Use -h for help in those commands"
-                echo "Maybe you need root permissions to manage cyclops, use su or sudo commands"
-                echo            
-                echo "Please connect to https://[cyclops web server address] to get info about cyclops"
-                echo
-        fi
+	_cyc_screen_status=$( cat $_sensors_sot | awk -F\; '$1 == "CYC" && $2 == "0008" { print $4 }' )
+	_cyc_wel_status=$( cat $_sensors_sot | awk -F\; '$1 == "CYC" && $2 == "0009" { print $4 }' )
 
-        _cyc_usr_l_ctrl=$( echo "$_pg_usr_ctrl_l1,$_pg_usr_ctrl_l2,$_pg_usr_ctrl_l3" | tr ',' '\n' | awk -v _u="$USER" '{ if ( $1 == _u ) { print "OK" }}' )                                          
-        [ "$_cyc_usr_l_ctrl" == "OK" ] && audit.nod.sh -i event -e issue -s info -m "User: $USER is login in the system"
+	#- WELCOME GEN -#
 
-fi
+	if [ "$_cyc_wel_status" == "ENABLED" ] 
+	then
+		[ "$_cyc_user_ctrl" == "OK" ] && _screen_wel_msg=$( cyc_module_welcome ) && export _screen_wel_msg
+	fi
+
+	#- PROCESSING WELCOME AND SCREEN OPTIONS -#
+
+	if [ "$_cyc_screen_status" == "ENABLED" ] 
+	then
+		cyc_module_screen 
+	else
+		[ "$_cyc_wel_status" == "ENABLED" ] && echo "${_screen_wel_msg}" 
+		[ "$_cyc_ask_activity" == "yes" ] && $_script_path/audit.nod.sh -i issue
+	fi
 
