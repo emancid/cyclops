@@ -5,7 +5,7 @@
 
 |<100%>|
 |  @#D7F2FF:  |
-|  {{  :public:hpctitle.png?600&nolink  |}}  | 
+|  {{  :public:maincyclopstitle.png?450&nolink  |}}  |
 |  @#D7F2FF:  |
 
 |< 100% 2% 48% 48% 2% >|
@@ -19,7 +19,7 @@
 
 |<100%>|
 |  @#D7F2FF:  |
-|  {{  :public:maincyclopstitle.png?350&nolink|}}|
+|  {{  public:mainhomelogo.png?nolink|}}|
 |  @#D7F2FF:  |
 
 <hidden Company Disclaimer>
