@@ -8,4 +8,4 @@
 #
 # login:passwordhash:Real Name:email:groups,comma,seperated
 
-admin:$1$qdX78kfK$0Wyjqz/KFUn1dkA/2fh4H0:admin bullx:no@mail.com:admin,user
+admin:$1$dLmetdwL$8ccfD6iwqhfRnTDOBAMft/:admin cyclops:no@mail.com:admin,user
