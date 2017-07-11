@@ -1,14 +1,14 @@
 ====== Specifications ======
 
-===== Versión Beta 2 =====
+===== 1.4.1 Version [RAZOR]  =====
 
-==== Compatibilidad ====
+==== Compatibility ====
 
 |< 100% >|
 ^  Operating System   ^  Certificated  |  Redhat/Centos 6 & 7                                                             ||
 | :::                  | :::          |  Opensuse 12/13                                                                   ||
 | :::                  | :::          |  SLES 11/12                                                                       ||
-| :::                  ^  Compatible  |  Debian/Ubuntu                         |  Cyclops Server, and base sensors compatible |
+| :::                  ^  Compatible  |  Debian/Ubuntu                         |  Cyclops Server, and base sensors compatible  |
 | :::                  | :::          |  SLES 9                                |  Only Client base sensors compatible          |
 |                      |              |                                                                                   ||
 ^  FileSystem          ^  Compatible  |  Linux Base ( ext2,3,4 )                                                          ||
