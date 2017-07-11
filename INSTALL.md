@@ -6,26 +6,23 @@ CYCLOPS 1.4.1v INSTALL
     ----------------------------------------------------------------------------------------------------------
 
     - install -> git
-	- yum install git
-    - install -> apache + php + php_gd
-        - yum install httpd php php-gd
-    - install -> dokuwiki
-         [ REDHAT/CENTOS ] - https://www.dokuwiki.org/install:centos
-        * Configure symbolic link or right path for apache access to cyclops web interface ( default /opt/cyclops/www )
-	* You have in /opt/cyclops/docs a file template ( redhat ) for configurate apache site (is usesfull with other distros)    
-	* You can use cyclops default certificates for apache if you want https cryp acces
-	* IMPORTANT: disable selinux for right apache behaviour
-        * create symlink:
-                cd /var/www/html/ 		## REDHAT WEB PATH ( Use the right path if you have other distro or other www configuration )
-		ln -s /opt/cyclops/www cyclops 
-	* Web access credentials:
-		User: admin
-		Pass: cyclops
+	- yum install git 			## REDHAT/CENTOS PACKAGE INSTALL 
+    - install -> apache + php + php gd + ssl module
+        - yum install httpd php php-gd mod_ssl 	## REDHAT/CENTOS PACKAGE INSTALL
     
     - Other Linux Recomended packages:
             - pdsh
             - sysstat
             - rsync
+
+    - Apache customization
+	1. You can use cyclops default certificates for apache if you want https cryp acces
+	2. [ONLY REDHAT USERS] you can use cyclops site template in /opt/cyclops/docs/apache.cyclops.conf
+		- [OTHER DISTROS] can use or adapt this template with right paths
+		- Use,create or change paths for ssl certs if use own certs or copy /opt/cyclops/docs certs to the right paths
+	3. IMPORTANT: disable selinux for right apache behaviour
+
+    - You have in /opt/cyclops/docs a file template ( redhat ) for configurate apache site (is usesfull with other distros)    
 
     2. INSTALL CYCLOPS
     ----------------------------------------------------------------------------------------------------------
@@ -44,7 +41,22 @@ CYCLOPS 1.4.1v INSTALL
 	- EXPERIMENTAL: ln -s /opt/git/cyclops/[version] cyclops ## EXPERIMENTAL, BETTER USE NEXT OPTION
 	- STABLE OPTION: copy /opt/git/cyclops/[version] in /opt/cyclops 
 
-	3. UPDATE CYCLOPS:
+	3. CREATE necesary directories
+		cd /opt/cyclops/www/data
+		mkdir attic cache index locks media_attic media_meta meta tmp
+
+	4. CREATE SYMLINKS
+
+	- Configuration path
+		cd /etc
+		ln -s /opt/cyclops/etc/cyclops
+
+	- Web Data
+                cd /var/www/html/ 		## REDHAT WEB PATH ( Use the right path if you have other distro or other www configuration )
+		ln -s /opt/cyclops/www cyclops 
+		
+
+	5. UPDATE CYCLOPS:
 
 	- BEFORE UPDATE/UPGRADE BEWARE WITH THIS:
 		- DO BACKUP FROM root cyclops directoty 
@@ -96,7 +108,29 @@ CYCLOPS 1.4.1v INSTALL
 		RECOMENDED: change permissions from /etc/cyclops/system/cyclopsrc to 750 
 		OPTIONAL: configure /etc/cyclops/monitor/plugin.users.ctrl.cfg with users to ctrl
 
-    5. CONFIGURE CYCLOPS
+    5. INSTALL WEB INTERFACE ( DOKUWIKI BASED )
+    ----------------------------------------------------------------------------------------------------------
+
+ 	- [OPTIONAL INSTALL] If you want you can install dokuwiki base from original source, and update it before with cyclops customization
+		- [REDHAT/CENTOS] - https://www.dokuwiki.org/install:centos
+		- Install necesary dokuwiki plugins
+		- REMEMBER: overwrite cyclops files over dokuwiki install (at least /opt/cyclops/www/data/pages and /opt/cyclops/www/data/media) 
+		- use rsync and customice it for update what ever you want
+
+	- [RECOMMENDED INSTALL] use cyclops dokuwiki customization
+		1. Configure symbolic link or right path for apache access to cyclops web interface ( default /opt/cyclops/www )
+		- [REDHAT/CENTOS] can use this commands: 
+			cd /var/www/html
+			ln -s /opt/cyclops/www cyclops
+
+	- If you use cyclops apache templates you can access:
+		https://[IP/DOMAIN NAME]/doku.php
+
+	* Web access credentials:
+		User: admin
+		Pass: cyclops
+
+    6. CONFIGURE CYCLOPS
     ----------------------------------------------------------------------------------------------------------
 
 	1. check /etc/global.cfg.template and after that rename to /etc/global.cfg
