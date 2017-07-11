@@ -2,7 +2,7 @@ CYCLOPS 1.4.1v INSTALL
 ==============================================================================================================
 
 
-    1.PREPARE NECESSARY ENVIRONMENT
+    1. PREPARE NECESSARY ENVIRONMENT
     ----------------------------------------------------------------------------------------------------------
 
     - install -> git
@@ -15,14 +15,14 @@ CYCLOPS 1.4.1v INSTALL
 	* You have in /opt/cyclops/docs a file template ( redhat ) for configurate apache site (is usesfull with other distros)    
 	* You can use cyclops default certificates for apache if you want https cryp acces
 	* IMPORTANT: disable selinux for right apache behaviour
-        * in centOS/redhat6 (optional):
-                /var/www/html/ln -s /opt/cyclops/www cyclops 
+        * create symlink:
+                cd /var/www/html/ 		## REDHAT WEB PATH ( Use the right path if you have other distro or other www configuration )
+		ln -s /opt/cyclops/www cyclops 
 	* Web access credentials:
 		User: admin
 		Pass: cyclops
     
-    - Recomended packages:
-        [ REDHAT/CENTOS ]
+    - Other Linux Recomended packages:
             - pdsh
             - sysstat
             - rsync
@@ -30,31 +30,54 @@ CYCLOPS 1.4.1v INSTALL
     2. INSTALL CYCLOPS
     ----------------------------------------------------------------------------------------------------------
 
-    a.FROM TAR:
+	1. FROM TAR:
 
-    - copy cyclops.[version].tgz and untar in /opt
-    - untar /opt/cyclops/monitor/packs/*.tar from root directory
+	- copy cyclops.[version].tgz and untar in /opt
+	- untar /opt/cyclops/monitor/packs/*.tar from root directory
 
-    b.FROM GITHUB: 
+	2. FROM GITHUB: 
 
-    - create dir /opt/git
-    - cd /opt/git/
-    - git clone https://github.com/ikseth/cyclops.git
-    - create link in /opt/ 
-    - ln -s /opt/git/cyclops/[version] cyclops
+	- create dir /opt/git
+	- cd /opt/git/
+	- git clone https://github.com/ikseth/cyclops.git
+	- create link in /opt/ 
+	- EXPERIMENTAL: ln -s /opt/git/cyclops/[version] cyclops ## EXPERIMENTAL, BETTER USE NEXT OPTION
+	- STABLE OPTION: copy /opt/git/cyclops/[version] in /opt/cyclops 
+
+	3. UPDATE CYCLOPS:
+
+	- BEFORE UPDATE/UPGRADE BEWARE WITH THIS:
+		- DO BACKUP FROM root cyclops directoty 
+		- WITH rsync USE --exclude="[FILE|DIR|STRING]" with any customization that you change in www cyclops web directory
+
+	- UPDATE IS EXPERIMENTAL YET
+
+	- MORE SAFETY, WITH STABLE GITHUB OPTION:
+		- from /opt/git/cyclops
+			git pull
+		- after git update, use:
+			rsync -vrltDuc /opt/git/cyclops/[version]/ /opt/cyclops/
+
+	- LESS SAFETY BUT MORE CONFORTABLE  
+		- use GITHUB EXPERIMENTAL OPTION INSTALL FOR CYCLOPS
+		- from /opt/git/cyclops
+			fit pull
+
+	- WITHOUT GITHUB
+		- download zip from github
+		- descompress file in temp dir
+		- rsync with -vrltDuc optins from temp dir to cyclops dir ( BEWARE use --dry-run rsync option to verify right update before do it )
+
     
-    3.Create Base Dirs&Files
+    3. CREATE AND CONFIGURE PERMISSIONS AND OWNERS
     ----------------------------------------------------------------------------------------------------------
 
-        groupadd -g 900 cyclops
-        useradd -g 900 -b /opt/cyclops/local -u 900 cyclops
+        groupadd -g 900 cyclops					## CHANGE GID IF YOUR DISTRO OR SYSTEM HAS 900 IN USE
+        useradd -g 900 -b /opt/cyclops/local -u 900 cyclops     ## CHANGE UID IF YOUR DISTRO OR SYSMTE HAS 900 IN USE
         cd /etc ; ln -s /opt/cyclops/etc/cyclops/
   
-    4.Configure permissions
-    ----------------------------------------------------------------------------------------------------------
-
         chown -R cyclops:cyclops /opt/cyclops
-        chown -R apache /opt/cyclops/www   ## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
+        chown -R apache /opt/cyclops/www 			## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
         
         chmod -R g+w,o-rwx /opt/cyclops/www/
 
@@ -62,27 +85,31 @@ CYCLOPS 1.4.1v INSTALL
         chmod -R 750 /opt/cyclops/tools/
         chmod -R 750 /opt/cyclops/statistics/scripts/
       
-    5.Add cyclops PATH to root profile file
+    4. PROFILING USERS ENVIRONMENT
     ----------------------------------------------------------------------------------------------------------
 
-        export PATH=$PATH":/opt/cyclops/scripts"        #### CYC MAIN  PATH
-        export PATH=$PATH":/opt/cyclops/tools/approved" #### CYC TOOLS PATH
+	- For cyclops RC module link cyclopsrc in /etc/profile.d  ## [ REDHAT/CENTOS ] use the right way in other distro
+	
+		cd /etc/profile.d 
+		ln -s /etc/cyclops/system/cyclopsrc
+            
+		RECOMENDED: change permissions from /etc/cyclops/system/cyclopsrc to 750 
+		OPTIONAL: configure /etc/cyclops/monitor/plugin.users.ctrl.cfg with users to ctrl
 
-    6.Configurate Cyclops
+    5. CONFIGURE CYCLOPS
     ----------------------------------------------------------------------------------------------------------
 
-        1. check /etc/global.cfg.template and after that rename to /etc/global.cfg
-        2. check /etc/cyclops/nodes/node.type.cfg.template and rename it to same path with template at end of file.
-        3. check /etc/cyclops/nodes/critical.res.cfg.template and rename it to same path without template at end of the file/
-    
+	1. check /etc/global.cfg.template and after that rename to /etc/global.cfg
+	2. check /etc/cyclops/nodes/node.type.cfg.template and rename it to same path with template at end of file.
+	3. check /etc/cyclops/nodes/critical.res.cfg.template and rename it to same path without template at end of the file/
 	4. You can use a cyclops prototipe option for configurate several items of it:
-		cyclops -y config
+		cyclops -y config  ## USE IT SPECIALLY FOR NODE,FAMILY,GROUP AND MONITORING ITEMS
 	5. You have the next files for configure cyclops
 
         /etc/cyclops/
                 global.cfg.template *               ## MAIN CFG ( RECOMMENDED NOT CHANGE IF NOT NECESARY) - RENAME IT TO global.cfg 
             ./system
-                wiki.cfg.template *                  ## APACHE USR&GRP
+                wiki.cfg.template *                 ## APACHE USR&GRP
                 cyclopsrc.template                  ## CYCLOPS profile customize option ( optional )
             ./nodes
                 bios.mng.cfg.template               ## IPMITOOL CREDENTIALS
@@ -110,38 +137,36 @@ CYCLOPS 1.4.1v INSTALL
             ./tools
                 tool.b7xx.upgrade.fw.cfg.template   ## ONLY FOR B7xx HARDWARE - Firmware definitions profiles files
 
-	3. Other Important dir&files:
-		3.1. Nodes items:
+	6. Other Important dir&files:
+		- Nodes items:
 			/opt/cyclops/monitor/sensors/status
 				./scripts		## [SENSORS COMPILANCE]/SENSORS FILES ## NECESARY IF YOU WANT TO CREATE NEW ONES OR MODIFY THEM, see .template file for help
 				./ia			## IA RULES FILES, see .template file for help
-		3.2. Environment items:
+		- Environment items:
 			/opt/cyclops/monitor/sensors/environment
 				./scripts		## [SENSORS COMPILANCE]/SENSORS FILES ## NECESARY IF YOU WANT TO CREATE NEW ONES OR MODIFY THEM, see .template file for help
 				./ia			## IA RULES FILES, see .template file for help
-		3.3. Slurm items:
+		- Slurm items:
 			/opt/cyclops/monitor/sensors/squeue
 				./ia			## EXPERIMENTAL, RULE LIST
 				./scripts		## RULES FILES, see template for hel
-		3.4. Audit items:
+		- Audit items:
 			/opt/cyclops/audit
 				./scripts/[OS COMPILANCE]	## AUDIT EXTRACTION FILES, edit one of them for help
-		3.5. Cyclops items:
+		- Cyclops items:
 			/opt/cyclops
 				./logs			## CYCLOPS LOGS STORAGE
 				./www			## DOKUWIKI WEB INTERAFACE, MOVE OR LINK APACHE SITE DEFINITION FOR USE WEB INTERFACE
-		3.6. Tools items:
+		- Tools items:
 			/opt/cyclops/tools
 				./approved		## OFFICIAL CYCLOPS TOOLS
 				./preops		## PRE-OFFICIAL CYCLOPS TOOLS
 				./testing		## TESTING CYCLOPS TOOLS AND YOUR OWN CYC TOOLS
-				./deprecated		## OLD CYCLOPS TOOLS
-				./cg_state		## OLD FIRST TOOL IN CYCLOPS... YOU WOULD DELETE IT
 
        	- WARNING: Rename .template for each one it change
 	- WARNING: Files with * is mandatory to be configurated previously to run cyclops 
 
-    7.HA CYCLOPS environment NOTES
+    6. HA CYCLOPS ENVIRONMENT NOTES [OPTIONAL]
     ----------------------------------------------------------------------------------------------------------
 
         - Sync /opt/cyclops with ha mirror node
@@ -153,7 +178,7 @@ CYCLOPS 1.4.1v INSTALL
         - Cyclops needs ha software like heartbeat or peacemaker to control ha resources
         - Cyclops needs floating ip to refer master node
 
-    8.MONITORING NODES CONFIG
+    7. NODES CONFIG
     ----------------------------------------------------------------------------------------------------------
 
         - Configure ssh keys for no auth ssh connections
@@ -173,15 +198,17 @@ CYCLOPS 1.4.1v INSTALL
 		4. Create family file with selected razors in /etc/cyclops/nodes/[FAMILY NAME].rzr.lst
 		- The order of razors is Hierarchical, from up ( first to do action ) to down ( last to do action )
 
-    9.TEST AND ENABLE CYCLOPS
+    8. TEST AND ENABLE CYCLOPS
     ----------------------------------------------------------------------------------------------------------
     
 	1. See available options with:
 		cyclops.sh -h
-        2. Check Status with:
-		cyclops.sh -y status
+
+	2. Check Status with:
+		cyc.stats.sh -a cyclops ## FOR CYCLOPS OPTIONS STATUS
+		cyc.stats.sh -a node  ## FOR NODE STATUS
 		
-        3. Generate monitoring entries with cyclops.sh -y config ( option 19 ) or editing /etc/cyclops/monitor/monitor.cfg.template and rename it to monitor.cfg
+	3. Generate monitoring entries with cyclops.sh -y config ( option 19 ) or editing /etc/cyclops/monitor/monitor.cfg.template and rename it to monitor.cfg
         
 	4. Add Cron Entries like this redhat example:
 
@@ -192,25 +219,11 @@ CYCLOPS 1.4.1v INSTALL
 		20 * * * * /opt/cyclops/scripts/procedures.sh -t node -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/node_status.txt        #### OPTIONAL - UPDATE PROCEDURE STATUS
 		21 * * * * /opt/cyclops/scripts/procedures.sh -t env -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/env_status.txt          #### OPTIONAL - UPDATE PROCEDURE STATUS
 		42 * * * * /opt/cyclops/scripts/cyc.stats.sh -t daemon >/dev/null 2>/opt/cyclops/logs/cyc.stats.err.log					   #### OPTIONAL BUT MANDATORY IF YOU ENABLE AUDIT MODULE
-		17 * * * * /opt/cyclops/statistics/scripts/extract.main.slurm.sh -d 2>&1 >/opt/cyclops/logs/[HOSTNAME].slurm.extract.log                      #### OPTIONAL - SLURM STATISTICS
+		17 * * * * /opt/cyclops/statistics/scripts/extract.main.slurm.sh -d 2>&1 >/opt/cyclops/logs/[HOSTNAME].slurm.extract.log                   #### OPTIONAL - SLURM STATISTICS
 	
 	5. Enable Cyclops in testing mode with:
 		cyclops.sh -y testing -m '[MESSAGE]' -c
+
 	6. Enable Cyclops in operative mode with:
-		cyclops.sh -y up -c
-
-	- Use cyclops.sh -h for see other optional features and activate them.
-	
-	7. For cyclops RC module add to /etc/profile this line
-	
-            [ -f "/etc/cyclops/system/cyclopsrc" ] && /etc/cyclops/system/cyclopsrc
-            
-            change permissions from /etc/cyclops/system/cyclopsrc to 750 
-            configure /etc/cyclops/monitor/plugin.users.ctrl.cfg with users to ctrl
-    
-    
-    
-
-
-    
+		cyclops.sh -y enable -c
 
