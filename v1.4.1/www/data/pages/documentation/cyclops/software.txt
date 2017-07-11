@@ -72,6 +72,6 @@ Actually the suit are compose by this programs:
 
 |< 100% >|
 ^  Version                                               ^  Name   ^  Description                                        ^  Notes File                        ^  Date        ^  Last update  ^  Support contact                ^
-|  {{ :documentation:cyclops:cyclops-1.3.tgz |1.3}}      |  Tabby  | First installable version                           |  {{popup>.:version13notes?[keepOpen]|Notes 1.3}}    |  28-10-2016  |  19-12-2016   |  ignaciogarciahoyos@gmail.com  |
-|  {{ :documentation:cyclops:cyclops-1.4.tgz |1.4}}      |  Razor  | Adding Auto Repair and Host Management Integration  |  {{popup>.:version14notes?[keepOpen]|Notes 1.4}}    |  16-12-2016  |  19-12-2016   |  ignaciogarciahoyos@gmail.com  |
-|  @#A5DF00: {{ :documentation:cyclops:cyclops-1.4.1.tgz |1.4.1}}  |  Razor  | Cyclops Status Tool And Bug Fixed         |  {{popup>.:version141notes?[keepOpen]|Notes 1.4.1}}  |  11-01-2017  |  06-03-2017   |  ignaciogarciahoyos@gmail.com  |
+|  1.3      |  Tabby  | First installable version                           |  {{popup>.:version13notes?[keepOpen]|Notes 1.3}}    |  28-10-2016  |  19-12-2016   |  ignaciogarciahoyos@gmail.com  |
+|  1.4      |  Razor  | Adding Auto Repair and Host Management Integration  |  {{popup>.:version14notes?[keepOpen]|Notes 1.4}}    |  16-12-2016  |  19-12-2016   |  ignaciogarciahoyos@gmail.com  |
+|  1.4.1    |  Razor  | Cyclops Status Tool And Bug Fixed         |  {{popup>.:version141notes?[keepOpen]|Notes 1.4.1}}  |  11-01-2017  |  06-03-2017   |  ignaciogarciahoyos@gmail.com  |

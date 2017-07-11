@@ -2,6 +2,7 @@
 
 source /etc/cyclops/global.cfg
 PATH="${PATH}:$_stat_extr_path"
+PS1="[\D{%Y-%m-%dT%H:%M:%S}][\u@\h][\w]\\$ "
 export PATH
 
 #### CONSOLE COLORS ####
