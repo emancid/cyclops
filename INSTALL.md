@@ -44,6 +44,8 @@ CYCLOPS 1.4.1v INSTALL
 	3. CREATE necesary directories
 		cd /opt/cyclops/www/data
 		mkdir attic cache index locks media_attic media_meta meta tmp
+		cd /opt/cyclops
+		mkdir logs lock temp
 
 	4. INSTALL SENSORS, IA RULES AND NODE RAZOR
 	- Decompress /opt/cyclops/monitor/packs for optain necesary sensors, rules and razors files
