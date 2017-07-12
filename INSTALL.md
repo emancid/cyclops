@@ -49,6 +49,8 @@ CYCLOPS 1.4.1v INSTALL
 	- Decompress /opt/cyclops/monitor/packs for optain necesary sensors, rules and razors files
 		from root directory ( cd / )
 		tar xvf /opt/cyclops/monitor/packs/*.tar
+		OR
+		for _file in $( ls -1 /opt/cyclops/monitor/packs/* ) ; do tar xvf $_file ; done ## IF *.tar does not works 
 
 	5. CREATE SYMLINKS
 
@@ -84,6 +86,8 @@ CYCLOPS 1.4.1v INSTALL
 		- download zip from github
 		- descompress file in temp dir
 		- rsync with -vrltDuc optins from temp dir to cyclops dir ( BEWARE use --dry-run rsync option to verify right update before do it )
+
+	NOTE: beware with update, sometimes owner or permissions could change, use chown or/and chmod commands to recovery right file and directory status, next step detail actions.
 
     
     3. CREATE AND CONFIGURE PERMISSIONS AND OWNERS
