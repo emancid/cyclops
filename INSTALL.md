@@ -121,11 +121,11 @@ CYCLOPS 1.4.1v INSTALL
 
 	- For cyclops RC module link cyclopsrc in /etc/profile.d  ## [ REDHAT/CENTOS ] use the right way in other distro
 	
+		copy /etc/cyclops/monitor/plugin.users.ctrl.cfg.template to /etc/cyclops/monitor/plugin.users.ctrl.cfg
 		cd /etc/profile.d 
-		ln -s /etc/cyclops/system/cyclopsrc
+		ln -s /etc/cyclops/system/cyclopsrc cyclopsrc.sh
             
 		RECOMENDED: change permissions from /etc/cyclops/system/cyclopsrc to 750 
-		OPTIONAL: configure /etc/cyclops/monitor/plugin.users.ctrl.cfg with users to ctrl
 
     5. INSTALL WEB INTERFACE ( DOKUWIKI BASED )
     ----------------------------------------------------------------------------------------------------------
