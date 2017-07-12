@@ -195,7 +195,7 @@ CYCLOPS 1.4.1v INSTALL
 				./scripts		## RULES FILES, see template for hel
 		- Audit items:
 			/opt/cyclops/audit
-				./scripts/[OS COMPILANCE]	## AUDIT EXTRACTION FILES, edit one of them for help
+				./scripts/[OS|STOCK COMPILANCE]	## AUDIT EXTRACTION FILES, edit one of them for help
 		- Cyclops items:
 			/opt/cyclops
 				./logs			## CYCLOPS LOGS STORAGE
@@ -206,18 +206,17 @@ CYCLOPS 1.4.1v INSTALL
 				./preops		## PRE-OFFICIAL CYCLOPS TOOLS
 				./testing		## TESTING CYCLOPS TOOLS AND YOUR OWN CYC TOOLS
 
-       	- WARNING: Rename .template for each one it change
+       	- WARNING: Rename .template for each one it change , best practice is copy the file without .template and change new file.
 	- WARNING: Files with * is mandatory to be configurated previously to run cyclops 
 
     6. HA CYCLOPS ENVIRONMENT NOTES [OPTIONAL]
     ----------------------------------------------------------------------------------------------------------
 
-        - Sync /opt/cyclops with ha mirror node
         - Repeat step 1. and 2.
         - Configure ssh keys for no auth ssh connections
+        - Sync /opt/cyclops with ha mirror node
+	- Copy file /etc/cyclops/system/ha.cfg.template with same name in same place without ".template" and change it
         - Define settings in ha config file
-            ./system
-                ha.cfg.template
         - Cyclops needs ha software like heartbeat or peacemaker to control ha resources
         - Cyclops needs floating ip to refer master node
 
@@ -228,7 +227,7 @@ CYCLOPS 1.4.1v INSTALL
 	- Create cyc working dirs
 		1. Copy from cyc server /opt/cyclops/local to all cyc monitor hosts
 		2. Default path: /opt/cyclops/local/data/sensors
-		- if you want to change:
+		- if you want to change [ NOT RECOMMENDED ] :
 			1. Edit /opt/cyclops/monitor/sensors/status/conf/sensor.var.cfg file and change: _sensor_remote_path variable
 			2. Edit /etc/cyclops/global.cfg file and change: _sensor_remote_path variable
 	- If you want to enable management integration with cyc client hosts enable host control razor on clients
@@ -236,10 +235,11 @@ CYCLOPS 1.4.1v INSTALL
 			*/2 * * * * /opt/cyclops/local/scripts/cyc.host.ctrl.sh -a daemon 2>>/opt/cyclops/local/log/hctrl.err.log
 		2. Create this entry in the /etc/rc.local
 			/opt/cyclops/local/scripts/cyc.host.ctrl.sh -a boot 2>>/opt/cyclops/local/log/hctrl.err.log
-		3. You need to create razor list in cyc server
+		3. You need to create razor list in cyclops server
 		- Available razors in /opt/cyclops/local/data/razor/[STOCK/OS]/
 		4. Create family file with selected razors in /etc/cyclops/nodes/[FAMILY NAME].rzr.lst
 		- The order of razors is Hierarchical, from up ( first to do action ) to down ( last to do action )
+		- [ RECOMMENDED ] first insert razor with host pasive checks and last instert razor with host dramatical actions like shutdown/reboot
 
     8. TEST AND ENABLE CYCLOPS
     ----------------------------------------------------------------------------------------------------------
