@@ -7,8 +7,10 @@ CYCLOPS 1.4.1v INSTALL
 
     - install -> git
 	- yum install git 			## REDHAT/CENTOS PACKAGE INSTALL 
+	- apt-get install git			## DEBIAN
     - install -> apache + php + php gd + ssl module
         - yum install httpd php php-gd mod_ssl 	## REDHAT/CENTOS PACKAGE INSTALL
+	- apt-get install apache2 php php-gd	## DEBIAN
     
     - Other Linux Recomended packages:
             - pdsh
@@ -63,7 +65,13 @@ CYCLOPS 1.4.1v INSTALL
 	- Web Data
                 cd /var/www/html/ 		## REDHAT WEB PATH ( Use the right path if you have other distro or other www configuration )
 		ln -s /opt/cyclops/www cyclops 
+		cp -p /etc/cyclops/system/wiki.cfg.template /etc/cyclops/system/wiki.cfg
 		
+		- Edit wiki.cfg file and change default user and group if is necesary:
+			[REDHAT/CENTOS]	-> 	_apache_usr="apache"
+			[DEBIAN] 	->	_apache_usr="www-data"
+			[ALL DISTROS]	->	_apache_grp="cyclops"	## RECOMMENDED
+
 
 	6. UPDATE CYCLOPS:
 
@@ -97,10 +105,10 @@ CYCLOPS 1.4.1v INSTALL
 
         groupadd -g 900 cyclops					## CHANGE GID IF YOUR DISTRO OR SYSTEM HAS 900 IN USE
         useradd -g 900 -b /opt/cyclops/local -u 900 cyclops     ## CHANGE UID IF YOUR DISTRO OR SYSMTE HAS 900 IN USE
-        cd /etc ; ln -s /opt/cyclops/etc/cyclops/
   
         chown -R cyclops:cyclops /opt/cyclops
         chown -R apache /opt/cyclops/www 			## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
+	chown -R www-data /opt/cyclops/www			## DEBIAN DEFAULT APACHE USER , CHANGE 
         
         chmod -R g+w,o-rwx /opt/cyclops/www/
 

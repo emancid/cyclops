@@ -25,9 +25,9 @@ cyclops.sh -y config</code>
         * ** repair ** , los técnicos están realizando tareas de reparación de uno o varios componentes hardware o software del sistema monitorizado
         * ** intervention ** , se esta realizando una intervención por parte de los técnicos sobre el sistema
 
-  * Comando: <code>/opt/cyclops/cyclops.sh -y</code> Activa, desactiva y muestra el estado de la monitorización.
+  * Comando: <code>/opt/cyclops/cyclops.sh -y [ACCION]</code> Activa, desactiva y muestra el estado de la monitorización.
 
-   * Comprobar el estado:<code>
+   * Comprobar el estado general:<code>
 /opt/cyclops/scripts/cyclops.sh -y status
 </code>
    * ** <fc red> NOTA: </fc> Actualmente se recomienda el uso del comando cyc.status.sh para conocer el estado de cyclops, sus recursos, opciones y componentes. **
