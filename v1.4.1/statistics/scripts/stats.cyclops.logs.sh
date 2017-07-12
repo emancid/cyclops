@@ -338,11 +338,11 @@ format_output()
 		if [ "$_opt_report" == "yes" ]
 		then
 			case "$_date_filter" in 
-			day)
+			hour)
 				[ "$_opt_hidden" == "yes" ] && echo "<hidden $_par_nod - $_itm_stg >"
-				_wiki_report_output="|<100%  50% 50%>|\n|  $_color_title Source: $_par_nod - $_itm_stg ($_par_typ)  ||\n|  Last 24 Hours  |  Last 7 Days  |\n|  "$_wiki_output
+				_wiki_report_output="|<100%  50% 50%>|\n|  $_color_title Source: $_par_nod - $_itm_stg ($_par_typ)  ||\n|  Last Hour  |  Last 24 Hours  |\n|  "$_wiki_output
 			;;
-			week)
+			day)
 				_wiki_report_output=$( echo "${_wiki_report_output} | ${_wiki_output}" )
 			;;
 			month)
@@ -372,7 +372,14 @@ format_output()
 	;;
         commas|*) 
 		[ "$_opt_report" == "yes" ] && echo -e "\nSensor $_par_itm - $_date_filter\n-------------------"
-                echo "${_log_stats_data}" | tr '=' ';' | sed -e 's/;/\-/' -e 's/_[A-Z][a-z][a-z]//' 
+               
+		if [ "$_opt_ref" == "yes" ] 
+		then
+			echo "${_log_stats_data}" | tr '=' ';' | sed -e 's/;/\-/' -e 's/_[A-Z][a-z][a-z]//' | awk -F\; -v _rf="$_par_ref" '{ _orf=($2*_rf)/100 ; print $1";"$2";"_orf }' 
+		else
+			echo "${_log_stats_data}" | tr '=' ';' | sed -e 's/;/\-/' -e 's/_[A-Z][a-z][a-z]//'  
+		fi
+		
         ;;
         esac
 
@@ -624,7 +631,7 @@ check_items()
 
 	if [ "$_par_date_start" == "report" ] 
 	then
-		_par_date_start="day\nweek\nmonth\nyear" 
+		_par_date_start="hour\nday\nmonth\nyear" 
 		_opt_report="yes" 
 	fi
 
