@@ -45,7 +45,12 @@ CYCLOPS 1.4.1v INSTALL
 		cd /opt/cyclops/www/data
 		mkdir attic cache index locks media_attic media_meta meta tmp
 
-	4. CREATE SYMLINKS
+	4. INSTALL SENSORS, IA RULES AND NODE RAZOR
+	- Decompress /opt/cyclops/monitor/packs for optain necesary sensors, rules and razors files
+		from root directory ( cd / )
+		tar xvf /opt/cyclops/monitor/packs/*.tar
+
+	5. CREATE SYMLINKS
 
 	- Configuration path
 		cd /etc
@@ -56,7 +61,7 @@ CYCLOPS 1.4.1v INSTALL
 		ln -s /opt/cyclops/www cyclops 
 		
 
-	5. UPDATE CYCLOPS:
+	6. UPDATE CYCLOPS:
 
 	- BEFORE UPDATE/UPGRADE BEWARE WITH THIS:
 		- DO BACKUP FROM root cyclops directoty 
