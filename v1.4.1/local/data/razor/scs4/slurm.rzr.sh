@@ -9,7 +9,7 @@ _rsc_rzr_cfg="/etc/slurm/slurm.conf"
 _rsc_rzr_out_cod="119"
 _rsc_rzr_hostname=$( hostname -s )
 
-# [ ! -f "$_rsc_rzr_cmd" ] && exit $_rsc_rzr_out_cod
+[ ! -f "$_rsc_rzr_cmd" ] && exit $_rsc_rzr_out_cod
 
 case "$1" in
 	check)
@@ -53,20 +53,21 @@ case "$1" in
 		_rsc_rzr_out_cod=$( service $_rsc_rzr_dae stop 2<&1 >/dev/null ; echo $? )
 		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="16" 
 	;;
-	up)
+	repair)
 		_rsc_rzr_out_cod=$( service $_rsc_rzr_dae status 2>&1 >/dev/null ; echo $? )
 		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod=$( service $_rsc_rzr_dae start 2>&1 >/dev/null ; echo $? )
 		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( /usr/bin/sinfo -h -n $_rsc_rzr_hostname | egrep "drain|down" | wc -l )
-		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=idle 2>&1 >/dev/null ; echo $? )  
+		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=resume 2>&1 >/dev/null ; echo $? )  
 		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="19" 
 	;;
-	link)
-		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=idle 2>&1 >/dev/null ; echo $? ) 
+	up|link)
+		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=resume 2>&1 >/dev/null ; echo $? ) 
 		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="12" 
 	;;
 	unlink)
 		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=drain reason=unlink_mode 2>&1 >/dev/null ; echo $? ) 
-		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="13" 
+		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( $_rsc_rzr_cmd show node $_rsc_rzr_hostname | awk '$1 ~ "State" { split($1,a,"=") ; if ( a[2] ~ "DRAIN" ) { print "0" } else { print "1" }} ' )
+		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="13"
 	;;
 	drain)
 		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=drain reason=maintenance_mode 2>&1 >/dev/null ; echo $? ) 
@@ -76,17 +77,11 @@ case "$1" in
 		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=drain reason=booting_safe_mode 2>&1 >/dev/null ; echo $? ) 
 		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="14" 
 	;;
-	diagnose|init|info)
+	diagnose|init|info|reset|reboot)
 		_rsc_rzr_out_cod="21"
 	;;
 	content)
 		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=drain reason=content_mode 2>&1 >/dev/null ; echo $? ) 
-		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=idle 2>&1 >/dev/null ; echo $? ) 
-		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="15" 
-	;;
-	repair)
-		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=drain reason=repair_mode 2>&1 >/dev/null ; echo $? ) 
-		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd update nodename=$_rsc_rzr_hostname state=idle 2>&1 >/dev/null ; echo $? ) 
 		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="15" 
 	;;
 esac

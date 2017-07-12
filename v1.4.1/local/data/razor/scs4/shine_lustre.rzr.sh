@@ -1,5 +1,5 @@
-##### RAZOR RESOURCE CTRL CONFIG FILE ####
 #!/bin/bash
+##### RAZOR RESOURCE CTRL CONFIG FILE ####
 
 _rsc_rzr_nam="shine_lustre"
 _rsc_rzr_des="Cyclops Local Shine Lustre Client Mounts Ctrl Razor"
@@ -44,7 +44,7 @@ case "$1" in
 			awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="1" } END { print _fail }'
 			)
 	;;
-	start|link|up)
+	start|link|up|repair)
 		sleep 5s
 		_rsc_rzr_out_cod=$(
 			$_rsc_rzr_cmd -O %fsname";"%status -H mount -n $_rsc_rzr_hostname 2>/dev/null | 
@@ -53,7 +53,7 @@ case "$1" in
 			awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="1" }  END { print _fail }'
 			)
 	;;
-	stop|unlink|content)
+	stop|unlink)
                 _rsc_rzr_out_cod=$(
                         $_rsc_rzr_cmd -O %fsname";"%status -H umount -n $_rsc_rzr_hostname 2>/dev/null | 
                         sed '/^$/d' | 
@@ -61,7 +61,7 @@ case "$1" in
                         awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="1" } END { print _fail }'
                         )
 	;;
-	repair|drain|diagnose|boot|init|info)
+	drain|diagnose|boot|init|info|reset|reboot|content)
 		_rsc_rzr_out_cod="21"
 	;;
 esac

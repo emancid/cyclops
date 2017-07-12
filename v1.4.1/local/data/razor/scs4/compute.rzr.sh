@@ -1,10 +1,10 @@
-#!/bin/bash
-##### RAZOR RESOURCE CTRL CONFIG FILE ####
+#!/bin/bash                                                                                                                         
+##### RAZOR RESOURCE CTRL CONFIG FILE ####                                                                                          
 ##### WARNING : WE RECOMMENDED THIS RAZOR AT THE END OF RAZOR LIST OF FAMILY NODES ####
 ##### WARNING : CHANGE DRAIN COMMAND IF YOU DON'T WANT HALT THE NODE ( BY DEFAULT ) ####
-
-_rsc_rzr_nam="host"
-_rsc_rzr_des="Cyclops Razor Host General Main Actions Ctrl"  ## Use this script like family template for different types of hosts
+                                                                                                                                    
+_rsc_rzr_nam="compute"
+_rsc_rzr_des="Cyclops Razor Host General Main Actions Ctrl"  ## Use this script like family template for different types of hosts                                                                                  
 _rsc_rzr_cmd=""
 _rsc_rzr_dae=""
 _rsc_rzr_cfg=""
@@ -25,14 +25,14 @@ case "$1" in
                 _rsc_rzr_out_cod="21"
         ;;
         stop|content)
-		_rsc_rzr_out_cod=$( eval exec $_rsc_rzr_sl_cmd -h -w $_rsc_rzr_hostname | wc -l )
+		_rsc_rzr_out_cod=$( eval exec $_rsc_rzr_sl_cmd -h -w $_rsc_rzr_hostname | wc -l ) 
 		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( eval exec $_rsc_rzr_drn_cmd 2>&1 >/dev/null )
         ;;
 	reboot)
 		_rsc_rzr_out_cod=$( eval exec $_rsc_rzr_sl_cmd -h -w $_rsc_rzr_hostname | wc -l )
 		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( eval exec $_rsc_rzr_rbt_cmd 2>&1 >/dev/null )
 	;;
-	drain|repair|reboot)
+	drain|repair|reset|reboot)
 		_rsc_rzr_out_cod="21"
 	;;
         info)

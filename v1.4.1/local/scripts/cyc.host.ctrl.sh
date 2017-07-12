@@ -168,7 +168,7 @@ host_daemon()
 		if [ "$_hctrl_host_sta" != "$_hctrl_last_sta" ] 
 		then
 			_hctrl_chg_status=$( $_cyc_clt_rzr_scp -a $_hctrl_host_sta ; echo $? )
-			if [ "$_hctrl_chg_status" == "0" ] 
+			if [ "$_hctrl_chg_status" == "0" ] || [ "$_hctrl_chg_status" == "21" ] 
 			then
 				echo "$( date +%s ) : CYC : HCTRL : $_hostname : status changed $_hctrl_last_sta to $_hctrl_host_sta ($_hctrl_chg_status)" >> $_cyc_clt_local_log 
 				echo "$_hctrl_host_fml;$_hctrl_host_grp;$_hctrl_host_stk;$_hctrl_host_pwr;$_hctrl_host_sta;$_hctrl_host_rol" > $_hctrl_rzr_last

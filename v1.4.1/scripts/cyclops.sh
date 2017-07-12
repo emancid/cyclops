@@ -1711,7 +1711,7 @@ mng_cyclops_pkg()
 	## SENSORS NODE PACK 
 
 	_action_pkg="check"
-	_msg_pkg="NODE SENSORS PKG STATUS\nPackage Name;Status;Version;Action\n;-------------;------;-------;------"
+	_msg_pkg="NODE SENSORS PKG STATUS\nPackage Name;Status;Version;Action\n-------------;------;-------;------"
 
 	for _dir in $( ls -d1 $_sensors_script_path/* )
 	do
@@ -1730,7 +1730,7 @@ mng_cyclops_pkg()
 
 	## NODE IA RULES PACK
 
-	_msg_pkg=$_msg_pkg"; ;\n; ;\nNODE IA RULES PKG STATUS\nPackage Name;Status;Version;Action\n;-------------;------;-------;------"
+	_msg_pkg=$_msg_pkg"; ;\n; ;\nNODE IA RULES PKG STATUS\nPackage Name;Status;Version;Action\n-------------;------;-------;------"
 
 	tar cvf $_cyclops_temp_path/rules.node.pack.tar $_sensors_ia_path 2>/dev/null >/dev/null 
 
@@ -1745,7 +1745,7 @@ mng_cyclops_pkg()
 
 	## SENSORS ENV PACK
 
-	_msg_pkg=$_msg_pkg"; ;\n; ;\nENV SENSORS PKG STATUS\nPackage Name;Status;Version;Action\n;-------------;------;-------;------"
+	_msg_pkg=$_msg_pkg"; ;\n; ;\nENV SENSORS PKG STATUS\nPackage Name;Status;Version;Action\n-------------;------;-------;------"
 
 	tar cvf $_cyclops_temp_path/sensors.env.pack.tar $_sensors_env_scripts 2>/dev/null >/dev/null
 
@@ -1760,7 +1760,7 @@ mng_cyclops_pkg()
 
 	## ENV IA RULES PACK
 
-	_msg_pkg=$_msg_pkg"; ;\n; ;\nENV IA RULES PKG STATUS\nPackage Name;Status;Version;Action\n;-------------;------;-------;------"
+	_msg_pkg=$_msg_pkg"; ;\n; ;\nENV IA RULES PKG STATUS\nPackage Name;Status;Version;Action\n-------------;------;-------;------"
 
 	tar cvf $_cyclops_temp_path/rules.env.pack.tar $_sensors_env_ia 2>/dev/null >/dev/null
 
@@ -1775,7 +1775,7 @@ mng_cyclops_pkg()
 
 	## RAZOR PACK
 
-	_msg_pkg=$_msg_pkg"; ;\n; ;\nRAZOR PKG STATUS\nPackage Name;Status;Version;Action\n;-------------;------;-------;------"
+	_msg_pkg=$_msg_pkg"; ;\n; ;\nRAZOR PKG STATUS\nPackage Name;Status;Version;Action\n-------------;------;-------;------"
 	
 	for _dir in $( ls -d1 $_cyc_clt_rzr_dat/* )
 	do
@@ -1794,7 +1794,7 @@ mng_cyclops_pkg()
 
 	## AUDIT EXTRACTOR PACK
 
-	_msg_pkg=$_msg_pkg"; ;\n; ;\nAUDIT EXTRACTOR PKG STATUS\nPackage Name;Status;Version;Action\n;-------------;------;-------;------"
+	_msg_pkg=$_msg_pkg"; ;\n; ;\nAUDIT EXTRACTOR PKG STATUS\nPackage Name;Status;Version;Action\n-------------;------;-------;------"
 
 	for _dir in $( ls -d1 $_audit_scripts_path/* )
 	do
