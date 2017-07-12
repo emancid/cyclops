@@ -92,7 +92,7 @@ do
 			if [ "$_ctrl_grp" == "0" ]
 			then
 				_par_node_grp=$( echo "$_par_node" | sed 's/@//g' )
-				_par_node=$( cat $_type | awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' ) 
+				_par_node=$( cat $_type | awk -F\; -v _grp="$_par_node_grp" '$1 !~ "#" { split (_grp,g,",") ; for ( i in g ) {  if ( $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' ) 
 				_par_node=$( node_group $_par_node ) 
 				[ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
 			fi
@@ -277,12 +277,12 @@ node_real_status()
 		_node_list=$( awk -F\; -v _nl="$_node_list" '
 			BEGIN { 
 				split (_nl,n,",") 
-			} { 
+			} $1 !~ "#" { 
 				for ( i in n ) { if ( $2 == n[i] ) { print $0 } }
 			}' $_type 
 			)
 	else
-		_node_list=$( cat $_type )
+		_node_list=$( cat $_type | grep -v "#" )
 	fi
 
 	_node_last_up=$( /usr/bin/stat -c %Y $_mon_path/monnod.txt )
