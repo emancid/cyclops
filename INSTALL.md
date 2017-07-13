@@ -22,7 +22,7 @@ CYCLOPS 1.4.1v INSTALL
 	2. [ONLY REDHAT USERS] you can use cyclops site template in /opt/cyclops/docs/apache.cyclops.conf
 		- [OTHER DISTROS] can use or adapt this template with right paths
 		- Use,create or change paths for ssl certs if use own certs or copy /opt/cyclops/docs certs to the right paths
-	3. IMPORTANT: disable selinux for right apache behaviour
+	3. IMPORTANT: disable selinux for right apache behaviour ## REDHAT/CENTOS
 
     - You have in /opt/cyclops/docs a file template ( redhat ) for configurate apache site (is usesfull with other distros)    
 
@@ -123,6 +123,7 @@ CYCLOPS 1.4.1v INSTALL
 	
 		copy /etc/cyclops/monitor/plugin.users.ctrl.cfg.template to /etc/cyclops/monitor/plugin.users.ctrl.cfg
 		cd /etc/profile.d 
+		copy /etc/cyclops/system/cyclopsrc.template to same path cyclopsrc [ without .template ] and customize file content.
 		ln -s /etc/cyclops/system/cyclopsrc cyclopsrc.sh
             
 		RECOMENDED: change permissions from /etc/cyclops/system/cyclopsrc to 750 
