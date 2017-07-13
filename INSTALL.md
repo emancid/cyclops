@@ -113,12 +113,17 @@ CYCLOPS 1.4.1v INSTALL
     3. CREATE AND CONFIGURE PERMISSIONS AND OWNERS
     ----------------------------------------------------------------------------------------------------------
 
+	1. Create Cyclops Group and User
+
         groupadd -g 900 cyclops					## CHANGE GID IF YOUR DISTRO OR SYSTEM HAS 900 IN USE
         useradd -g 900 -u 900 cyclops     			## CHANGE UID IF YOUR DISTRO OR SYSMTE HAS 900 IN USE
 	useradd -g 900 -u 900 -s /bin/bash cyclops		## [DEBIAN ONLY| MAYBE UBUNTU]
-
 	passwd cyclops						## CREATE cyclops password
-  
+
+	NOTE: if you use ldap or other user authentication software use the right commands to create and assign the user
+
+	2. Assign Permissions
+
         chown -R cyclops:cyclops /opt/cyclops
         chown -R apache /opt/cyclops/www 			## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
 	chown -R www-data /opt/cyclops/www			## DEBIAN DEFAULT APACHE USER , CHANGE 
@@ -140,6 +145,15 @@ CYCLOPS 1.4.1v INSTALL
 		ln -s /etc/cyclops/system/cyclopsrc cyclopsrc.sh
             
 		RECOMENDED: change permissions from /etc/cyclops/system/cyclopsrc to 750 
+
+	- edit plugin.users.ctrl.cfg file with your favourite editor and change:
+		_pg_usr_ctrl_admin="[USER1],[USER2],..."                ### existing users for admin role
+		_pg_usr_ctrl_l1_support="[USER1],[USER2],..."           ### OPTIONAL: for Level 1 support users
+		_pg_usr_ctrl_l2_support="[USER1],[USER2],..."           ### OPTIONAL: for Level 2 support users
+		_pg_usr_ctrl_l3_support="[USER1],[USER2],..."           ### OPTIONAL: for Level 3 support users
+		_pg_usr_ctrl_other="[USER1],[USER2],..."                ### OPTIONAL: for deploy users, or what ever users you want to control
+
+                NOTE: if you dont change this file, user cyclops would be cyclops by default admin user
 
     5. INSTALL WEB INTERFACE ( DOKUWIKI BASED )
     ----------------------------------------------------------------------------------------------------------
@@ -167,6 +181,8 @@ CYCLOPS 1.4.1v INSTALL
 
     6. CONFIGURE CYCLOPS
     ----------------------------------------------------------------------------------------------------------
+
+	IMPORTANT: you need to have access to the hostname of nodes/hosts, with dns or /etc/hosts
 
 	1. check /etc/cyclops/nodes/node.type.cfg.template and rename it to same path with template at end of file.
 	2. check /etc/cyclops/nodes/critical.res.cfg.template and rename it to same path without template at end of the file/
