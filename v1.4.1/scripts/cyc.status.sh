@@ -285,13 +285,13 @@ node_real_status()
 		_node_list=$( cat $_type | grep -v "#" )
 	fi
 
-	_node_last_up=$( /usr/bin/stat -c %Y $_mon_path/monnod.txt )
+	_node_last_up=$( [ -f "$_mon_path/monnod.txt" ] && /usr/bin/stat -c %Y $_mon_path/monnod.txt || echo 0 )
 	_node_last_st=$( echo "$_node_last_up" | awk -v _g="$_sh_color_green" -v _r="$_sh_color_red" 'BEGIN { _now=systime() } { if ( $1 < _now-300 )  { _s=_r } else { _s=_g }} END { print _s }' ) 
 
 	_node_last_up=$( date -d @$_node_last_up +%Y-%m-%d\ %H:%M:%S )
 
 	_node_real_status=$( 
-		cat $_mon_path/monnod.txt | 
+		cat $_mon_path/monnod.txt 2>/dev/null | 
 		tr '|' ';' | 
 		grep ";" | 
 		sed -e 's/\ *;\ */;/g' -e '/^$/d' -e '/:wiki:/d' -e "s/$_color_disable/DISABLE/g" -e "s/$_color_unk/UNK/g" -e "s/$_color_up/UP/g" -e "s/$_color_down/DOWN/g" -e "s/$_color_mark/MARK/g" -e "s/$_color_fail/FAIL/g" -e "s/$_color_check/CHECK/g" -e "s/$_color_ok/OK/g" -e "s/$_color_disable/DISABLE/" -e "s/$_color_title//g" -e "s/$_color_header//g" -e 's/^;//' -e 's/;$//' -e '/</d' -e 's/((.*))//' -e '/:::/d' | 
