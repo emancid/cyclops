@@ -104,7 +104,7 @@ CYCLOPS 1.4.1v INSTALL
     ----------------------------------------------------------------------------------------------------------
 
         groupadd -g 900 cyclops					## CHANGE GID IF YOUR DISTRO OR SYSTEM HAS 900 IN USE
-        useradd -g 900 -b /opt/cyclops/local -u 900 cyclops     ## CHANGE UID IF YOUR DISTRO OR SYSMTE HAS 900 IN USE
+        useradd -g 900 -u 900 cyclops     ## CHANGE UID IF YOUR DISTRO OR SYSMTE HAS 900 IN USE
   
         chown -R cyclops:cyclops /opt/cyclops
         chown -R apache /opt/cyclops/www 			## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
