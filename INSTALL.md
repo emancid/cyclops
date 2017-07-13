@@ -50,7 +50,9 @@ CYCLOPS 1.4.1v INSTALL
 		cd /opt/cyclops/www/data
 		mkdir -p attic cache index locks media_attic media_meta meta tmp pages/operation/monitoring/history/noindex
 		cd /opt/cyclops
-		mkdir logs lock temp
+		mkdir -p logs lock temp
+		cd /opt/cyclops/monitor/sensors 
+		mkdir -p temp status/data/ environment/conf environment/data
 
 	4. INSTALL SENSORS, IA RULES AND NODE RAZOR
 	- Decompress /opt/cyclops/monitor/packs for optain necesary sensors, rules and razors files
@@ -79,6 +81,7 @@ CYCLOPS 1.4.1v INSTALL
 
 	- Copy /etc/cyclops/global.cfg.template to /etc/cyclops/global.cfg
 	- Copy /etc/cyclops/monitor/alert.email.cfg.template to /etc/cyclops/monitor/alert.email.cfg
+	- Copy /etc/cyclops/statistics/main.ext.cfg.template to /etc/cyclops/statistics/main.ext.cfg
 
 	7. UPDATE CYCLOPS:
 
