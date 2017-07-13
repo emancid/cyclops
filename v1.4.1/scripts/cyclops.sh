@@ -701,7 +701,7 @@ mng_node_status()
 		[ "$_opt_node" == "no" ] && echo "-n parameter needed, nodename mandatory" && exit 1
 		if [ -f "$_par_mon_file"  ] 
 		then
-			_stats_node_title=$( echo $_par_mon_file | awk -F\/ '{ split($NF,a,".") ;  print a[1] }' )
+			_stats_node_title=$( echo $_par_mon_file 2>/dev/null | awk -F\/ '{ split($NF,a,".") ;  print a[1] }' )
 			#_status_node_title=$( date -d "$_status_node_title" +%s )
 		else
 			_par_mon_file=$_mon_path"/monnod.txt"
@@ -710,7 +710,7 @@ mng_node_status()
 
 
 		_last_mon_status=$( 
-			cat  $_par_mon_file | 
+			cat  $_par_mon_file 2>/dev/null | 
 			tr '|' ';' | 
 			grep ";" | 
 			sed -e 's/\ *;\ */;/g' -e '/^$/d' -e '/:wiki:/d' -e "s/$_color_disable/DISABLE/g" -e "s/$_color_unk/UNK/g" -e "s/$_color_up/UP/g" -e "s/$_color_down/DOWN/g" -e "s/$_color_mark/MARK/g" -e "s/$_color_fail/FAIL/g" -e "s/$_color_check/CHECK/g" -e "s/$_color_ok/OK/g" -e "s/$_color_disable/DISABLE/" -e "s/$_color_title//g" -e "s/$_color_header//g" -e 's/^;//' -e 's/;$//' -e '/</d' -e 's/((.*))//' -e '/:::/d' | 
