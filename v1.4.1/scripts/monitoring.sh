@@ -1386,9 +1386,6 @@ mon_node_operative_pg()
                 _nod_operative_sound="{{mp3play>:wiki:craking_system.mp3?autostart&loop}}" ### REFACTORING: CHANGE SOUND
 
 		_msg_insert="Monitoring: Critical resources level, probably not enought for operation"
-
-		$_script_path/audit.nod.sh -i bitacora -e ALERT -s DOWN -m $_msg_insert 
-		$_script_path/cyclops.sh -p high -m "System Status : "$_msg_insert -l
         ;;
 	[4-6][0-9])
                 _nod_operative_color=$_color_mark
@@ -1398,9 +1395,6 @@ mon_node_operative_pg()
                 _nod_operative_sound="{{mp3play>:wiki:craking_system.mp3?autostart&loop}}"
 
 		_msg_insert="Monitoring: Warning resources level so low"
-
-		$_script_path/audit.nod.sh -i bitacora -e ALERT -s INFO -m $_msg_insert 
-		$_script_path/cyclops.sh -p medium -m "System Status : "$_msg_insert -l
         ;;	
 	7[0-9])
                 _nod_operative_color=$_color_check
@@ -1906,7 +1900,7 @@ mon_log_node()
 					}
 				} 
 			}  
-			print systime()" : "_node" : "_status""_log >> _lp"/"_node".pg.mon.log" ; 
+			if ( _node != "" ) { print systime()" : "_node" : "_status""_log >> _lp"/"_node".pg.mon.log" } ; 
 			_log="" 
 		}' 2>/dev/null
 }
