@@ -131,7 +131,7 @@ mon_launch_active()
 
 mon_launch_pasive()
 {
-	_mon[1]=$( cat $_mon_path/monnod.txt )
+	_mon[1]=$( cat $_mon_path/monnod.txt 2>/dev/null )
 }
 
 mon_analisys()
