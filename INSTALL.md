@@ -13,9 +13,11 @@ CYCLOPS 1.4.1v INSTALL
 	- apt-get install apache2 php php-gd	## DEBIAN
     
     - Other Linux Recomended packages:
-            - pdsh
-            - sysstat
-            - rsync
+	- vim
+	- pdsh
+	- sysstat
+	- rsync
+	- mailx ( mail command - console mail client )
 
     - Apache customization
 	1. You can use cyclops default certificates for apache if you want https cryp acces
@@ -38,14 +40,15 @@ CYCLOPS 1.4.1v INSTALL
 
 	- create dir /opt/git
 	- cd /opt/git/
-	- git clone https://github.com/ikseth/cyclops.git
+	- git clone --depth=1 https://github.com/ikseth/cyclops.git
 	- create link in /opt/ 
 	- EXPERIMENTAL: ln -s /opt/git/cyclops/[version] cyclops ## EXPERIMENTAL, BETTER USE NEXT OPTION
 	- STABLE OPTION: copy /opt/git/cyclops/[version] in /opt/cyclops 
+		- rsync -acvu /opt/git/cyclops/[version]/ /opt/cyclops
 
 	3. CREATE necesary directories
 		cd /opt/cyclops/www/data
-		mkdir attic cache index locks media_attic media_meta meta tmp
+		mkdir -p attic cache index locks media_attic media_meta meta tmp pages/operation/monitoring/history/noindex
 		cd /opt/cyclops
 		mkdir logs lock temp
 
@@ -71,9 +74,13 @@ CYCLOPS 1.4.1v INSTALL
 			[REDHAT/CENTOS]	-> 	_apache_usr="apache"
 			[DEBIAN] 	->	_apache_usr="www-data"
 			[ALL DISTROS]	->	_apache_grp="cyclops"	## RECOMMENDED
+	
+	6. INIT CYCLOPS CONFIGURATION BASE
 
+	- Copy /etc/cyclops/global.cfg.template to /etc/cyclops/global.cfg
+	- Copy /etc/cyclops/monitor/alert.email.cfg.template to /etc/cyclops/monitor/alert.email.cfg
 
-	6. UPDATE CYCLOPS:
+	7. UPDATE CYCLOPS:
 
 	- BEFORE UPDATE/UPGRADE BEWARE WITH THIS:
 		- DO BACKUP FROM root cyclops directoty 
@@ -104,7 +111,10 @@ CYCLOPS 1.4.1v INSTALL
     ----------------------------------------------------------------------------------------------------------
 
         groupadd -g 900 cyclops					## CHANGE GID IF YOUR DISTRO OR SYSTEM HAS 900 IN USE
-        useradd -g 900 -u 900 cyclops     ## CHANGE UID IF YOUR DISTRO OR SYSMTE HAS 900 IN USE
+        useradd -g 900 -u 900 cyclops     			## CHANGE UID IF YOUR DISTRO OR SYSMTE HAS 900 IN USE
+	useradd -g 900 -u 900 -s /bin/bash cyclops		## [DEBIAN ONLY| MAYBE UBUNTU]
+
+	passwd cyclops						## CREATE cyclops password
   
         chown -R cyclops:cyclops /opt/cyclops
         chown -R apache /opt/cyclops/www 			## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
@@ -135,7 +145,7 @@ CYCLOPS 1.4.1v INSTALL
 		- [REDHAT/CENTOS] - https://www.dokuwiki.org/install:centos
 		- Install necesary dokuwiki plugins
 		- REMEMBER: overwrite cyclops files over dokuwiki install (at least /opt/cyclops/www/data/pages and /opt/cyclops/www/data/media) 
-		- use rsync and customice it for update what ever you want
+		- use rsync and customize it for update what ever you want
 
 	- [RECOMMENDED INSTALL] use cyclops dokuwiki customization
 		1. Configure symbolic link or right path for apache access to cyclops web interface ( default /opt/cyclops/www )
@@ -150,15 +160,16 @@ CYCLOPS 1.4.1v INSTALL
 		User: admin
 		Pass: cyclops
 
+	NOTE: Verify apache is up ( usually service apache2 status or service httpd status )
+
     6. CONFIGURE CYCLOPS
     ----------------------------------------------------------------------------------------------------------
 
-	1. check /etc/global.cfg.template and after that rename to /etc/global.cfg
-	2. check /etc/cyclops/nodes/node.type.cfg.template and rename it to same path with template at end of file.
-	3. check /etc/cyclops/nodes/critical.res.cfg.template and rename it to same path without template at end of the file/
-	4. You can use a cyclops prototipe option for configurate several items of it:
+	1. check /etc/cyclops/nodes/node.type.cfg.template and rename it to same path with template at end of file.
+	2. check /etc/cyclops/nodes/critical.res.cfg.template and rename it to same path without template at end of the file/
+	3. You can use a cyclops prototipe option for configurate several items of it:
 		cyclops -y config  ## USE IT SPECIALLY FOR NODE,FAMILY,GROUP AND MONITORING ITEMS
-	5. You have the next files for configure cyclops
+	4. You have the next files for configure cyclops
 
         /etc/cyclops/
                 global.cfg.template *               ## MAIN CFG ( RECOMMENDED NOT CHANGE IF NOT NECESARY) - RENAME IT TO global.cfg 
@@ -191,7 +202,7 @@ CYCLOPS 1.4.1v INSTALL
             ./tools
                 tool.b7xx.upgrade.fw.cfg.template   ## ONLY FOR B7xx HARDWARE - Firmware definitions profiles files
 
-	6. Other Important dir&files:
+	5. Other Important dir&files:
 		- Nodes items:
 			/opt/cyclops/monitor/sensors/status
 				./scripts		## [SENSORS COMPILANCE]/SENSORS FILES ## NECESARY IF YOU WANT TO CREATE NEW ONES OR MODIFY THEM, see .template file for help
@@ -218,7 +229,7 @@ CYCLOPS 1.4.1v INSTALL
 				./testing		## TESTING CYCLOPS TOOLS AND YOUR OWN CYC TOOLS
 
        	- WARNING: Rename .template for each one it change , best practice is copy the file without .template and change new file.
-	- WARNING: Files with * is mandatory to be configurated previously to run cyclops 
+	- WARNING: Files with * are mandatory to be configurated previously to run cyclops 
 
     6. HA CYCLOPS ENVIRONMENT NOTES [OPTIONAL]
     ----------------------------------------------------------------------------------------------------------
