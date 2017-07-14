@@ -126,7 +126,7 @@ CYCLOPS 1.4.1v INSTALL
 
         chown -R cyclops:cyclops /opt/cyclops
         chown -R apache /opt/cyclops/www 			## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
-	chown -R www-data /opt/cyclops/www			## DEBIAN DEFAULT APACHE USER , CHANGE 
+	chown -R www-data /opt/cyclops/www			## DEBIAN DEFAULT APACHE USER 
         
         chmod -R g+w,o-rwx /opt/cyclops/www/
 
@@ -169,9 +169,11 @@ CYCLOPS 1.4.1v INSTALL
 		- [REDHAT/CENTOS] can use this commands: 
 			cd /var/www/html
 			ln -s /opt/cyclops/www cyclops
+		- [DEBIAN] not use cyclops pre-configure site.
 
 	- If you use cyclops apache templates you can access:
-		https://[IP/DOMAIN NAME]/doku.php
+		[REDHAT/CENTOS] https://[IP/DOMAIN NAME]/doku.php
+		[DEBIAN]	http://[IP/DOMAIN NAME]/cyclops/doku.php
 
 	* Web access credentials:
 		User: admin
@@ -188,6 +190,8 @@ CYCLOPS 1.4.1v INSTALL
 	2. check /etc/cyclops/nodes/critical.res.cfg.template and rename it to same path without template at end of the file/
 	3. You can use a cyclops prototipe option for configurate several items of it:
 		cyclops -y config  ## USE IT SPECIALLY FOR NODE,FAMILY,GROUP AND MONITORING ITEMS
+		- Use option 11 to define family, group and node settings, included all range of node to manage.
+		NOTE: BUG: Please exist (end option) all times you finish to configure one option, variables don't reinit well
 	4. You have the next files for configure cyclops
 
         /etc/cyclops/
