@@ -375,7 +375,12 @@ CYCLOPS 1.4.1v INSTALL
 		cyc.stats.sh -a cyclops ## FOR CYCLOPS OPTIONS STATUS
 		cyc.stats.sh -a node  ## FOR NODE STATUS
 		
-	3. Generate monitoring entries with cyclops.sh -y config ( option 19 ) or editing /etc/cyclops/monitor/monitor.cfg.template and rename it to monitor.cfg
+	3. Generate monitoring entries 
+		- With cyclops.sh -y config ( option 19 ) or editing /etc/cyclops/monitor/monitor.cfg.template and rename it to monitor.cfg
+		- Change /etc/cyclops/monitor/monitor.cfg manually for security, services and environment monitoring if you need activate this modules.
+		- For security module you need to edit and change /etc/cyclops/security/login.node.list.cfg ( copy .template for helping you ) 
+		- Services, actually only has slurm service, early we add configure instructions
+		- Environment, actually only is compatible with ipmitool compatible devices, and only has developt a few devices sensors
 	
 	4. Enable Cyclops in testing mode with:
 		cyclops.sh -y testing -m '[MESSAGE]' -c
