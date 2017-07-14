@@ -3,8 +3,8 @@
 ##### WARNING : WE RECOMMENDED THIS RAZOR AT THE END OF RAZOR LIST OF FAMILY NODES ####
 ##### WARNING : CHANGE DRAIN COMMAND IF YOU DON'T WANT HALT THE NODE ( BY DEFAULT ) ####
                                                                                                                                     
-_rsc_rzr_nam="water64"
-_rsc_rzr_des="Cyclops Razor AEMET Compute 64 GB specific Host General Settings Ctrl"  ## Use this script like family template for different types of hosts                                                                                  
+_rsc_rzr_nam="compute64"
+_rsc_rzr_des="Cyclops Razor Template Compute 64 GB specific Host General Settings Ctrl"  ## Use this script like family template for different types of hosts                                                                                  
 _rsc_rzr_cmd=""                                                                          
 _rsc_rzr_dae=""                                                                                                                     
 _rsc_rzr_cfg=""                                                                             

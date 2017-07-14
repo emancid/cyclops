@@ -2,6 +2,7 @@
 
 source /etc/cyclops/global.cfg
 PATH="${PATH}:$_stat_extr_path"
+PATH=${PATH}":"$_script_path":"$_tool_path"/approved"
 PS1="[\D{%Y-%m-%dT%H:%M:%S}][\u@\h][\w]\\$ "
 export PATH
 
@@ -31,7 +32,6 @@ _nformat="\033[0m"
 
 cyc_module_welcome()
 {
-	PATH=${PATH}":"$_script_path":"$_tool_path"/approved"
 	export PATH
 	_sys_status=$( $_tool_path/approved/test.productive.env.sh -t pasive -v simple 2>/dev/null | cut -d';' -f4 )
 
