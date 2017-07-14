@@ -1,6 +1,24 @@
 CYCLOPS 1.4.1v INSTALL
 ==============================================================================================================
 
+    0. COMPATIBILITY
+    ----------------------------------------------------------------------------------------------------------
+
+	THIS HOWTO HAS BEEN TESTED WITH:
+		- REDHAT6/7
+		- DEBIAN9
+
+	PROBABLY WORKS FINE WITH:
+		- CENTOS6/7
+		- OPENSUSE LEAP
+
+	WE THINK IT WILL HELP TO:
+		- DEBIAN7/8
+		- OPENSUSE TUMBLEWEED
+		- SLES11/12/13
+		- FEDORA
+		- ARCHLINUX
+		- UBUNTU
 
     1. PREPARE NECESSARY ENVIRONMENT
     ----------------------------------------------------------------------------------------------------------
@@ -11,6 +29,9 @@ CYCLOPS 1.4.1v INSTALL
     - install -> apache + php + php gd + ssl module
         - yum install httpd php php-gd mod_ssl 	## REDHAT/CENTOS PACKAGE INSTALL
 	- apt-get install apache2 php php-gd	## DEBIAN
+
+    - install -> gawk 				## IMPORTANT: FOR DEBIAN USERS!!!
+	- apt-get install gawk
     
     - Other Linux Recomended packages:
 	- vim
@@ -27,6 +48,16 @@ CYCLOPS 1.4.1v INSTALL
 	3. IMPORTANT: disable selinux for right apache behaviour ## REDHAT/CENTOS
 
     - You have in /opt/cyclops/docs a file template ( redhat ) for configurate apache site (is usesfull with other distros)    
+
+    - Create node hostname like [NAME(string)][ID(numeric)] example: minion01 
+	We recommended to use something like [NAME][ROL(character)][ID] example: grubs01
+	Is better to use different prefix for server name and a letter like grubS01 (s) for server role
+	Nodes will be better follow this format like: minionc01
+	Use letter (c) minionC01 for node rol for example Compute.
+
+	Don't use (recommeded) characters like (-,.%) or other differnet to [a-z] or/and [0-9] to the hostname
+	You can use DNS alias or /etc/hosts alias for a major descriptive names
+
 
     2. INSTALL CYCLOPS
     ----------------------------------------------------------------------------------------------------------
@@ -47,10 +78,12 @@ CYCLOPS 1.4.1v INSTALL
 		- rsync -acvu /opt/git/cyclops/[version]/ /opt/cyclops
 
 	3. CREATE necesary directories
-		cd /opt/cyclops/www/data
-		mkdir -p attic cache index locks media_attic media_meta meta tmp pages/operation/monitoring/history/noindex
 		cd /opt/cyclops
 		mkdir -p logs lock temp
+		cd /opt/cyclops/local
+		mkdir -p log
+		cd /opt/cyclops/www/data
+		mkdir -p attic cache index locks media_attic media_meta meta tmp pages/operation/monitoring/history/noindex
 		cd /opt/cyclops/monitor/sensors 
 		mkdir -p temp status/data/ environment/conf environment/data
 
@@ -187,11 +220,17 @@ CYCLOPS 1.4.1v INSTALL
 	IMPORTANT: you need to have access to the hostname of nodes/hosts, with dns or /etc/hosts
 
 	1. check /etc/cyclops/nodes/node.type.cfg.template and rename it to same path with template at end of file.
+
 	2. check /etc/cyclops/nodes/critical.res.cfg.template and rename it to same path without template at end of the file/
+
 	3. You can use a cyclops prototipe option for configurate several items of it:
 		cyclops -y config  ## USE IT SPECIALLY FOR NODE,FAMILY,GROUP AND MONITORING ITEMS
+
 		- Use option 11 to define family, group and node settings, included all range of node to manage.
 		NOTE: BUG: Please exist (end option) all times you finish to configure one option, variables don't reinit well
+
+		- After you finished you need to configure option 19.
+
 	4. You have the next files for configure cyclops
 
         /etc/cyclops/
@@ -265,24 +304,64 @@ CYCLOPS 1.4.1v INSTALL
         - Cyclops needs ha software like heartbeat or peacemaker to control ha resources
         - Cyclops needs floating ip to refer master node
 
-    7. NODES CONFIG
+    7. ACTIVATE CYCLOPS SERVICES
+    ----------------------------------------------------------------------------------------------------------
+    
+	- Add Cron Entries like this REDHAT/CENTOS example:
+
+		NOTE: Use cron root user
+
+		13 4 * * * /opt/cyclops/scripts/backup.cyc.sh -t all &>>/opt/cyclops/logs/$HOSTNAME.bkp.log                                          #### OPTIONAL FOR BACKUP PROUPOSES
+		*/3 * * * * /opt/cyclops/scripts/monitoring.sh -d 2>>/opt/cyclops/logs/$HOSTNAME.mon.err.log                                         #### MANDATORY - MAIN CYCLOPS MONITOR ENTRY
+		36 * * * * /opt/cyclops/scripts/audit.nod.sh -d  2>&1 >>/opt/cyclops/logs/audit.err.log                                                    #### OPTIONAL - IF YOU WANT TO USE AUDIT MODULE
+		59 * * * * /opt/cyclops/scripts/historic.mon.sh  -d 2>>/opt/cyclops/logs/historic.err.log                                                  #### RECOMENDED - FOR SHOW HISTORIC MONITORING
+		20 * * * * /opt/cyclops/scripts/procedures.sh -t node -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/node_status.txt        #### OPTIONAL - UPDATE PROCEDURE STATUS
+		21 * * * * /opt/cyclops/scripts/procedures.sh -t env -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/env_status.txt          #### OPTIONAL - UPDATE PROCEDURE STATUS
+		42 * * * * /opt/cyclops/scripts/cyc.stats.sh -t daemon >/dev/null 2>/opt/cyclops/logs/cyc.stats.err.log					   #### OPTIONAL BUT MANDATORY IF YOU ENABLE AUDIT MODULE
+		17 * * * * /opt/cyclops/statistics/scripts/extract.main.slurm.sh -d 2>&1 >/opt/cyclops/logs/$HOSTNAME.slurm.extract.log                   #### OPTIONAL - SLURM STATISTICS
+
+	- We recomend enable one by one, trying it step by step.
+
+	NOTE: we really try to get time to make a daemon services, please be patient and use this "old and ugly" method, we apologize 
+
+    8. NODES CONFIG
     ----------------------------------------------------------------------------------------------------------
 
         - Configure ssh keys for no auth ssh connections
+		- ssh-keygen
+		- ssh-copy-id [IP OR HOSTNAME]
+
+	- Use pdsh to test it 
+		- pdsh -w [HOSTNAME-RANGE] hostname -s
+
+		[DEBIAN] ## CREATE OR USE : export PDSH_RCMD_TYPE=ssh : if you have problems with pdsh ( debian rules ;) )
+		[DEBIAN] ## recommed to create this export inside of /etc/system/cyclopsrc if you want.
+
 	- Create cyc working dirs
 		1. Copy from cyc server /opt/cyclops/local to all cyc monitor hosts
+			NOTE: you can use pdcp to make it easy
+			pdsh -w [NODERANGE] mkdir /opt/cyclops
+			pdcp -w [NODERANGE] /opt/cyclops/local /opt/cyclops
+
 		2. Default path: /opt/cyclops/local/data/sensors
 		- if you want to change [ NOT RECOMMENDED ] :
 			1. Edit /opt/cyclops/monitor/sensors/status/conf/sensor.var.cfg file and change: _sensor_remote_path variable
 			2. Edit /etc/cyclops/global.cfg file and change: _sensor_remote_path variable
-	- If you want to enable management integration with cyc client hosts enable host control razor on clients
+
+	- If you want to enable management (RAZOR) integration with cyc client hosts enable host control razor on clients
+
 		1. Create this entry in the client host cron
 			*/2 * * * * /opt/cyclops/local/scripts/cyc.host.ctrl.sh -a daemon 2>>/opt/cyclops/local/log/hctrl.err.log
+			NOTE: Use cron root user
+
 		2. Create this entry in the /etc/rc.local
 			/opt/cyclops/local/scripts/cyc.host.ctrl.sh -a boot 2>>/opt/cyclops/local/log/hctrl.err.log
+
 		3. You need to create razor list in cyclops server
 		- Available razors in /opt/cyclops/local/data/razor/[STOCK/OS]/
+
 		4. Create family file with selected razors in /etc/cyclops/nodes/[FAMILY NAME].rzr.lst
+		- Use template in /etc/cyclops/nodes , family.rzr.lst.template , then name was the next format:
 		- The order of razors is Hierarchical, from up ( first to do action ) to down ( last to do action )
 		- [ RECOMMENDED ] first insert razor with host pasive checks and last instert razor with host dramatical actions like shutdown/reboot
 
@@ -297,21 +376,10 @@ CYCLOPS 1.4.1v INSTALL
 		cyc.stats.sh -a node  ## FOR NODE STATUS
 		
 	3. Generate monitoring entries with cyclops.sh -y config ( option 19 ) or editing /etc/cyclops/monitor/monitor.cfg.template and rename it to monitor.cfg
-        
-	4. Add Cron Entries like this redhat example:
-
-		13 4 * * * /opt/cyclops/scripts/backup.cyc.sh -t all &>>/opt/cyclops/logs/[MAIN CYC NODE].bkp.log                                          #### OPTIONAL FOR BACKUP PROUPOSES
-		*/3 * * * * /opt/cyclops/scripts/monitoring.sh -d 2>>/opt/cyclops/logs/[MAIN CYC NODE].mon.err.log                                         #### MANDATORY - MAIN CYCLOPS MONITOR ENTRY
-		36 * * * * /opt/cyclops/scripts/audit.nod.sh -d  2>&1 >>/opt/cyclops/logs/audit.err.log                                                    #### OPTIONAL - IF YOU WANT TO USE AUDIT MODULE
-		59 * * * * /opt/cyclops/scripts/historic.mon.sh  -d 2>>/opt/cyclops/logs/historic.err.log                                                  #### RECOMENDED - FOR SHOW HISTORIC MONITORING
-		20 * * * * /opt/cyclops/scripts/procedures.sh -t node -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/node_status.txt        #### OPTIONAL - UPDATE PROCEDURE STATUS
-		21 * * * * /opt/cyclops/scripts/procedures.sh -t env -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/env_status.txt          #### OPTIONAL - UPDATE PROCEDURE STATUS
-		42 * * * * /opt/cyclops/scripts/cyc.stats.sh -t daemon >/dev/null 2>/opt/cyclops/logs/cyc.stats.err.log					   #### OPTIONAL BUT MANDATORY IF YOU ENABLE AUDIT MODULE
-		17 * * * * /opt/cyclops/statistics/scripts/extract.main.slurm.sh -d 2>&1 >/opt/cyclops/logs/[HOSTNAME].slurm.extract.log                   #### OPTIONAL - SLURM STATISTICS
 	
-	5. Enable Cyclops in testing mode with:
+	4. Enable Cyclops in testing mode with:
 		cyclops.sh -y testing -m '[MESSAGE]' -c
 
-	6. Enable Cyclops in operative mode with:
+	5. Enable Cyclops in operative mode with:
 		cyclops.sh -y enable -c
 
