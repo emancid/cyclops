@@ -119,10 +119,13 @@ do
 				echo "		help: show available sensors for host/node/device"
 				echo
 				echo "STATS:"
-				echo "	-t [avg|acu] : Specific Data Processing"
-				echo "		per: Percentage Data, Average Processing (Default)"
+				echo "	-t [avg|acu|per|max|min] : Specific Data Processing"
 				echo "		avg: Average Data Processing"
 				echo "		acu: Acumulate Data Processing"
+				echo "		per: Percentage Data, Average Processing (Default)"
+				echo "		max|min: Get only Maximun/Minimun Value of date group" 
+				echo "	-k [value] : transform percen referenced data with real data"
+				echo "		[value] : 100% link max value"
 				echo
 				echo "FILTER:"
 				echo "	-d [date format], start date or range to filter by date:"
@@ -245,6 +248,14 @@ calc_data()
 										if ( t  <= _fld ) { t=_fld }
 									}
 								}
+								if ( _tc == "min" ) {
+									if ( _to != _time ) {
+										print _to"="t ;
+										_to=_time ;
+										t=_fld ;
+									} else {
+										if ( t >= _fld ) ( t=_fld }
+									}
 								_reg_c="yes"
 							} 
 						} ;
