@@ -254,7 +254,7 @@ calc_data()
 										_to=_time ;
 										t=_fld ;
 									} else {
-										if ( t >= _fld ) ( t=_fld }
+										if ( t >= _fld ) { t=_fld }
 									}
 								_reg_c="yes"
 							} 
