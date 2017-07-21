@@ -256,6 +256,7 @@ calc_data()
 									} else {
 										if ( t >= _fld ) { t=_fld }
 									}
+								}
 								_reg_c="yes"
 							} 
 						} ;
