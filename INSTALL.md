@@ -49,8 +49,8 @@ CYCLOPS 1.4.1v INSTALL
 
     - You have in /opt/cyclops/docs a file template ( redhat ) for configurate apache site (is usesfull with other distros)    
 
-    - Create node hostname like [NAME(string)][ID(numeric)] example: minion01 
-	We recommended to use something like [NAME][ROL(character)][ID] example: grubs01
+    - Create node hostname like [NAME(string)][ID(numeric)] example: minion01, minion02, minion03, etc... 
+	We recommended to use something like [NAME][ROL(character)][ID] example: grubs01,grubs02,grubs03, etc...
 	Is better to use different prefix for server name and a letter like grubS01 (s) for server role
 	Nodes will be better follow this format like: minionc01
 	Use letter (c) minionC01 for node rol for example Compute.
@@ -79,7 +79,7 @@ CYCLOPS 1.4.1v INSTALL
 
 	3. CREATE necesary directories
 		cd /opt/cyclops
-		mkdir -p logs lock temp
+		mkdir -p logs lock temp audit/data
 		cd /opt/cyclops/local
 		mkdir -p log
 		cd /opt/cyclops/www/data
