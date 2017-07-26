@@ -87,14 +87,17 @@ CYCLOPS 1.4.1v INSTALL
 		cd /opt/cyclops/monitor/sensors 
 		mkdir -p temp status/data/ environment/conf environment/data
 
-	4. INSTALL SENSORS, IA RULES AND NODE RAZOR
+	4. INITIALIZE BITACORAS ( LOGBOOKS ):
+		for _file in $( awk -F\; '$1 !~ "#" { print $1 }' /etc/cyclops/audit/bitacoras.cfg ) ; do touch /opt/cyclops/audit/data/$_file.bitacora.txt ; done
+
+	5. INSTALL SENSORS, IA RULES AND NODE RAZOR
 	- Decompress /opt/cyclops/monitor/packs for optain necesary sensors, rules and razors files
 		from root directory ( cd / )
 		tar xvf /opt/cyclops/monitor/packs/*.tar
 		OR
 		for _file in $( ls -1 /opt/cyclops/monitor/packs/* ) ; do tar xvf $_file ; done ## IF *.tar does not works 
 
-	5. CREATE SYMLINKS
+	6. CREATE SYMLINKS
 
 	- Configuration path
 		cd /etc
@@ -110,13 +113,14 @@ CYCLOPS 1.4.1v INSTALL
 			[DEBIAN] 	->	_apache_usr="www-data"
 			[ALL DISTROS]	->	_apache_grp="cyclops"	## RECOMMENDED
 	
-	6. INIT CYCLOPS CONFIGURATION BASE
+	7. INIT CYCLOPS CONFIGURATION BASE
 
 	- Copy /etc/cyclops/global.cfg.template to /etc/cyclops/global.cfg
 	- Copy /etc/cyclops/monitor/alert.email.cfg.template to /etc/cyclops/monitor/alert.email.cfg
 	- Copy /etc/cyclops/statistics/main.ext.cfg.template to /etc/cyclops/statistics/main.ext.cfg
+	- Copy /opt/cyclops/monitor/sensors/data/status/stateofthings.cyc.template /opt/cyclops/monitor/sensors/data/status/stateofthings.cyc
 
-	7. UPDATE CYCLOPS:
+	8. UPDATE CYCLOPS:
 
 	- BEFORE UPDATE/UPGRADE BEWARE WITH THIS:
 		- DO BACKUP FROM root cyclops directoty 
