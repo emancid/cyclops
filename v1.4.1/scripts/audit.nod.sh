@@ -53,6 +53,11 @@ fi
 
 source $_color_cfg_file
 
+#### LIBS ####
+
+        source $_libs_path/node_group.sh
+        source $_libs_path/node_ungroup.sh
+
 ## CYCLOPS OPTION STATUS CHECK
 
 _audit_status=$( awk -F\; '$1 == "CYC" && $2 == "0003" && $3 == "AUDIT" { print $4 }' $_sensors_sot )
@@ -90,10 +95,19 @@ do
 				then
 					_long=$( cat $_type | sed -e '/^#/d' -e '/^$/d' | cut -d';' -f2 )
 				else
-					_name=$( echo $_par_node | cut -d'[' -f1 | sed 's/[0-9]*$//' )
-					_range=$( echo $_par_node | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
-					_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
-					_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
+					_ctrl_grp=$( echo $_par_node | grep @ 2>&1 >/dev/null ; echo $? )
+
+					if [ "$_ctrl_grp" == "0" ]
+					then
+						_par_node_grp=$( echo "$_par_node" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
+						_par_node=$( echo $_par_node | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
+						_par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
+						_par_node_grp=$( node_group $_par_node_grp )
+						[ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
+						_par_node=$_par_node""$_par_node_grp
+					fi
+
+					_long=$( node_ungroup $_par_node | tr ' ' '\n' )
 				fi
 			fi
 
@@ -285,7 +299,7 @@ shift $((OPTIND-1))
 #              FUNCTIONs                  #
 ###########################################
 
-node_group()
+node_group_old()
 {
 
         _prefix=$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sed 's/^\([a-zA-Z_-]*\)[0-9]*$/\1/' | sort -u )
@@ -328,47 +342,6 @@ node_group()
         done
 
         echo "$_node_range" | sed 's/\,$//'
-}
-
-node_group_old()
-{       
-	#### DEPRECATED - IF NEW ONE WORKS FINE - DELETE THIS FUNCTION
-
-        echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sed 's/[0-9]*$/;&/' | sort -t\; -k2,2n -u | awk -F\; '
-                { if ( NR == "1" ) { _sta=$2 ; _end=$2  ; _string=$1"[" }
-                else {
-                    if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end"," }
-                                else {
-                                    _string=_string""_sta"," }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                    }
-                }
-
-                END { if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end }
-                                else {
-                                    _string=_string""_sta }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                        print _string"]" }'
-
- 
 }
 
 extract_static_data()

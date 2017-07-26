@@ -24,6 +24,11 @@ _opt_kill_msg="check"
 _opt_type="yes"
 _opt_type="zombie"
 
+#### LIBS ####
+
+        source $_libs_path/node_group.sh
+        source $_libs_path/node_ungroup.sh
+
 ###########################################
 #              PARAMETERs                 #
 ###########################################
@@ -58,12 +63,27 @@ do
 			_opt_node="yes"
 			_par_node=$OPTARG
 
-                        _name=$( echo $_par_node | cut -d'[' -f1 | sed 's/[0-9]*$//' )
-                        _range=$( echo $_par_node | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
-                        _values=$( eval echo $_range | tr -d '{' | tr -d '}' )
-                        _long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
+                        #_name=$( echo $_par_node | cut -d'[' -f1 | sed 's/[0-9]*$//' )
+                        #_range=$( echo $_par_node | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
+                        #_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
+                        #_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
 
-                        [ -z $_range ] && echo "Need nodename or range of nodes" && exit 1
+                        #[ -z $_range ] && echo "Need nodename or range of nodes" && exit 1
+
+			_ctrl_grp=$( echo $_par_node | grep @ 2>&1 >/dev/null ; echo $? )
+
+			if [ "$_ctrl_grp" == "0" ]
+			then
+				_par_node_grp=$( echo "$_par_node" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
+				_par_node=$( echo $_par_node | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
+				_par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
+				_par_node_grp=$( node_group $_par_node_grp )
+				_par_node=$_par_node""$_par_node_grp
+
+				[ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
+			fi
+
+			_long=$( node_ungroup $_par_node | tr ' ' '\n' )
 		;;
 		"u")
 			_opt_user="yes"
