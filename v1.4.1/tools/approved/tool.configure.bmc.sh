@@ -6,6 +6,11 @@ _default_pass="pass"
 _new_user="administrator"
 _new_pass="administrator"
 
+#### LIBS ####
+
+        source $_libs_path/node_group.sh
+        source $_libs_path/node_ungroup.sh
+
 #### PARAMETERS ####
 
 while getopts ":n:u:p:U:P:h:" _optname
@@ -28,9 +33,26 @@ do
 		_opt_nod="yes"
 		_par_nod=$OPTARG
 
-		_name=$( echo $_par_nod | cut -d'[' -f1 | sed 's/[0-9]*$//' )
-		_range=$( echo $_par_nod | sed -e "s/$_name\[/\{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
-		_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
+		#_name=$( echo $_par_nod | cut -d'[' -f1 | sed 's/[0-9]*$//' )
+		#_range=$( echo $_par_nod | sed -e "s/$_name\[/\{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
+		#_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
+
+		_ctrl_grp=$( echo $_par_nod | grep @ 2>&1 >/dev/null ; echo $? )
+
+		if [ "$_ctrl_grp" == "0" ]
+		then
+			_par_node_grp=$( echo "$_par_nod" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
+			_par_node=$( echo $_par_nod | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
+			_par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
+			_par_node_grp=$( node_group $_par_node_grp )
+			_par_node=$_par_nod""$_par_node_grp
+
+			[ -z "$_par_nod" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
+		fi
+
+		_values=$( node_ungroup $_par_nod | tr ' ' '\n' )
+	
+
 	;;
 	"h")
 		case "$OPTARG" in

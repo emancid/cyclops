@@ -88,6 +88,7 @@ _cyc_razor_status=$(    awk -F\; '$1 == "CYC" && $2 == "0014" && $3 == "RAZOR" {
 #### LIBS ####
 
 	source $_libs_path/node_group.sh
+	source $_libs_path/node_ungroup.sh
 
 ###########################################
 #              PARAMETERs                 #
@@ -122,19 +123,18 @@ do
 
 			_ctrl_grp=$( echo $_par_node | grep @ 2>&1 >/dev/null ; echo $? )
 
-                        if [ "$_ctrl_grp" == "0" ]
-                        then
-                                _par_node_grp=$( echo "$_par_node" | sed 's/@//g' )
-                                _par_node=$( cat $_type | awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' )
-                                _par_node=$( node_group $_par_node )
-                                [ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
-                        fi
+			if [ "$_ctrl_grp" == "0" ]
+			then
+				_par_node_grp=$( echo "$_par_node" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
+				_par_node=$( echo $_par_node | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
+				_par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
+				_par_node_grp=$( node_group $_par_node_grp )
+				_par_node=$_par_node""$_par_node_grp
 
-			_name=$( echo $_par_node | cut -d'[' -f1 | sed 's/[0-9]*$//' )
-			_range=$( echo $_par_node | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
-			_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
-			_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
-
+				[ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
+			fi
+					
+			_long=$( node_ungroup $_par_node | tr ' ' '\n' )
 		;;
 		"m")
 			_opt_msg="yes"
@@ -504,63 +504,6 @@ ha_check()
 			exit 1
 		fi
 	fi
-}
-
-node_expand()
-{
-	_range_nodes=$1
-
-	_name=$( echo $_range_nodes | cut -d'[' -f1 | sed 's/[0-9]*$//' )
-	_range=$( echo $_range_nodes | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
-	_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
-	_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
-
-	echo "${_long}"
-}
-
-node_group()
-{
-
-	_prefix=$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sed 's/^\([a-zA-Z_-]*\)[0-9]*$/\1/' | sort -u )
-
-	for _node_prefix in $( echo "${_prefix}" )
-	do
- 	       _node_range=$_node_range""$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sed 's/[0-9]*$/;&/' | awk -F\; -v _p="$_node_prefix" '$1 ~ "^"_p"[0-9]+$" || $1 == _p { print $0 }' | sort -t\; -k2,2n -u | awk -F\; '
-                { if ( NR == "1" ) { _sta=$2 ; _end=$2  ; _string=$1"[" }
-                else {
-                    if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end"," }
-                                else {
-                                    _string=_string""_sta"," }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                    }
-                }
-
-                END { if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end }
-                                else {
-                                    _string=_string""_sta }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                        print _string"]" }' )","
-	done
-
-	echo "$_node_range" | sed 's/\,$//'
 }
 
 debug_bkp()
@@ -2266,7 +2209,7 @@ config_nodes()
 
 	done
 
-	_cfg_range_nodes=$( node_expand $_cfg_nodes )
+	_cfg_range_nodes=$( node_ungroup $_cfg_nodes )
 
 	for _node in $( echo "${_cfg_range_nodes}" )
 	do
@@ -2407,7 +2350,7 @@ config_nod_bmc_cred()
 
 	if [ "$_ask_cfg_nod_bmc_cred" == "y" ]
 	then
-		for _node in $( node_expand $_ask_bmc_cred_nod_range )
+		for _node in $( node_ungroup $_ask_bmc_cred_nod_range )
 		do
 			if [ ! -z "$_ask_bmc_cred_bmc_prefix" ] 
 			then
