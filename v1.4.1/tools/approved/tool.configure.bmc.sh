@@ -8,6 +8,8 @@ _new_pass="administrator"
 
 #### LIBS ####
 
+	source /etc/cyclops/global.cfg
+
         source $_libs_path/node_group.sh
         source $_libs_path/node_ungroup.sh
 
