@@ -163,12 +163,12 @@ relocate_files()
 	#_relocate_date=$( date +%s )
 
 	_count=0
-	echo -e "BEGIN:\n"
+	[ "$_opt_daemon" != "yes" ] && echo -e "BEGIN:\n"
 
 	for _file in $( find $_mon_history_path/noindex/ -name "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].txt" 2>/dev/null | awk -F\/ '{ print $NF }' )
 	do
 		let "_count++"
-		echo -ne $_count"\r"
+		[ "$_opt_daemon" != "yes" ] && echo -ne $_count"\r"
 
 		_file_date=$( echo $_file | cut -d'.' -f1 )
 		_file_year=$( date -d @$_file_date +%Y )
