@@ -8,9 +8,9 @@
 ===== Procedimiento =====
 
     - Proporcionadas previamente
-ping 172.24.29.90</code>
+ping [CYCLOPS SERVER IP]</code>
     - En caso de no establecerse conexión referirse a la documentación referida en el punto primero para la resolución de problemas.
-    - https://172.24.29.90/dokuwiki/doku.php
+    - https://[CYCLOPS SERVER IP]/dokuwiki/doku.php
   - Confirmada la conexión con la URL anteriormente indicada, validar el usuario y clave proporcionados de acceso para dirigirse a la vista de monitorización.
   - Pulsar sobre el menú: ** Operation - Monitoring - Dashboard ** en la parte alta de la pagina web
   - La pagina web se actualizara automáticamente cada 2 minutos y el sistema de monitorización realiza ciclos cada 3 minutos, por lo que verificando los tiempos indicados en los distintos elementos de monitorización se puede confirmar de manera rápida que el sistema esta funcionando correctamente.

@@ -13,7 +13,7 @@
 
 |< 50% >|
 ^  ACTOR          ^  EJECUCION                   ^  HORARIO EJECUCION                                                                     ^
-|  BULL MADRID    |  @#EAFFD5:SI                 |  @#FFFF00: INTERVENCION SOLICITADA                                                     |
+|     |  @#EAFFD5:SI                 |  @#FFFF00: INTERVENCION SOLICITADA                                                     |
 
 
 ===== Procedimiento =====
@@ -23,22 +23,17 @@
 === Servidores Externos - Primera Conexión ( Exterior ) ===
 
 ^  Hostname  ^  Direccion IP  ^  Tipo     ^  Funcion  ^
-|  [MANAGEMENT NODES]   |  172.24.29.90  |  Gestion  |  Gestion y Mantenimiento del Sistema  |
-|  [MANAGEMENT NODES]   |  172.24.29.91  |  Gestion  |  Gestion y Mantenimiento del Sistema  |
-|  [LOGIN NODES]   |  172.24.8.221  |  Login    |  Acceso de Usuarios al Sistema        |
-|  [LOGIN NODES]   |  172.24.8.223  |  Login    |  Acceso de Usuarios al Sistema        |
-|  [LOGIN NODES]   |  172.24.8.227  |  IO       |  Pasarela de Sistema de Archivos Lustre al Exterior del Sistema (IP FLotante)  |
-|  [LOGIN NODES]   |  172.24.8.227  |  IO       |  Pasarela de Sistema de Archivos Lustre al Exterior del Sistema (IP FLotante)  |
+|  [MANAGEMENT NODES]   |    |  Gestion  |  Gestion y Mantenimiento del Sistema  |
+|  [LOGIN NODES]   |    |  Login    |  Acceso de Usuarios al Sistema        |
 
 === Servidores Internos  - Segunda Conexión ( Interna ) ===
 
-^  Hostname                 ^  BMC Hostname          ^  Tipo            ^  Funcion  ^
-|  MANAGEMENT NODES              |  bmc[0-1]              |  Gestion         |  Gestion y Mantenimiento del Sistema  |
-|  LOGIN NODES (CRITICAL)              |  bmc[2-3]              |  Login           |  Acceso de Usuarios al Sistema        |
-|  LOGIN NODES              |  bmc[4-5]              |  IO              |  Pasarela de Sistema de Archivos Lustre al Exterior del Sistema (IP FLotante)  |
-|  node[RANGE]              |  Lustre          |  Servidores de Sistema de ficheros Lustre  |
-|  node[RANGE]            |  Computo - Aire  |  Nodos de Computo refrigerados por Aire  |
-|  node[RANGE]  |  Computo - Agua  |  Nodos de Computo refrigerados por Agua  |
+^  Hostname                 ^  BMC Hostname   ^  Tipo       ^  Funcion  ^
+|  MANAGEMENT NODES         |  	              |  Gestion    |  Gestion y Mantenimiento del Sistema       |
+|  LOGIN NODES              |                 |  Login      |  Accceso de usuarios al cluster            |
+|  node[RANGE]              |                 |  Lustre     |  Servidores de Sistema de ficheros Lustre  |
+|  node[RANGE]              |                 |  Computo    |  Nodos de Computo refrigerados por Aire    |
+
 ==== Primera conexión - Acceso desde el exterior ====
 
 === Conexión Windows ===
