@@ -135,7 +135,7 @@ _background_launch()
 echo "start to create ipmi user, pass and access in $1"
 echo
 
-for _bmc in $( echo "${_values}" | tr ' ' '\n' | sed 's/^/bmc/' )
+for _bmc in $( echo "${_values}" | tr ' ' '\n' )
 do
 	
 	_background_launch &
