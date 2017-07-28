@@ -32,6 +32,12 @@ _stat_slurm_data=$( cat $_stat_main_cfg_file | awk -F\; '$2 == "slurm" { print $
 _stat_slurm_cfg_file=$_config_path_sta"/"$( echo $_stat_slurm_data | cut -d';' -f3 )
 _stat_slurm_data_dir=$_stat_data_path"/"$( echo $_stat_slurm_data | cut -d';' -f4 )
 
+#### LIBS ####
+
+        [ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
+        [ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="113"
+        [ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
+
 ###########################################
 #              PARAMETERs                 #
 ###########################################
@@ -87,16 +93,23 @@ do
 			_opt_nod="yes"
 			_par_nod=$OPTARG
 
+                        _ctrl_grp=$( echo $_par_node | grep @ 2>&1 >/dev/null ; echo $? )
+
 			if [ "$_par_nod" == "all" ]
 			then
 				_long=$( cat $_type | sed -e '/^#/d' -e '/^$/d' | cut -d';' -f2 )
 			else
-				_name=$( echo $_par_nod | cut -d'[' -f1 | sed 's/[0-9]*$//' )
-				_range=$( echo $_par_nod | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
-				_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
-				_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
+				then
+					_par_node_grp=$( echo "$_par_node" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
+					_par_node=$( echo $_par_node | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
+					_par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
+					_par_node_grp=$( node_group $_par_node_grp )
+					_par_node=$_par_node""$_par_node_grp
 
-				[ -z $_range ] && echo "Need nodename or range of nodes" && exit 1
+					[ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
+				fi
+
+				_long=$( node_ungroup $_par_node | tr ' ' '\n' )
 			fi
 
 			_total_nodes=$( echo "${_long}" | wc -l )
