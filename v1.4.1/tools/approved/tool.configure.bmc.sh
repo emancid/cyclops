@@ -75,7 +75,7 @@ do
 			echo 
 			echo "CYCLOPS TOOL: CONFIGURE REMOTE ACCESS FOR BMC (IPMITOOL)"
 			echo
-			echo "	-n node name or node range (node1 or node[1-5])"
+			echo "	-n bmc name or bmc range (bmc1 or bmc[1-5])"
 			echo "	-u default bmc/ilo user"
 			echo "	-p default bmc/ilo password"
 			echo "	-U new user to create in bmc/ilo"
@@ -134,6 +134,8 @@ _background_launch()
 
 echo "start to create ipmi user, pass and access in $1"
 echo
+echo "Access to bmc with user: "$_default_user
+echo "Create new bmc user: "$_new_user
 
 for _bmc in $( echo "${_values}" | tr ' ' '\n' )
 do
