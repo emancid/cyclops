@@ -93,7 +93,7 @@ do
 			_opt_nod="yes"
 			_par_nod=$OPTARG
 
-                        _ctrl_grp=$( echo $_par_node | grep @ 2>&1 >/dev/null ; echo $? )
+                        _ctrl_grp=$( echo $_par_nod | grep @ 2>&1 >/dev/null ; echo $? )
 
 			if [ "$_par_nod" == "all" ]
 			then
@@ -101,16 +101,16 @@ do
 			else
 				if [ "$_ctrl_grp" == "0" ] 
 				then
-					_par_node_grp=$( echo "$_par_node" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
-					_par_node=$( echo $_par_node | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
+					_par_node_grp=$( echo "$_par_nod" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
+					_par_nod=$( echo $_par_nod | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
 					_par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
 					_par_node_grp=$( node_group $_par_node_grp )
-					_par_node=$_par_node""$_par_node_grp
+					_par_nod=$_par_nod""$_par_node_grp
 
-					[ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
+					[ -z "$_par_nod" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
 				fi
 
-				_long=$( node_ungroup $_par_node | tr ' ' '\n' )
+				_long=$( node_ungroup $_par_nod | tr ' ' '\n' )
 			fi
 
 			_total_nodes=$( echo "${_long}" | wc -l )
