@@ -99,6 +99,7 @@ do
 			then
 				_long=$( cat $_type | sed -e '/^#/d' -e '/^$/d' | cut -d';' -f2 )
 			else
+				if [ "$_ctrl_grp" == "0" ] 
 				then
 					_par_node_grp=$( echo "$_par_node" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
 					_par_node=$( echo $_par_node | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
