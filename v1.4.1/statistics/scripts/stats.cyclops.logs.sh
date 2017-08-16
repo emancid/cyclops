@@ -336,12 +336,13 @@ format_output()
 
 		_wiki_output=$( echo "<gchart "$_opt_with"x350 $_opt_gvalue $_opt_gtype $_sen_graph_color #ffffff center>" ;
                 echo "${_log_stats_data}" | 
-                                awk -F\; '
+                                awk -F\; -v _vr="$_par_ref" '
                                         { 
                                                 split($2,a,"=") ; 
-                                                split(a[2],b,".") ; 
 						gsub("^.*-", "", $1) ;
                                                 if ( _do != $1 ) { _do=$1 ; _pdo=_do"_" } else { _pdo=" " } ; 
+						if ( _vr ~ "[0-9]+" ) { a[2]=(a[2]*_vr)/100 } ;
+                                                split(a[2],b,".") ; 
                                                 print _pdo a[1]"="b[1] ; 
                                                 _t="" 
                                         }' ; 

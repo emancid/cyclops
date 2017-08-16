@@ -37,7 +37,7 @@ case "$1" in
 			if [ "$_rsc_rzr_slm_srv" == "0" ] || [ "$_rsc_rzr_slm_bkp" == "0" ]
 			then
 				[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( /sbin/service $_rsc_rzr_dae status 2>&1 >/dev/null ; echo $? )
-				[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( /usr/bin/sinfo -h -n $_rsc_rzr_hostname | egrep "drain|down" | wc -l )
+				[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( /usr/bin/sinfo -h -n $_rsc_rzr_hostname | awk 'BEGIN { _c=0 } $5 ~ /drain|down/ { _c++ } END { print _c }' )
 				[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod="0" || _rsc_rzr_out_cod="18"
 
 			else
