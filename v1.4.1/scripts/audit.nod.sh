@@ -404,11 +404,8 @@ read_data()
 
 		show_data
 	else
-		if [ -z "$_par_node" ]
-		then
-			_long=$( cat $_type | awk -F\; '$1 ~ "[0-9]" { print $2 }' )	
-			[ "$_par_show" == "eventlog" ] && _long=$_long"\nmain"
-		fi
+		[ -z "$_par_node" ] && _long=$( cat $_type | awk -F\; '$1 ~ "[0-9]" { print $2 }' )
+		[ "$_par_show" == "eventlog" ] && _long=$_long"\n"$( awk -F\; '$0 !~ "#" { print $1 }' $_config_path_aud/bitacoras.cfg  )
 
 		_count=0
 
