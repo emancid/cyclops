@@ -205,7 +205,11 @@ calc_data()
 									if ( dat[1] ~ "[0-9]" ) { 
 										_fld=dat[1] ;	
 									} else {
-										_fld=dat[2] ;
+										if ( dat[2] == "" ) { 
+											_fld=0 
+										} else {
+											_fld=dat[2]
+										}
 									}
 								}
 								if ( _tc == "per" ) {
