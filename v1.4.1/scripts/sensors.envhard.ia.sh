@@ -44,7 +44,11 @@ _ia_codes=""
 alerts_gen()
 {
 
-	for _alert_incidence in $( echo "${_dev_err}" | grep -v ";[1-3]$" )
+	#echo "DEBUG: START ## $( date +%s ) " 2>&1 >>/opt/cyclops/logs/envia.debug 
+	#echo "${_dev_err}" | grep -v ";[1-3]$"  2>&1 >>/opt/cyclops/logs/envia.debug 
+	#echo "DEBUG: START ## $( date +%s ) " 2>&1 >>/opt/cyclops/logs/envia.debug
+
+	for _alert_incidence in $( echo "${_dev_err}" ) # | grep -v ";[1-3]$" )
 	do
 		_alert_dev=$( echo $_alert_incidence | cut -d';' -f1 )
 		_alert_fail=$( echo $_alert_incidence | cut -d';' -f2 )

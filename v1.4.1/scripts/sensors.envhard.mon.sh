@@ -260,7 +260,7 @@ ia_processing()
 {
 
         echo "${_output}" | sort -n | tr '@' ';' | sed -e '/^$/d' | cut -d';' -f3- |
-                awk -F\; '$0 ~ "OK" || $0 ~ "UP" || $0 ~ "DOWN" || $0 ~ "FAIL" || $0 ~ "UNKN" { _err=0 ; for (i=1;i<=NF;i++) { if ($i ~ "DOWN") { _err=1 ; print $1";D;"i } else ;if ($i ~ "FAIL") { _err=1 ; print $1";F;"i} else ;if ($i ~ "UNKN") { _err=1 ; print $1";U;"i}} ; if ( _err == 0 ) { print $1";K;0"}} ' |
+                awk -F\; '$0 ~ "OK" || $0 ~ "UP" || $0 ~ "DOWN" || $0 ~ "FAIL" || $0 ~ "UNKN" { _err=0 ; for (i=1;i<=NF;i++) { if ($i ~ "DOWN") { _err=1 ; print $1";D;"(i-2) } else ;if ($i ~ "FAIL") { _err=1 ; print $1";F;"(i-2)} else ;if ($i ~ "UNKN") { _err=1 ; print $1";U;"(i-2)}} ; if ( _err == 0 ) { print $1";K;0"}} ' |
                 cut -d' ' -f2- > $_sensors_ia_tmp_path/$_pid"."$_sensors_ia_tmp_name
 
         _ia_alert=$($_sensors_ia_env_script_file $_pid)
