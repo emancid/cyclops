@@ -115,7 +115,7 @@ case "$_par_rzr_act" in
 	;;
 	stop|unlink|drain|content|boot)
 		_rsc_rzr_output=$( $_rsc_rzr_file check 2>&1 >/dev/null ; echo $? )
-		[ "$_rsc_rzr_output" == "0" ] && [ "$_rsc_rzr_output" != "21" ] && _rsc_rzr_output=$( $_rsc_rzr_file $_par_rzr_act 2>&1 >/dev/null ; echo $? ) || _rsc_rzr_output="0"
+		[ "$_rsc_rzr_output" == "0" ] && _rsc_rzr_output=$( $_rsc_rzr_file $_par_rzr_act 2>&1 >/dev/null ; echo $? ) || _rsc_rzr_output="0"
 	;;
 	start|up|link|repair)
 		_rsc_rzr_output=$( $_rsc_rzr_file check 2>&1 >/dev/null ; echo $? )
@@ -123,10 +123,11 @@ case "$_par_rzr_act" in
 		then
 			_rsc_rzr_output=$( $_rsc_rzr_file $_par_rzr_act 2>&1 >/dev/null ; echo $? )
 			[ "$_rsc_rzr_output" != "0" ] && _rsc_rzr_output=$( $_rsc_rzr_file start 2>&1 >/dev/null ; echo $? )	
-		fi
-		if [ "$_rsc_rzr_output" == "0" ] || [ "$_rsc_rzr_output" == "21" ]
-		then
-			_rsc_rzr_output=$( $_rsc_rzr_file check 2>&1 >/dev/null ; echo $? )
+
+			if [ "$_rsc_rzr_output" == "0" ] || [ "$_rsc_rzr_output" == "21" ]
+			then
+				_rsc_rzr_output=$( $_rsc_rzr_file check 2>&1 >/dev/null ; echo $? )
+			fi
 		fi
 	;;
 	diagnose|info)

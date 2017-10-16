@@ -26,16 +26,11 @@ case "$1" in
 			head -n1 
 			)
 		_rsc_rzr_out_cod=$( 
-			$_rsc_rzr_cmd list | 
-			grep -v mgs 2>&1 >/dev/null ; 
-			echo $? 
-			)
-		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( 
 			$_rsc_rzr_cmd  -O %type";"%servers";"%status -H status -n $_rsc_rzr_lustre_MDT 2>/dev/null | 
-			grep "^MDT" | 
-			sort -u | 
-			grep -o ";online$" 2>&1 >/dev/null ; 
-			echo $? 
+			awk -F\; 'BEGIN { _fail="21" } $1 ~ "MDT" && $3 == "online" { _fail="0" } END { print _fail }' ) 
+		_rsc_rzr_out_cod=$( 
+			$_rsc_rzr_cmd  -O %type";"%servers";"%status -H status -n $_rsc_rzr_lustre_OST 2>/dev/null | 
+			awk -F\; 'BEGIN { _fail="21" } $1 ~ "OST" && $3 == "online" { _fail="0" } END { print _fail }' ) 
 			)
 		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$(
 			$_rsc_rzr_cmd -O %fsname";"%status -H status -n $_rsc_rzr_hostname 2>/dev/null |
