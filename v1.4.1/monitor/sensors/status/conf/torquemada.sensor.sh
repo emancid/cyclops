@@ -21,8 +21,8 @@ then
 	[ -f "$_my_sensor_soul_file" ] && rm -f $_my_sensor_soul_file 2>&1 >/dev/null
 	kill -9 $_alive_soul
 
-
-	exit 101
+	echo ";FAIL mon timeout"
+	exit 1
 fi
 
 #echo $(date +%s)" : "$_log_msg" : dead : SAINT TO HEAVEN!" >> ./torquemada.log 
