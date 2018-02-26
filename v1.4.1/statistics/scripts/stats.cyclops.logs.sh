@@ -28,6 +28,8 @@ else
         exit 1
 fi
 
+_par_ref="empty"
+
 ###########################################
 #              PARAMETERs                 #
 ###########################################
@@ -132,10 +134,10 @@ do
 				echo "		[YYYY]: ask for complete year"
 				echo "		[Mmm-YYYY]: ask for concrete month"
 				echo "		year: ask for last year"
-				echo "		month: ask for last month"
+				echo "		[1-9*]month: ask for last month"
 				echo "		week: ask for last week"
-				echo "		[0-9*]day: ask for last n days ( sort by 24h format"
-				echo "		[0-9*]day: ask for last n hours ( sort by hour format"
+				echo "		[1-9*]day: ask for last n days ( sort by 24h format"
+				echo "		[1-9*]day: ask for last n hours ( sort by hour format"
 				echo "		report: ask for year,month,week,day"
 				echo "		[YYYY-MM-DD]: Implies data from date to now if you dont use -e"
 				echo "	-e [YYYY-MM-DD], end date for concrete start date" 
@@ -198,18 +200,15 @@ calc_data()
 							split($i,d,"=") ; 
 							if ( d[1] == _sf ) { 
 								split(d[2],dat," ") ;
-								if ( dat[2] ~ "%" ) { 
-									gsub("%", "", dat[2]) ; 
+								gsub("%", "", dat[1]) ; 
+								gsub("%", "", dat[2]) ; 
+								if ( dat[2] ~ "^[0-9]+$" ) { 
 									_fld=dat[2] ; 
 								} else {
-									if ( dat[1] ~ "[0-9]" ) { 
+									if ( dat[1] ~ "^[0-9]+$" ) { 
 										_fld=dat[1] ;	
 									} else {
-										if ( dat[2] == "" ) { 
-											_fld=0 
-										} else {
-											_fld=dat[2]
-										}
+											_fld=0
 									}
 								}
 								if ( _tc == "per" ) {
@@ -473,15 +472,20 @@ init_date()
                 _par_date_end=$( date +%Y-%m-%d )
 
         ;;
-        month)
+        *[0-9]month|month)
                 #_ask_date=$( date -d "last month" +%Y-%m-%d )
-                _ts_date=2592000
+		_month_count=$( echo $_par_date_start | grep -o ^[0-9]* )
+		_par_date_start="month"
+
+		[ -z "$_month_count" ] && _month_count=1
+
+                let _ts_date=2592000*_month_count
 
                 let _par_ds=_date_tsn-_ts_date
                 _par_de=$_date_tsn
 
                 _date_filter=$_par_date_start
-                _par_date_start=$( date -d "last month" +%Y-%m-%d )
+                _par_date_start=$( date -d @$_ts_date +%Y-%m-%d )
                 _par_date_end=$( date +%Y-%m-%d )
         ;;
         year)
