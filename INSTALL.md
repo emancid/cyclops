@@ -137,7 +137,7 @@ CYCLOPS 1.4.1v INSTALL
 	- LESS SAFETY BUT MORE CONFORTABLE  
 		- use GITHUB EXPERIMENTAL OPTION INSTALL FOR CYCLOPS
 		- from /opt/git/cyclops
-			fit pull
+			git pull
 
 	- WITHOUT GITHUB
 		- download zip from github
