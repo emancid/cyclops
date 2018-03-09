@@ -23,6 +23,8 @@ if [ -f $_config_path/global.cfg ]
 then
         source $_config_path/global.cfg
 	source $_color_cfg_file
+
+	source $_libs_path/node_ungroup.sh
 else
         echo "Global config don't exits" 
         exit 1
@@ -182,7 +184,7 @@ shift $((OPTIND-1))
 
 calc_data()
 {
-	_log_stats_data=$( cat $_log_file | 
+	_log_stats_data=$( cat $_log_file | sort -t\; -n | 
                                 awk -F " : " -v _dr="$_date_filter" -v _tsb="$_par_ds" -v _tse="$_par_de" -v _sf="$_par_itm" -v _tc="$_par_typ" '
                                         BEGIN { 
                                                 _to="START" ; 
@@ -638,7 +640,8 @@ check_items()
 		exit 1
 	;;
 	*)
-		_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
+		_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
+		#_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
 	;;
 	esac 
 
@@ -663,8 +666,8 @@ check_items()
 
 		### LAUNCH ###
 
-		if [ -f "$_log_file" ] 
-		then
+		#if [ -f "$_log_file" ] 
+		#then
 			if [ "$_par_itm" == "help" ]
 			then
 				check_items
@@ -672,10 +675,10 @@ check_items()
 				calc_data
 				format_output
 			fi
-		else
-			echo "Log File not exits, check $_par_nod log"
-			exit 1
-		fi
+		#else
+		#	echo "Log File not exits, check $_par_nod log"
+		#	exit 1
+		#fi
 		
 		[ "$_opt_debug" == "yes" ] && debug
 
