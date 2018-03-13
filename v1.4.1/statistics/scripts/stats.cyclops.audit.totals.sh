@@ -32,12 +32,6 @@ _stat_slurm_data=$( cat $_stat_main_cfg_file | awk -F\; '$2 == "slurm" { print $
 _stat_slurm_cfg_file=$_config_path_sta"/"$( echo $_stat_slurm_data | cut -d';' -f3 )
 _stat_slurm_data_dir=$_stat_data_path"/"$( echo $_stat_slurm_data | cut -d';' -f4 )
 
-#### LIBS ####
-
-        [ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
-        [ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="113"
-        [ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
-
 ###########################################
 #              PARAMETERs                 #
 ###########################################
@@ -46,7 +40,7 @@ _date_now=$( date +%s )
 _par_grp="day"
 _par_show="commas"
 
-while getopts ":g:s:b:f:n:e:w:v:cxh:" _optname
+while getopts ":g:s:b:f:n:e:w:v:cxzh:" _optname
 do
         case "$_optname" in
 		"g")
@@ -93,24 +87,16 @@ do
 			_opt_nod="yes"
 			_par_nod=$OPTARG
 
-                        _ctrl_grp=$( echo $_par_nod | grep @ 2>&1 >/dev/null ; echo $? )
-
 			if [ "$_par_nod" == "all" ]
 			then
 				_long=$( cat $_type | sed -e '/^#/d' -e '/^$/d' | cut -d';' -f2 )
 			else
-				if [ "$_ctrl_grp" == "0" ] 
-				then
-					_par_node_grp=$( echo "$_par_nod" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
-					_par_nod=$( echo $_par_nod | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
-					_par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
-					_par_node_grp=$( node_group $_par_node_grp )
-					_par_nod=$_par_nod""$_par_node_grp
+				_name=$( echo $_par_nod | cut -d'[' -f1 | sed 's/[0-9]*$//' )
+				_range=$( echo $_par_nod | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
+				_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
+				_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
 
-					[ -z "$_par_nod" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
-				fi
-
-				_long=$( node_ungroup $_par_nod | tr ' ' '\n' )
+				[ -z $_range ] && echo "Need nodename or range of nodes" && exit 1
 			fi
 
 			_total_nodes=$( echo "${_long}" | wc -l )
@@ -147,9 +133,12 @@ do
 			_opt_src="yes"
 			_par_src=$OPTARG	
 		;;
-		"x")
+		"z")
 			# DEBUG option
 			_opt_debug="yes"
+		;;
+                "x")
+                        _opt_hea="yes"
 		;;
 		"h")
 			case "$OPTARG" in
@@ -343,25 +332,30 @@ format_output()
 {
 	case "$_par_show" in
 	commas)
-		echo "source;$( [ -z "$_par_src" ] && echo -n bitacora,activity || echo -n $_par_src )"
-		echo "date start;$_par_date_start"
-		echo "date end;$_par_date_end"
-		echo "average: $( [ "$_opt_avg" == "yes" ] && echo "$_total_nodes processed nodes" || echo "na" )"
+		if [ "$_opt_hea" != "yes" ]
+		then
+			echo "source;$( [ -z "$_par_src" ] && echo -n bitacora,activity || echo -n $_par_src )"
+			echo "date start;$_par_date_start"
+			echo "date end;$_par_date_end"
+			echo "average: $( [ "$_opt_avg" == "yes" ] && echo "$_total_nodes processed nodes" || echo "na" )"
+		fi
 		echo "${_output}"
-		echo "END OF FILE"
 	;;
 	human)
 
 		_filter="0"
 
-		echo "SOURCE: $( [ -z "$_par_src" ] && echo -n bitacora,activity || echo -n $_par_src )"
-		echo "DATE RANGE FROM $_par_date_start TO $_par_date_end"
-		echo "TOTAL REGISTER PROCESSED: "$( cat $_files | wc -l )
-		echo "ACTIVE FILTERS:"
-		[ ! -z "$_par_eve" ] && echo " EVENTS: $_par_eve" && let "_filter++"
-		[ "$_filter" == "0" ] && echo " NONE"
-		[ ! -z "$_par_grp" ] && echo "GROUP BY: $_par_grp" && _title=$( echo $_par_grp | tr [:lower:] [:upper:] ) || _title="DAY" 
-		echo
+		if [ "$_opt_hea" != "yes" ]
+		then
+			echo "SOURCE: $( [ -z "$_par_src" ] && echo -n bitacora,activity || echo -n $_par_src )"
+			echo "DATE RANGE FROM $_par_date_start TO $_par_date_end"
+			echo "TOTAL REGISTER PROCESSED: "$( cat $_files | wc -l )
+			echo "ACTIVE FILTERS:"
+			[ ! -z "$_par_eve" ] && echo " EVENTS: $_par_eve" && let "_filter++"
+			[ "$_filter" == "0" ] && echo " NONE"
+			[ ! -z "$_par_grp" ] && echo "GROUP BY: $_par_grp" && _title=$( echo $_par_grp | tr [:lower:] [:upper:] ) || _title="DAY" 
+			echo
+		fi
 		echo -e "$_title;NUM REG\n--------;---------\n${_output}" | column -s\; -t ### DOT FOR MILES >> | sed -e ':a;s/\B[0-9]\{3\}\>/.&/;ta'
 	;;
 	wiki)

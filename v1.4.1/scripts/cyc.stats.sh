@@ -69,6 +69,8 @@ do
 			# Type Option
                         _opt_typ="yes"
 			_par_typ=$OPTARG
+			
+			export _sh_action=$_par_type	
 
                 ;;
 		"n")
