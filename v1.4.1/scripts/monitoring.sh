@@ -332,10 +332,13 @@ generate_mon_output_dash ()
 		_audit_last_bitacora_msg=$( echo "${_audit_last_bitacora_msg}" | sed '1 i\|< 100% 6% 6% 8% 10% 64% 6%>|' )
 	fi
 
-	_audit_last_events=$( $_script_path/audit.nod.sh -v eventlog | sort -n -t\; | awk -F\; -v _cd="$_color_down" -v _cf="$_color_fail"  -v _cr="$_color_rzr" -v _cc="$_color_fail" -v _cm="$_color_mark" -v _cu="$_color_up" -v _ap="$_wiki_audit_path" '
+	_audit_last_events=$( $_script_path/audit.nod.sh -v eventlog | awk -F\; '$4 == "ALERT" ||  ( $4 == "REACTIVE" && $6 !~ /REPAIR|OK/ ) { print $0 }' | 
+				sort -n -t\; | 
+				tail -n 30 | 
+				awk -F\; -v _cd="$_color_down" -v _cf="$_color_fail"  -v _cr="$_color_rzr" -v _cc="$_color_fail" -v _cm="$_color_mark" -v _cu="$_color_up" -v _ap="$_wiki_audit_path" '
                 BEGIN {
                         _st=systime()-86400*3
-                } $1 >= _st && ( $4 == "ALERT" ||  $4 == "REACTIVE" && $6 !~ /REPAIR|OK/ ) { 
+                } { 
                         _d=strftime("%Y-%m-%d;%H:%M:%S",$1) ; 
                         split(_d,d,";") ; 
                         if ( d[1] != _do ) { 
@@ -395,7 +398,7 @@ generate_mon_output_dash ()
         echo "|< 100% 10% 8% $_dash_column_text >|"
         echo "|  $_sec_color_title [[$_wiki_mon_sec_path|$_sec_image_title]]  |"$_dash_title_full_text
 
-        if [ "$_cyclops_monnod_status" == "ENABLED" ] 
+        if [ "$_cyclops_monsec_status" == "ENABLED" ] 
 	then
         	echo "start time;elapsed time"$_sec_mon_dash_titles""$_sec_header_full_text | sed -e "s/^/|  $_color_header/" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"
         	echo $_sec_mon_begin_dash_date";"$_sec_mon_time_elapsed""$_sec_mon_dash_values | sed -e 's/^/|  /' -e 's/$/  |/' -e 's/;/  |  /g' -e "s/UP/$_color_ok \*\* \<fc white\>  OPERATIVE \<\/fc\> \*\*/g" -e "s/FAIL/$_color_fail/g" -e "s/DOWN.[0-9]/$_color_down {{ :wiki:hb-alert.gif?nolink |}}/g" -e "s/DISABLE/$_color_disable/"
@@ -403,7 +406,7 @@ generate_mon_output_dash ()
         echo "| |"
 
         echo "|  $_srv_color_title [[$_wiki_mon_srv_path|$_srv_image_title]]  |"$_dash_title_full_text 
-        if [ "$_cyclops_monnod_status" == "ENABLED" ] 
+        if [ "$_cyclops_monsrv_status" == "ENABLED" ] 
 	then
         	echo "start time;elapsed time"$_srv_mon_dash_titles""$_srv_header_full_text | sed -e "s/^/|  $_color_header/" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"
         	echo $_srv_mon_begin_dash_date";"$_srv_mon_time_elapsed""$_srv_mon_dash_values | sed -e 's/^/|  /' -e 's/$/  |/' -e 's/;/  |  /g' -e "s/UP/$_color_ok \*\* \<fc white\>  OPERATIVE \<\/fc\> \*\*/g" -e "s/FAIL/$_color_fail/g" -e "s/DOWN/$_color_down {{ :wiki:hb-alert.gif?nolink |}}/g" -e "s/DISABLE/$_color_disable/"
@@ -437,7 +440,7 @@ generate_mon_output_dash ()
 
 	## SOUND CONTROL --
 
-	if [ ! -z "$_active_sound" ] && [ "$_cyclops_sound_status" == "ENABLED" ]
+	if [ ! -z "$_active_sound" ] && [ "$_cyclops_sound_status" == "ENABLED" ] && [ "$_cyclops_status" == "ENABLED" ] 
 	then
 		echo "<hidden Active Sounds initialState=\"visible\">"
 		echo $_env_status_pg_sound

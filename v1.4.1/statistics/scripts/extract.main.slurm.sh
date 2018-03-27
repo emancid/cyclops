@@ -254,6 +254,8 @@ main_compact_data()
 
 #### MAIN EXEC ####
 
+export _sh_action
+
 [ "$_cyclops_ha" == "ENABLED" ] && ha_check $_command
 
 case "$_sh_action" in
