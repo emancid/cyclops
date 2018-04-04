@@ -13,12 +13,12 @@ _rsc_rzr_hostname=$( hostname -s )
 
 case "$1" in
 	check)
-		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd sel elist 2>/dev/null | wc -l )
+		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd sel info 2>/dev/null | awk -F\: '$1 ~ "^Entries" { if ( int($2) == 0 ) { print "0" } else { print "1" }}' )
 	;;
 	start|link|up|reset)
-		_rsc_rzr_out_dat=$( $_rsc_rzr_cmd sel elist 2>/dev/null )
-		_rsc_rzr_out_cod=$( echo "${_rsc_rzr_out_dat}" | wc -l )
-		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="11" && echo "${_rsc_rzr_out_dat}" | sed "s/^/$( date +%s )\:/" >> $_cyc_clt_log_path/$_rsc_rzr_hostname.bmc.log && $_rsc_rzr_cmd sel clear
+		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd sel info 2>/dev/null | awk -F\: '$1 ~ "^Entries" { if ( int($2) == 0 ) { print "0" } else { print "1" }}' )
+		[ "$_rsc_rzr_out_cod" == "1" ] && _rsc_rzr_out_dat=$( $_rsc_rzr_cmd sel elist 2>/dev/null )
+		[ "$_rsc_rzr_out_cod" == "1" ] && echo "${_rsc_rzr_out_dat}" | sed "s/^/$( date +%s )\:/" >> $_cyc_clt_log_path/$_rsc_rzr_hostname.bmc.log && _rsc_rzr_out_cod=$( $_rsc_rzr_cmd sel clear 2>&1 >/dev/null ; echo $? )
 	;;
 	stop|unlink|content)
 		_rsc_rzr_out_cod="21"
@@ -27,9 +27,9 @@ case "$1" in
 		_rsc_rzr_out_cod="21"
 	;;
 	repair)
-		_rsc_rzr_out_dat=$( $_rsc_rzr_cmd sel elist 2>/dev/null )
-		_rsc_rzr_out_cod=$( echo "${_rsc_rzr_out_dat}" | wc -l )
-		[ "$_rsc_rzr_out_cod" != "0" ] && _rsc_rzr_out_cod="11" && echo "${_rsc_rzr_out_dat}" | sed "s/^/$( date +%s )\:/" >> $_cyc_clt_log_path/$_rsc_rzr_hostname.bmc.log && $_rsc_rzr_cmd sel clear
+		_rsc_rzr_out_cod=$( $_rsc_rzr_cmd sel info 2>/dev/null | awk -F\: '$1 ~ "^Entries" { if ( int($2) == 0 ) { print "0" } else { print "1" }}' )
+		[ "$_rsc_rzr_out_cod" == "1" ] && _rsc_rzr_out_dat=$( $_rsc_rzr_cmd sel elist 2>/dev/null )
+		[ "$_rsc_rzr_out_cod" == "1" ] && echo "${_rsc_rzr_out_dat}" | sed "s/^/$( date +%s )\:/" >> $_cyc_clt_log_path/$_rsc_rzr_hostname.bmc.log && _rsc_rzr_out_cod=$( $_rsc_rzr_cmd sel clear 2>&1 >/dev/null ; echo $? )
 	;;
 esac
 

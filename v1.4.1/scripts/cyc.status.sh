@@ -357,7 +357,7 @@ node_real_status()
 			_node_sta="NO DATA"
 			_node_err="NO DATA"
 		else
-			_node_sta=$( echo $_node_std | cut -d';' -f1 )
+			_node_sta=$( echo $_node_std | cut -d';' -f1 | sed 's/MARK //' )
 			_node_slm=$( echo $_node_std | cut -d';' -f2 )
 			_node_err=$( echo $_node_std | cut -d';' -f3 | sed 's/,$//' )
 		fi

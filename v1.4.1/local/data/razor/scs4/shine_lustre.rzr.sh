@@ -27,16 +27,15 @@ case "$1" in
 			)
 		_rsc_rzr_out_cod=$( 
 			$_rsc_rzr_cmd  -O %type";"%servers";"%status -H status -n $_rsc_rzr_lustre_MDT 2>/dev/null | 
-			awk -F\; 'BEGIN { _fail="21" } $1 ~ "MDT" && $3 == "online" { _fail="0" } END { print _fail }' ) 
-		_rsc_rzr_out_cod=$( 
+			awk -F\; 'BEGIN { _fail="11" } $1 ~ "MDT" && $3 == "online" { _fail="0" } END { print _fail }' ) 
+		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( 
 			$_rsc_rzr_cmd  -O %type";"%servers";"%status -H status -n $_rsc_rzr_lustre_OST 2>/dev/null | 
-			awk -F\; 'BEGIN { _fail="21" } $1 ~ "OST" && $3 == "online" { _fail="0" } END { print _fail }' ) 
-			)
+			awk -F\; 'BEGIN { _fail="12" } $1 ~ "OST" && $3 == "online" { _fail="0" } END { print _fail }' )
 		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$(
 			$_rsc_rzr_cmd -O %fsname";"%status -H status -n $_rsc_rzr_hostname 2>/dev/null |
 			sed '/^$/d' |
 			grep ";" |
-			awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="1" } END { print _fail }'
+			awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="13" } END { print _fail }'
 			)
 	;;
 	start|link|up|repair)
@@ -53,7 +52,7 @@ case "$1" in
                         $_rsc_rzr_cmd -O %fsname";"%status -H umount -n $_rsc_rzr_hostname 2>/dev/null | 
                         sed '/^$/d' | 
                         grep ";" | 
-                        awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="1" } END { print _fail }'
+                        awk -F\; 'BEGIN { _fail="1" } $2 != "mounted" { _fail="0" } END { print _fail }'
                         )
 	;;
 	drain|diagnose|boot|init|info|reset|reboot|content)

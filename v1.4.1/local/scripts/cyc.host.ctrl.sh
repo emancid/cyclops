@@ -143,7 +143,18 @@ host_launch()
 
 		_rsc_output=$( $_cyc_clt_rzr_rsc -a $_host_launch_act  -r $_rzr -t $_hctrl_host_stk 2>&1 >/dev/null ; echo $? )
 		[ "$_opt_show" == "yes" ] && echo $_hostname";"$_hctrl_host_stk";"$_rzr";"$_rsc_output
-		[ "$_rsc_output" != "0" ] && [ "$_rsc_output" != "21" ] && _host_check_status="1"
+
+		case "$_host_launch_act" in 
+		repair|link|up|boot) 
+			[ "$_rsc_output" != "0" ] && [ "$_rsc_output" != "21" ] && _host_check_status="1" && break
+		;;
+		unlink|content|stop|drain)
+			[ "$_rsc_output" != "0" ] && [ "$_rsc_output" != "21" ] && _host_check_status="1" && break
+		;;
+		*) 
+			[ "$_rsc_output" != "0" ] && [ "$_rsc_output" != "21" ] && _host_check_status="1"
+		;;
+		esac
 	done
 }
 
