@@ -2525,7 +2525,7 @@ config_node_sensors()
 		echo
 
 		echo -e "${_ask_sensor_list}" | awk -F\. '{ print $2 }' > $_config_path_nod/$_ask_cfg_nod_sens_fam.mon.cfg
-		chown cyclops:cyclops $_config_path_nod/$_ask_cfg_nod_sens_fam.mon.cf
+		chown cyclops:cyclops $_config_path_nod/$_ask_cfg_nod_sens_fam.mon.cfg
 
 	else
 		echo
