@@ -827,7 +827,7 @@ wiki_format()
 	### REFACTORING NEXT LINE ( awk -F\; -v _awp="$_audit_wiki_path" -v _wfp="$_wiki_audit_path" 'BEGIN { OFS=";" } $3 != "" { split ($3,a," ") ; if( system( "[ -f "_awp"/"a[2]".audit.txt ] " )  == 0 ) { $3=a[1]" {{popup>"_wfp":"a[2]".audit?[%100x700%]&[keepOpen] |"a[2]"}}" }} { print $0 }' ) ## INSERT AUDIT LINK TO NODE MON
 	echo -e "${_output}" | sort -n | cut -d';' -f2- |
 		sed '/^$/d' |
-sed -e "s/@/;$_color_title/g" -e "s/family/$_color_title&/" -e 's/^/\|\ \ /' -e 's/$/\ \ \|/' -e 's/\;/\ \ \|\ \ /g' -e "s/UPTIME/$_color_up/" -e "s/TIME/$_color_up/" -e "s/UP/$_color_up/g" -e "s/DOWN/$_color_down/g" -e "s/OK/$_color_ok/g" -e "s/FAIL/$_color_fail/g" -e 's/none//g' -e "s/UNKNOWN/$_color_unknown/g" -e "s/UNKN/$_color_unk/g" -e "s/UNLINK/$_color_mark KICKOUT/" -e "s/REPAIR/$_color_mark &/" -e "s/MARK/$_color_mark/g" -e "s/CHECKING/$_color_check/g" -e "s/DISABLE/$_color_disable/g" -e "s/LOADED/$_color_loaded/g" -e "s/DRAIN/$_color_disable MAINTENANCE/" -e "s/POWEROFF/$_color_poweroff power off/" -e "s/DEAD/$_color_dead/g" |
+sed -e "s/@/;$_color_title/g" -e "s/family/$_color_title&/" -e 's/^/\|\ \ /' -e 's/$/\ \ \|/' -e 's/\;/\ \ \|\ \ /g' -e "s/UPTIME/$_color_up/" -e "s/TIME/$_color_up/" -e "s/UP/$_color_up/g" -e "s/DOWN/$_color_down/g" -e "s/OK/$_color_ok/g" -e "s/FAIL/$_color_fail/g" -e 's/none//g' -e "s/UNKNOWN/$_color_unknown/g" -e "s/UNKN/$_color_unk/g" -e "s/UNLINK/$_color_mark KICKOUT/" -e "s/MARK/$_color_mark/g" -e "s/CHECKING/$_color_check/g" -e "s/DISABLE/$_color_disable/g" -e "s/LOADED/$_color_loaded/g" -e "s/DRAIN/$_color_disable MAINTENANCE/" -e "s/POWEROFF/$_color_poweroff power off/" -e "s/DEAD/$_color_dead/g" |
 		sed -e '/family/ i\
 ' -e '/family/ i\
 |< 100% 8% 8% 8% 8% >|'
