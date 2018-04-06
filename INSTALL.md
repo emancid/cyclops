@@ -81,7 +81,7 @@ CYCLOPS 1.4.1v INSTALL
 		cd /opt/cyclops
 		mkdir -p logs lock temp audit/data
 		cd /opt/cyclops/local
-		mkdir -p log
+		mkdir -p logs
 		cd /opt/cyclops/www/data
 		mkdir -p attic cache index locks media_attic media_meta meta tmp pages/operation/monitoring/history/noindex
 		cd /opt/cyclops/monitor/sensors 
@@ -133,6 +133,7 @@ CYCLOPS 1.4.1v INSTALL
 			git pull
 		- after git update, use:
 			rsync -vrltDuc /opt/git/cyclops/[version]/ /opt/cyclops/
+		* Recommeded first execute rsync with --dry-run option to see changes before update.
 
 	- LESS SAFETY BUT MORE CONFORTABLE  
 		- use GITHUB EXPERIMENTAL OPTION INSTALL FOR CYCLOPS
@@ -376,8 +377,8 @@ CYCLOPS 1.4.1v INSTALL
 		cyclops.sh -h
 
 	2. Check Status with:
-		cyc.stats.sh -a cyclops ## FOR CYCLOPS OPTIONS STATUS
-		cyc.stats.sh -a node  ## FOR NODE STATUS
+		cyc.status.sh -a cyclops ## FOR CYCLOPS OPTIONS STATUS
+		cyc.status.sh -a node  ## FOR NODE STATUS
 		
 	3. Generate monitoring entries 
 		- With cyclops.sh -y config ( option 19 ) or editing /etc/cyclops/monitor/monitor.cfg.template and rename it to monitor.cfg
