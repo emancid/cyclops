@@ -469,7 +469,7 @@ generate_mon_output_dash ()
 	## DASHBOARD LOG --
 
 	echo $( date +%s )" : "$_mon_date" : CYC="$_mon_cycle" : CYC_ST="$_cyclops_status" : ACT_MSG="$_active_msg" : ACT_ALE="$_active_msg_alerts" : MAIL_MSG="$_sent_msg_alerts" : USR_ADM="$_pg_usr_adm" : USR_L1="$_pg_usr_l1" : USR_L2="$_pg_usr_l2" : USR_L3="$_pg_usr_l3" : URS_OTH="$_pg_usr_other" : CYC_HOST="$_hostname >> $_sys_dashboard_log
-	echo $( date +%s )" : "$_mon_date" : CYC="$_mon_cycle" : OPER_ENV="$( echo $_nod_operative_status | grep -o "[0-9]*" )"  : ACT_WARN="$_warning_detector" : SLURM_LOAD="$_srv_slurm_load_data" : NOD_LOAD="$_nod_load" : USR_LGN="$_login_users" : MAX_UP="$_max_node" : MIN_UP="$_min_node >> $_pg_dashboard_log
+	echo $( date +%s )" : "$_mon_date" : CYC="$_mon_cycle" : OPER_ENV="$( echo $_nod_operative_status | grep -o "[0-9]*" )"  : ACT_WARN="$_warning_detector" : SLURM_LOAD="$( echo $_srv_slurm_load_data | grep -o "[0-9]*" )" : NOD_LOAD="$( echo $_nod_load | grep -o "[0-9]*" )" : USR_LGN="$_login_users" : MAX_UP="$_max_node" : MIN_UP="$_min_node >> $_pg_dashboard_log
 
 }
 

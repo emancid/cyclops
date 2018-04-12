@@ -171,6 +171,7 @@ do
                                 echo "			Tline:  Line graph"
                                 echo "			Tpie:   Pie graph"
 				echo "			value:  Include values in graph"
+				echo "		-l ,Do loop with 3 mins update life"
 				echo
 				echo "HELP:"
 				echo "	-h [|des] help, this help"
@@ -649,7 +650,7 @@ check_items()
 		while true 
 		do
 			clear
-			echo -e "LOOP $_me WITH OPTIONS : $_sh_opt"
+			echo -e "$( date +%FT%T )\nLOOP $_me\nWITH OPTIONS : $_sh_opt\n"
 			_output=$( eval exec $_me $_sh_opt )
 			echo "${_output}"
 			echo -e "\n$_end_message"
