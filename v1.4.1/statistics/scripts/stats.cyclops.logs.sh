@@ -36,7 +36,9 @@ _par_ref="empty"
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":r:d:e:t:f:n:v:w:k:xh:" _optname
+_sh_opt=$@
+
+while getopts ":r:d:e:t:f:n:v:w:k:xlh:" _optname
 do
         case "$_optname" in
 		"n")
@@ -79,6 +81,9 @@ do
 		"f")
 			_opt_file="yes"
 			_par_file=$OPTARG
+		;;
+		"l")
+			_opt_loop="yes"
 		;;
 		"x")
 			# DEBUG option
@@ -625,61 +630,81 @@ check_items()
 #               MAIN EXEC                 #
 ###########################################
 
-	### INIT DEFAULT OPTIONS ####
+	### LOOP LAUNCH ###
 
-	case "$_par_nod" in
-	cyclops)
-		echo "Not Available yet"
-		exit 1
-	;;
-	dashboard)
-		_log_file=$_pg_dashboard_log
-	;;
-	"")
-		echo -e "\nNeed Log "$_par_src"name\nUse -h for help\n" 
-		exit 1
-	;;
-	*)
-		_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
-		#_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
-	;;
-	esac 
-
-	[ -z "$_par_itm" ] && echo -e "\nNeed Log Item\nUse -h for help\n" && exit 1
-	[ -z "$_par_date_start" ]  && _par_date_start="day" && unset _par_date_end
-	[ -z "$_par_show" ] && _par_show="graph"
-
-	[ -z "$_par_typ" ] && _par_typ="per"
-	[ "$_par_typ" == "avg" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
-	[ "$_par_typ" == "acu" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
-
-	if [ "$_par_date_start" == "report" ] 
+	if [ "$_opt_loop" == "yes" ]
 	then
-		_par_date_start="hour\nday\nmonth\nyear" 
-		_opt_report="yes" 
+		_sh_opt=$( echo "${_sh_opt}" | sed 's/\-l//' )
+		_me=$( basename "$0" )
+		_end_message="\nPush Ctrl+C to End Loop"
+
+		while true 
+		do
+			clear
+			echo "OPTIONS : "$_sh_opt
+			$_me $_sh_opt
+			echo -e "$_end_message"
+			sleep 3m
+
+		done
+			
+	else
+		### INIT DEFAULT OPTIONS ####
+
+		case "$_par_nod" in
+		cyclops)
+			echo "Not Available yet"
+			exit 1
+		;;
+		dashboard)
+			_log_file=$_pg_dashboard_log
+		;;
+		"")
+			echo -e "\nNeed Log "$_par_src"name\nUse -h for help\n" 
+			exit 1
+		;;
+		*)
+			_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
+			#_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
+		;;
+		esac 
+
+		[ -z "$_par_itm" ] && echo -e "\nNeed Log Item\nUse -h for help\n" && exit 1
+		[ -z "$_par_date_start" ]  && _par_date_start="day" && unset _par_date_end
+		[ -z "$_par_show" ] && _par_show="graph"
+
+		[ -z "$_par_typ" ] && _par_typ="per"
+		[ "$_par_typ" == "avg" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
+		[ "$_par_typ" == "acu" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
+
+		if [ "$_par_date_start" == "report" ] 
+		then
+			_par_date_start="hour\nday\nmonth\nyear" 
+			_opt_report="yes" 
+		fi
+
+		for _par_date_start in $( echo -e "$_par_date_start" ) 
+		do
+
+			init_date
+
+			### LAUNCH ###
+
+			#if [ -f "$_log_file" ] 
+			#then
+				if [ "$_par_itm" == "help" ]
+				then
+					check_items
+				else
+					calc_data
+					format_output
+				fi
+			#else
+			#	echo "Log File not exits, check $_par_nod log"
+			#	exit 1
+			#fi
+			
+			[ "$_opt_debug" == "yes" ] && debug
+
+		done
 	fi
-
-	for _par_date_start in $( echo -e "$_par_date_start" ) 
-	do
-
-		init_date
-
-		### LAUNCH ###
-
-		#if [ -f "$_log_file" ] 
-		#then
-			if [ "$_par_itm" == "help" ]
-			then
-				check_items
-			else
-				calc_data
-				format_output
-			fi
-		#else
-		#	echo "Log File not exits, check $_par_nod log"
-		#	exit 1
-		#fi
-		
-		[ "$_opt_debug" == "yes" ] && debug
-
-	done
