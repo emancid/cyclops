@@ -36,8 +36,6 @@ _par_ref="empty"
 #              PARAMETERs                 #
 ###########################################
 
-_sh_opt=$@
-
 while getopts ":r:d:e:t:f:n:v:w:k:xlh:" _optname
 do
         case "$_optname" in
@@ -45,42 +43,51 @@ do
 			# field node [ FACTORY NODE RANGE ] 
 			_opt_nod="yes"
 			_par_nod=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
                 "e")
 			# date end
                         _opt_date_end="yes"
                         _par_date_end=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
                 ;;
                 "d")
 			# date start
                         _opt_date_start="yes"
                         _par_date_start=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
 		"v")
 			# format output
 			_opt_show="yes"
 			_par_show=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
 		"s")
 			# log data source
 			_opt_src="yes"
 			_par_src=$OPTARG	
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
 		"k")
 			_opt_ref="yes"
 			_par_ref=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
 		"r")
 			_opt_itm="yes"
 			_par_itm=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" '"$OPTARG"'"
 		;;
 		"t")
 			_opt_typ="yes"
 			_par_typ=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
 		"f")
 			_opt_file="yes"
 			_par_file=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
 		"l")
 			_opt_loop="yes"
@@ -92,6 +99,7 @@ do
 		"w")
                         _opt_vwiki="yes"
                         _par_vwiki=$OPTARG
+			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 
 			_opt_hidden=$( echo $_par_vwiki | tr ',' '\n' | awk '$0 ~ "hidden" { print "yes" }' )
                         _opt_with=$( echo $_par_vwiki | tr ',' '\n' | grep "^W" | sed 's/W//' )
@@ -634,16 +642,17 @@ check_items()
 
 	if [ "$_opt_loop" == "yes" ]
 	then
-		_sh_opt=$( echo "${_sh_opt}" | sed 's/\-l//' )
+		_sh_opt=$( echo "$_sh_opt" )
 		_me=$( basename "$0" )
-		_end_message="\nPush Ctrl+C to End Loop"
+		_end_message="Push Ctrl+C to End Loop"
 
 		while true 
 		do
 			clear
-			echo "OPTIONS : "$_sh_opt
-			$_me $_sh_opt
-			echo -e "$_end_message"
+			echo -e "LOOP $_me WITH OPTIONS : $_sh_opt"
+			_output=$( eval exec $_me $_sh_opt )
+			echo "${_output}"
+			echo -e "\n$_end_message"
 			sleep 3m
 
 		done
