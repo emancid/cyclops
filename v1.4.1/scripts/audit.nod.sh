@@ -1168,9 +1168,9 @@ show_data()
                         echo "${_output_bitacora}"
                 ;;
                 eventlog) 
-                        [ "$_par_filter" == "none" ] || [[ $_par_filter == *"activity"* ]] && [ ! "$_output_activity" == "NO ACTIVITY DATA" ] && echo "${_output_activity}" | awk -F\; 'BEGIN { OFS=";" } { $1=$1";"strftime("%F;%T",$1) ; print $0 }'
-                        [ "$_par_filter" == "none" ] || [[ $_par_filter == *"bitacora"* ]] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}" | awk -F\; 'BEGIN { OFS=";" } { $1=$1";"strftime("%F;%T",$1) ; print $0 }'
-                        [ "$_check_par_filter" == "1" ] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}" | awk -F\; 'BEGIN { OFS=";" } { $1=$1";"strftime("%F;%T",$1) ; print $0 }'
+                        [ "$_par_filter" == "none" ] || [[ $_par_filter == *"activity"* ]] && [ ! "$_output_activity" == "NO ACTIVITY DATA" ] && echo "${_output_activity}"
+                        [ "$_par_filter" == "none" ] || [[ $_par_filter == *"bitacora"* ]] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}"
+                        [ "$_check_par_filter" == "1" ] && [ ! "$_output_bitacora" == "NO BITACORA DATA" ] && echo "${_output_bitacora}"
                 ;;
                 debug)  
                         echo "${_output_settings}"
