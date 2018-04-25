@@ -87,7 +87,8 @@ do
 				echo "-v [option] Show formated results"
 				echo "		human: human readable"
 				echo "		wiki:  wiki format readable"
-				echo "		commas: excell readable"
+				echo "		commas: excel readable"
+				echo "		hcol: human readable column sorted"
 				exit 1	
 			fi
 		;;
@@ -128,6 +129,7 @@ do
 				echo "          human: human readable"
 				echo "          wiki:  wiki format readable"
 				echo "          commas: excell readable"
+				echo "		hcol: human readable column sorted"
 				echo "-h [|des]	help is help"
 				echo "		des: Detailed Command help"
 				echo
@@ -923,6 +925,15 @@ case $_par_show in
 		echo -e "${_output}" | sort -n -t\; | cut -d';' -f2- | tr '@' ';' | column -s\; -t | sed -e '/^$/d' -e '/family/ i\
 '
 		echo
+	;;
+	"hcol")
+		if [ -z "${_ia_header}" ]
+		then
+			echo "IA ANALISIS REPORT:"
+			echo -e "${_ia_header}"
+			echo -e "${_ia_alert}" | sed -e 's/--//' -e 's/@/;/g'
+		fi
+		echo -e "${_output}" | sort -n | cut -d';' -f2- | tr '@' ';' | sed -e '/^$/d' | awk -F\; 'BEGIN { _s=0 } $1 == "family" { _s=1 ; split($0,h,";") } $1 != "family" && _s=1 { for ( i in h ) { h[i]=h[i]";"$i }} END { for ( a in h ) { print a";"h[a] }}' | sort -n -t\; | cut -d';' -f2- | column -t -s\; 
 	;;
 	"wiki")
 		wiki_format
