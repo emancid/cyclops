@@ -259,7 +259,7 @@ do
 				echo "	bitacora: Custom Info about node"
 				echo "	settings: Audit Soft and Hard Info"  
 				echo "	resume: Basic Node Info"
-				echo "	.. you can add more than option separated with commas"
+				echo "	.. you can add more than option separated by commas"
 				echo "-g [option] generate required audit data"
 				echo "	data: host audit data from diferent sources"
 				echo "	wiki: generate wiki pages from existing data files"
