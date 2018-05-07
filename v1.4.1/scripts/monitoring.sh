@@ -335,7 +335,7 @@ generate_mon_output_dash ()
 	_audit_last_events=$( $_script_path/audit.nod.sh -v eventlog | awk -F\; '$4 == "ALERT" ||  ( $4 == "REACTIVE" && $6 !~ /REPAIR|OK/ ) { print $0 }' | 
 				sort -n -t\; | 
 				tail -n 30 | 
-				awk -F\; -v _cd="$_color_down" -v _cf="$_color_fail"  -v _cr="$_color_rzr" -v _cc="$_color_fail" -v _cm="$_color_mark" -v _cu="$_color_up" -v _ap="$_wiki_audit_path" '
+				awk -F\; -v _cd="$_color_down" -v _cf="$_color_fail"  -v _cr="$_color_rzr" -v _cc="$_color_fail" -v _cm="$_color_mark" -v _cu="$_color_up" -v _ap="$_wiki_audit_path" -v _uk="$_color_unk" '
                 BEGIN {
                         _st=systime()-86400*3
                 } { 
@@ -352,6 +352,7 @@ generate_mon_output_dash ()
                         if ( $6 == "DIAGNOSE" ) { $6=_cm" "$6 }
                         if ( $6 == "UP" ) { $6=_cu" "$6 }
                         if ( $6 == "CONTENT" ) { $6=_cc" "$6 }
+			if ( $6 == "UNKNOWN" ) { $6=_uk" "$6 }
                         if ( $4 == "ALERT" ) { $4=_cf" "$4 }
                         if ( $4 == "REACTIVE" ) { $4=_cr" "$4 }
                         print "|  "_dp"  |  "d[2]"  |  [["_ap":"$3".audit|"$3"]]  |  "$4"  |  "$5"  |  "$6"  |" 
