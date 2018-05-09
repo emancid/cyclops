@@ -39,13 +39,14 @@ ha_check()
                 then
                         if [ "$_sh_action" == "daemon" ]
                         then
+				echo "DEBUG: [$_sh_action]" 
                                 exit 0
                         else
-				echo "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : TRYING REMOTE EXEC : [$_ha_master_host]" 
+				echo "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : TRYING REMOTE EXEC : [$_ha_master_host] : DEBUG [$_sh_action]" 
 
-                                ssh $_ha_master_host $_parent_cmd
+                                ssh -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_ha_master_host $_parent_cmd
                                 _exit_code=$?
-                                [ "$_exit_code" != "0" ] && echo "ERROR ($_exit_code): please connect to $_ha_master_host to exec the command"
+                                [ "$_exit_code" != "0" ] && echo -e "ERROR [$_ha_master_host] ($_exit_code): please connect to $_ha_master_host to exec the command\n\tCMD:[$_parent_cmd]"
                                 exit $?
                         fi
 		else
@@ -58,7 +59,7 @@ ha_check()
                         [ "$_sh_action" != "daemon" ] && echo -e "WARNING: HA CONFIG ON POSIBLE SPLIT BRAIN SITUATION force MASTER on UPDATER node" 
                         exit 1
 		else 
-			echo -e "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : LOCAL EXEC : [$_hostname]"
+			echo -e "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : LOCAL EXEC : [$_hostname] : DEBUG [$_sh_action]"
                 fi
         fi
 }

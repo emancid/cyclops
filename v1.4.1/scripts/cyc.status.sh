@@ -30,11 +30,11 @@
 	_sh_color_bolt='\033[1m'
 	_sh_color_nformat='\033[0m'
 
-	_command_opts=$( echo "$@" | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^m/ ) { gsub(/^[a-z] /,"&@",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' )
+	_command_opts=$( echo "~$@~" | tr -d '~' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' ) 
 	_command_name=$( basename "$0" )
 	_command_dir=$( dirname "${BASH_SOURCE[0]}" )
 	_command="$_command_dir/$_command_name $_command_opts"
-
+	
 	[ -f "/etc/cyclops/global.cfg" ] && source /etc/cyclops/global.cfg || _exit_code="111"
 
 	[ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"

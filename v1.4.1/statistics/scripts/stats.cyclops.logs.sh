@@ -22,14 +22,36 @@ _config_path="/etc/cyclops"
 if [ -f $_config_path/global.cfg ]
 then
         source $_config_path/global.cfg
-	source $_color_cfg_file
+	[ -f "$_color_cfg_file" ] && source $_color_cfg_file
 
-	source $_libs_path/node_ungroup.sh
+	[ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
+	[ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
 else
         echo "Global config don't exits" 
         exit 1
 fi
 
+        _command_opts=$( echo "$@" | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^m/ ) { gsub(/^[a-z] /,"&@",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' )
+        _command_name=$( basename "$0" )
+        _command_dir=$( dirname "${BASH_SOURCE[0]}" )
+        _command="$_command_dir/$_command_name $_command_opts"
+
+        case "$_exit_code" in
+        111)
+                echo "Main Config file doesn't exists, please revise your cyclops installation"
+                exit $_exit_code 
+        ;;
+        112)
+                echo "HA Control Script doesn't exists, please revise your cyclops installation"
+                exit $_exit_code 
+        ;;
+        11[3-4])
+                echo "Necesary libs files doesn't exits, please revise your cyclops installation"
+                exit $_exit_code 
+        ;;
+        esac
+
+_cyclops_ha=$( awk -F\; '$1 == "CYC" && $2 == "0006" { print $4}' $_sensors_sot )
 _par_ref="empty"
 
 ###########################################
@@ -115,7 +137,7 @@ do
 			;;
 			"*")
 				echo "ERR: Use -h for help"
-				exit 1
+				exit 0
 			;;
 			esac
 		;;
@@ -180,12 +202,12 @@ do
 				exit 0
 			else
 				echo "ERR: Use -h for help"
-				exit 1
+				exit 0 
 			fi
 		;;
 		"*")
 			echo "ERR: Use -h for help"
-			exit 1
+			exit 0 
 		;;
 	esac
 done
@@ -639,6 +661,10 @@ check_items()
 #               MAIN EXEC                 #
 ###########################################
 
+	############### HA CHECK ##################
+
+	[ "$_cyclops_ha" == "ENABLED" ] && ha_check $_command
+
 	### LOOP LAUNCH ###
 
 	if [ "$_opt_loop" == "yes" ]
@@ -664,14 +690,14 @@ check_items()
 		case "$_par_nod" in
 		cyclops)
 			echo "Not Available yet"
-			exit 1
+			exit 41
 		;;
 		dashboard)
 			_log_file=$_pg_dashboard_log
 		;;
 		"")
 			echo -e "\nNeed Log "$_par_src"name\nUse -h for help\n" 
-			exit 1
+			exit 42 
 		;;
 		*)
 			_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
@@ -679,7 +705,7 @@ check_items()
 		;;
 		esac 
 
-		[ -z "$_par_itm" ] && echo -e "\nNeed Log Item\nUse -h for help\n" && exit 1
+		[ -z "$_par_itm" ] && echo -e "\nNeed Log Item\nUse -h for help\n" && exit 43 
 		[ -z "$_par_date_start" ]  && _par_date_start="day" && unset _par_date_end
 		[ -z "$_par_show" ] && _par_show="graph"
 
@@ -718,3 +744,5 @@ check_items()
 
 		done
 	fi
+
+exit 0
