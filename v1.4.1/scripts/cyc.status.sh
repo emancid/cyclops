@@ -30,7 +30,7 @@
 	_sh_color_bolt='\033[1m'
 	_sh_color_nformat='\033[0m'
 
-	_command_opts=$( echo "~$@~" | tr -d '~' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' ) 
+	_command_opts=$( echo "~$@~" | tr -d '~' | tr '@' '#' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' | tr '#' '@' ) 
 	_command_name=$( basename "$0" )
 	_command_dir=$( dirname "${BASH_SOURCE[0]}" )
 	_command="$_command_dir/$_command_name $_command_opts"
@@ -87,17 +87,6 @@ do
 			_opt_node="yes"
 			_par_node=$OPTARG
 
-			_ctrl_grp=$( echo $_par_node | grep @ 2>&1 >/dev/null ; echo $? )
-
-                        if [ "$_ctrl_grp" == "0" ]
-                        then
-                                _par_node_grp=$( echo "$_par_node" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
-                                _par_node=$( echo $_par_node | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
-                                _par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
-                                _par_node_grp=$( node_group $_par_node_grp )
-                                _par_node=$_par_node""$_par_node_grp
-                                [ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
-                        fi
 
 		;;
 		"d")
@@ -1058,6 +1047,25 @@ init_special_opts()
 [ "$_par_act" == "all" ] && _par_act="slurm,cyclops,audit,critical,node"
 [ -z "$_par_typ" ] && _par_type="status"
 [ -z "$_par_dat" ] && _par_dat="day"
+
+
+####====== FILTER PROCESSING =======#####
+
+
+if [ "$_opt_nod" == "yes" ]
+then
+	_ctrl_grp=$( echo $_par_node | grep @ 2>&1 >/dev/null ; echo $? )
+
+	if [ "$_ctrl_grp" == "0" ]
+	then
+		_par_node_grp=$( echo "$_par_node" | tr ',' '\n' | grep ^@ | sed 's/@//g' | tr '\n' ',' )
+		_par_node=$( echo $_par_node | tr ',' '\n' | grep -v ^@ | tr '\n' ',' )
+		_par_node_grp=$( awk -F\; -v _grp="$_par_node_grp" '{ split (_grp,g,",") ; for ( i in g ) {  if ( $2 == g[i] || $3 == g[i] || $4 == g[i] ) { _n=_n""$2","  }}} END { print _n }' $_type )
+		_par_node_grp=$( node_group $_par_node_grp )
+		_par_node=$_par_node""$_par_node_grp
+		[ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
+	fi
+fi
 
 ################ LAUNCHING ###################
 
