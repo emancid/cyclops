@@ -1052,7 +1052,7 @@ init_special_opts()
 ####====== FILTER PROCESSING =======#####
 
 
-if [ "$_opt_nod" == "yes" ]
+if [ "$_opt_node" == "yes" ]
 then
 	_ctrl_grp=$( echo $_par_node | grep @ 2>&1 >/dev/null ; echo $? )
 
