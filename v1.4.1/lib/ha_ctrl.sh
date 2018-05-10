@@ -42,24 +42,24 @@ ha_check()
 				echo "DEBUG: [$_sh_action]" 
                                 exit 0
                         else
-				echo "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : TRYING REMOTE EXEC : [$_ha_master_host] : DEBUG [$_sh_action]" 
+				echo "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : TRYING REMOTE EXEC : [$_ha_master_host] : DEBUG [$_sh_action]" >&2 
 
                                 ssh -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_ha_master_host $_parent_cmd
                                 _exit_code=$?
-                                [ "$_exit_code" != "0" ] && echo -e "ERROR [$_ha_master_host] ($_exit_code): please connect to $_ha_master_host to exec the command\n\tCMD:[$_parent_cmd]"
+                                [ "$_exit_code" != "0" ] && echo -e "ERROR [$_ha_master_host] ($_exit_code): please connect to $_ha_master_host to exec the command\n\tCMD:[$_parent_cmd]" >&2
                                 exit $?
                         fi
 		else
-			echo -e "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : ABORT EXEC, POSIBLE SPLIT BRAIN"
+			echo -e "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : ABORT EXEC, POSIBLE SPLIT BRAIN" >&2
 			exit 1
                 fi
         else
                 if [ "$_ha_role_me" == "SLAVE" ]
                 then
-                        [ "$_sh_action" != "daemon" ] && echo -e "WARNING: HA CONFIG ON POSIBLE SPLIT BRAIN SITUATION force MASTER on UPDATER node" 
+                        [ "$_sh_action" != "daemon" ] && echo -e "WARNING: HA CONFIG ON POSIBLE SPLIT BRAIN SITUATION force MASTER on UPDATER node" >&2 
                         exit 1
 		else 
-			echo -e "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : LOCAL EXEC : [$_hostname] : DEBUG [$_sh_action]"
+			echo -e "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : LOCAL EXEC : [$_hostname] : DEBUG [$_sh_action]" >&2
                 fi
         fi
 }

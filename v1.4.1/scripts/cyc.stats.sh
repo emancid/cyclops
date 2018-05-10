@@ -278,9 +278,9 @@ cyclops_global_calc()
 	_cyc_iss_global_g=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_date_start -f $_date_end -v wiki -g $_date_filter -n $_par_nod -e issues )
 	_cyc_rea_global_g=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_date_start -f $_date_end -v wiki -g $_date_filter -n $_par_nod -c -e reactive )
 
-	_cyc_ava_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r OPER_ENV -d $_date_start -e $_date_end -v wiki -t per -w hidden,Tbar,value )
-	_cyc_usr_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r USR_LGN -d $_date_start -e $_date_end -v wiki -t max -w hidden,Tline,value )
-	_cyc_cpu_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r NOD_LOAD -d $_date_start -e $_date_end -v wiki -t per -w hidden,Tline,value )
+	_cyc_ava_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r OPER_ENV -d $_date_start -e $_date_end -v wiki -t per -w hidden,Tbar,value 2>/dev/null )
+	_cyc_usr_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r USR_LGN -d $_date_start -e $_date_end -v wiki -t max -w hidden,Tline,value 2>/dev/null )
+	_cyc_cpu_global_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r NOD_LOAD -d $_date_start -e $_date_end -v wiki -t per -w hidden,Tline,value 2>/dev/null )
 
 	#### TREND CALC ####
 
@@ -988,7 +988,7 @@ slurm_init()
 
 slurm_main()
 {
-	_slm_cyc_graph_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r SLURM_LOAD -d $_date_start -e $_date_end -v wiki -t per -w W850 ) 
+	_slm_cyc_graph_g=$( $_stat_extr_path/stats.cyclops.logs.sh -n dashboard -r SLURM_LOAD -d $_date_start -e $_date_end -v wiki -t per -w W850 2>/dev/null ) 
 	_slm_global_output=$( slurm_global_print )
 
 	for _slurm_env_def in $( cat $_config_path_sta/$_slurm_cfg_env | awk -F\; '$1 ~ "[0-9]+" { print $0 }')
