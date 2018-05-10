@@ -68,7 +68,7 @@
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":a:n:t:d:o:v:h:" _optname
+while getopts ":a:n:t:d:o:p:v:h:" _optname
 do
         case "$_optname" in
 		"a")
@@ -96,6 +96,10 @@ do
 		"v")
 			_opt_shw="yes"
 			_par_shw=$OPTARG
+		;;
+		"p")
+			_opt_path="yes"
+			_par_path=$OPTARG
 		;;
                 "h")
                         _opt_help="yes"
@@ -252,6 +256,12 @@ critical_env()
 
 node_real_status()
 {
+	if [ "$_opt_path" == "yes" ] 
+	then
+		[ -f "$_mon_history_path/$_par_path" ] && _mon_nod_file=$_mon_history_path/$_par_path || _mon_nod_file=$_mon_path/monnod.txt
+	else
+		_mon_nod_file=$_mon_path/monnod.txt
+	fi
 
 	_critical_st_simp=$( $_tool_path/approved/test.productive.env.sh -t pasive -v simple 2>/dev/null )
 	_critical_st_color=$( echo "$_critical_st_simp" | awk -F\; -v _g="$_sh_color_green" -v _f="$_sh_color_yellow" -v _r="$_sh_color_red" '
@@ -277,13 +287,13 @@ node_real_status()
 		_node_list=$( cat $_type | grep -v "#" )
 	fi
 
-	_node_last_up=$( [ -f "$_mon_path/monnod.txt" ] && /usr/bin/stat -c %Y $_mon_path/monnod.txt || echo 0 )
+	_node_last_up=$( [ -f "$_mon_nod_file" ] && /usr/bin/stat -c %Y $_mon_nod_file || echo 0 )
 	_node_last_st=$( echo "$_node_last_up" | awk -v _g="$_sh_color_green" -v _r="$_sh_color_red" 'BEGIN { _now=systime() } { if ( $1 < _now-300 )  { _s=_r } else { _s=_g }} END { print _s }' ) 
 
 	_node_last_up=$( date -d @$_node_last_up +%Y-%m-%d\ %H:%M:%S )
 
 	_node_real_status=$( 
-		cat $_mon_path/monnod.txt 2>/dev/null | 
+		cat $_mon_nod_file 2>/dev/null | 
 		tr '|' ';' | 
 		grep ";" | 
 		sed -e 's/\ *;\ */;/g' -e '/^$/d' -e '/:wiki:/d' -e "s/$_color_disable/DISABLE/g" -e "s/$_color_unk/UNK/g" -e "s/$_color_up/UP/g" -e "s/$_color_down/DOWN/g" -e "s/$_color_mark/MARK/g" -e "s/$_color_fail/FAIL/g" -e "s/$_color_check/CHECK/g" -e "s/$_color_ok/OK/g" -e "s/$_color_disable/DISABLE/" -e "s/$_color_title//g" -e "s/$_color_header//g" -e 's/^;//' -e 's/;$//' -e '/</d' -e 's/((.*))//' -e '/:::/d' | 
@@ -326,6 +336,7 @@ node_real_status()
 				} else {
 					split(_ns,st," ") ; 
 					_ns=st[2] ;
+					if ( $2 ~ "DISABLE" && _ns ~ "MAINTENANCE" ) { _ns="POWER_OFF" } ;
 				}
 				print _ns";"n[2]";"_wn";"_sens ; 
 				_sens="" ; 
@@ -337,7 +348,7 @@ node_real_status()
 		_node_nam=$( echo $_node_data | cut -d';' -f2 )
 		_node_grp=$( echo $_node_data | cut -d';' -f4 )
 		_node_fam=$( echo $_node_data | cut -d';' -f3 )
-		_node_mng=$( echo $_node_data | cut -d';' -f7 )
+		[ "$_opt_path" == "yes" ] && _node_mng="n/a" || _node_mng=$( echo $_node_data | cut -d';' -f7 )
 
 		_node_std=$( echo "${_node_real_status}" | awk -F\; -v _n="$_node_nam" '$2 == _n { print $1";"$3";"$4 }') 
 
