@@ -6,6 +6,15 @@ PATH=${PATH}":"$_script_path":"$_tool_path"/approved"
 PS1="[\D{%Y-%m-%dT%H:%M:%S}][\u@\h][\w]\\$ "
 export PATH
 
+#PS1="[\D{%Y-%m-%dT%H:%M:%S}][\u@\h][\w]\\$ "
+
+if [ $( whoami ) == "root" ]
+then
+        PS1="[\D{%Y-%m-%dT%H:%M:%S}][\\033[31m\u\\033[0m@\\033[31m\h\\033[0m][\w]\\$ "
+else
+        PS1="[\D{%Y-%m-%dT%H:%M:%S}][\\033[32m\u\\033[0m@\\033[31m\h\\033[0m][\w]\\$ "
+fi
+
 #### SPECIFIC DISTRO THINGS! ####
 
 DISTRO=$( lsb_release -i | cut -d':' -f2 | tr '[:upper:]' '[:lower:]' | grep -o "[a-z]*" )

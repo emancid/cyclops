@@ -24,13 +24,7 @@
 	IFS="
 	"
 
-	_sh_color_green='\033[32m'
-	_sh_color_red='\033[31m'
-	_sh_color_yellow='\033[33m'
-	_sh_color_bolt='\033[1m'
-	_sh_color_nformat='\033[0m'
-
-	_command_opts=$( echo "~$@~" | tr -d '~' | tr '@' '#' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' | tr '#' '@' ) 
+	_command_opts=$( echo "~$@~" | tr -d '~' | tr '@' '#' | sed 's/-\([0-9]*\)/~\1/g' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' | tr '#' '@'  | tr '~' '-' ) 
 	_command_name=$( basename "$0" )
 	_command_dir=$( dirname "${BASH_SOURCE[0]}" )
 	_command="$_command_dir/$_command_name $_command_opts"
@@ -41,6 +35,7 @@
 	[ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="113"
 	[ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
 	[ -f "$_libs_path/init_date.sh" ] && source $_libs_path/init_date.sh || _exit_code="115"
+	[ -f "$_color_cfg_file" ] && source $_color_cfg_file || _exit_code="116"
 
 	source $_color_cfg_file
 
@@ -56,6 +51,9 @@
 	11[3-5])
 		echo "Necesary libs files doesn't exits, please revise your cyclops installation"
 		exit 1
+	;;
+	116)
+		echo "WARNING: Color file doesn't exits, you see data in black"
 	;;
 	esac
 
@@ -293,7 +291,7 @@ node_real_status()
 		_node_list=$( awk -F\; -v _nl="$_node_list" '
 			BEGIN { 
 				split (_nl,n,",") 
-			} $1 !~ "#" { 
+			} $1 !~ "|" { 
 				for ( i in n ) { if ( $2 == n[i] ) { print $0 } }
 			}' $_type 
 			)
@@ -478,10 +476,10 @@ slurm_activity()
 						if ( b[1] > 50 ) { _tp=_y""b[1]"%"_n ; hp=a[1] } ; 
 						if ( b[1] > 75 ) { _tp=_r""b[1]"%"_n ; hp=_r""a[1]_n } ; 
 						for (i=1;i<=b[1];i++) { 
-							if ( i == 1 ) { _t=_g"#" } ;
+							if ( i == 1 ) { _t=_g"|" } ;
 							if ( i == y[1] ) { _t=_t""_n""_y } ;
 							if ( i == r[1] ) { _t=_t""_n""_r } ;
-							_t=_t"#" ; 
+							_t=_t"|" ; 
 							if ( i == b[1] ) { _t=_t""_n } ;
 							} ; 
 						if ( _do != $1 ) { _do=$1 ; _pdo=_do } else { _pdo=" " } ; 
@@ -545,8 +543,8 @@ system_avail()
 						if ( b[1] < 65 ) { _tp=_r""b[1]"%"_n ; hp=a[1] ; _ln=_r } ;
 						if ( b[1] >= 90 ) { _tp=_g""b[1]"%"_n ; hp=a[1] ; _ln=_g } ; 
 						for (i=1;i<=b[1];i++) { 
-							if ( i == 1 ) { _t=_ln"#" } ;
-							_t=_t"#" ; 
+							if ( i == 1 ) { _t=_ln"|" } ;
+							_t=_t"|" ; 
 							if ( i == b[1] ) { _t=_t""_n } ;
 							} ; 
 						if ( _do != $1 ) { _do=$1 ; _pdo=_do } else { _pdo=" " } ; 
@@ -617,10 +615,10 @@ system_use()
 						if ( b[1] >= 50 ) { _tp=_y""b[1]"%"_n ; hp=a[1] } ; 
 						if ( b[1] >= 75 ) { _tp=_r""b[1]"%"_n ; hp=_r""a[1]_n } ; 
 						for (i=1;i<=b[1];i++) { 
-							if ( i == 1 ) { _t=_g"#" } ;
+							if ( i == 1 ) { _t=_g"|" } ;
 							if ( i == y[1] ) { _t=_t""_n""_y } ;
 							if ( i == r[1] ) { _t=_t""_n""_r } ;
-							_t=_t"#" ; 
+							_t=_t"|" ; 
 							if ( i == b[1] ) { _t=_t""_n } ;
 							} ; 
 						if ( _do != $1 ) { _do=$1 ; _pdo=_do } else { _pdo=" " } ; 
@@ -703,7 +701,7 @@ slurm_consumption()
 							if ( b[1] > 50 ) { _tp=_y""b[1]"%"_n ; hp=a[2]" h" } ; 
 							if ( b[1] > 75 ) { _tp=_r""b[1]"%"_n ; hp=_r""a[2]" h"_n } ; 
 							for (i=1;i<=b[1];i++) { 
-								if ( i == 1 ) { _t=_g"#" } else { _t=_t"#" } ;
+								if ( i == 1 ) { _t=_g"|" } else { _t=_t"|" } ;
 								if ( i == y[1] ) { _t=_t""_n""_y } ;
 								if ( i == r[1] ) { _t=_t""_n""_r } ;
 								if ( i == b[1] ) { _t=_t""_n } ;
@@ -808,7 +806,7 @@ slurm_use()
 							if ( b[1] > 50 ) { _tp=_y""b[1]"%"_n ; hp=a[2]" h" } ; 
 							if ( b[1] > 75 ) { _tp=_r""b[1]"%"_n ; hp=_r""a[2]" h"_n } ; 
 							for (i=1;i<=b[1];i++) { 
-								if ( i == 1 ) { _t=_g"#" } else { _t=_t"#" } ;
+								if ( i == 1 ) { _t=_g"|" } else { _t=_t"|" } ;
 								if ( i == y[1] ) { _t=_t""_n""_y } ;
 								if ( i == r[1] ) { _t=_t""_n""_r } ;
 								if ( i == b[1] ) { _t=_t""_n } ;

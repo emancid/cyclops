@@ -31,7 +31,7 @@ else
         exit 1
 fi
 
-        _command_opts=$( echo "$@" | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^m/ ) { gsub(/^[a-z] /,"&@",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' )
+	_command_opts=$( echo "~$@~" | tr -d '~' | tr '@' '#' | sed 's/-\([0-9]*\)/~\1/g' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' | tr '#' '@'  | tr '~' '-' ) 
         _command_name=$( basename "$0" )
         _command_dir=$( dirname "${BASH_SOURCE[0]}" )
         _command="$_command_dir/$_command_name $_command_opts"
@@ -340,7 +340,7 @@ format_output()
                                                         if ( i == 1 ) { _t=_g } ;
                                                         if ( i == y[1] ) { _t=_t""_n""_y } ;
                                                         if ( i == r[1] ) { _t=_t""_n""_r } ;
-                                                        _t=_t"#" ; 
+                                                        _t=_t"|" ;  
                                                         if ( i == b[1] ) { _t=_t""_n } ;
                                                         } ; 
                                                 if ( _do != $1 ) { _do=$1 ; _pdo=_do } else { _pdo=" " } ; 

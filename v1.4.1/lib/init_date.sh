@@ -58,7 +58,7 @@ init_date()
                 _date_tse=$_date_tsn
 
                 _date_filter=$_date_start
-                _date_start=$( date -d @$_ts_date +%Y-%m-%d )
+                _date_start=$( date -d @$_date_tsb +%Y-%m-%d )
                 _date_end=$( date +%Y-%m-%d )
         ;;
         week|"")
@@ -85,7 +85,7 @@ init_date()
                 _date_tse=$_date_tsn
 
                 _date_filter=$_date_start
-                _date_start=$( date -d @$_ts_date +%Y-%m-%d )
+                _date_start=$( date -d @$_date_tsb +%Y-%m-%d )
                 _date_end=$( date +%Y-%m-%d )
         ;;
         year)
