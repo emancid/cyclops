@@ -40,6 +40,7 @@
 	[ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
 	[ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="113"
 	[ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
+	[ -f "$_libs_path/init_date.sh" ] && source $_libs_path/init_date.sh || _exit_code="115"
 
 	source $_color_cfg_file
 
@@ -52,7 +53,7 @@
 		echo "HA Control Script doesn't exists, please revise your cyclops installation"
 		exit 1
 	;;
-	11[3-4])
+	11[3-5])
 		echo "Necesary libs files doesn't exits, please revise your cyclops installation"
 		exit 1
 	;;
@@ -68,7 +69,7 @@
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":a:n:t:d:o:p:v:h:" _optname
+while getopts ":a:n:t:d:e:o:p:v:h:" _optname
 do
         case "$_optname" in
 		"a")
@@ -90,8 +91,12 @@ do
 
 		;;
 		"d")
-			_opt_dat="yes"
-			_par_dat=$OPTARG
+			_opt_date_start="yes"
+			_par_date_start=$OPTARG
+		;;
+		"e")
+			_opt_date_end="yes"
+			_par_date_end=$OPTARG
 		;;
 		"v")
 			_opt_shw="yes"
@@ -111,6 +116,13 @@ do
                                                 echo "  Default path: $( dirname "${BASH_SOURCE[0]}" )"
                                                 echo "  Global config path : $_config_path"
                                                 echo "          Global config file: global.cfg"
+						echo "	Cyclops dependencies:"
+						echo "		Cyclops libs: $_libs_path"
+						echo "		Cyclops Modules:"
+						echo "			$_script_path/audit.nod.sh"
+						echo "			$_stat_path/scripts/stats.slurm.total.jobs.sh"
+						echo "		Tools:"
+						echo "			$_tool_path/approved/test.productive.env.sh"
                                                 echo
 
                                                 exit 0
@@ -138,7 +150,7 @@ do
 				echo "	system: Show data from system source"
 				echo "	-t [status|use] Type of information"
 				echo
-				echo "-d [option] date range"
+				echo "-d [option] date start or date range"
 				echo "	*[0-9]hour: last n hours before actual time"
 				echo "	day: last 24 hours"
 				echo "	week: last seven days"
@@ -146,6 +158,8 @@ do
 				echo "	year: last 365 days"
 				echo "	[Mmm]-[YYYY]: to select specific month"
 				echo "	[YYYY]: to select specific year"
+				echo "	[YYYY-MM-DD]: date start format"
+				echo "-e [YYYY-MM-DD] end date, only works with date start format"
 				echo 
 				echo "-n [node|node range] node filter"
 				echo "	You can use @[group or family name] to define range node"
@@ -229,7 +243,7 @@ audit_status()
 	echo -e $_sh_color_bolt"AUDIT: STATUS"$_sh_color_nformat
 	echo -e $_sh_color_bolt"-------------"$_sh_color_nformat
 	echo
-	[ ! -z "$_par_dat" ] && echo -e "FILTER: Date Range: $_par_dat\n" 
+	[ ! -z "$_par_date_start" ] && echo -e "FILTER: Date Range: $_par_date_start\n" 
 	echo "BITACORA DATA :"
 	[ -z "$_audit_output" ] && echo "NO DATA IN DATE RANGE" || echo -e "Date;Hour;Source;Type;Status;Message\n----;----;------;----;------;-------\n${_audit_output}" | column -t -s\;
 	echo
@@ -482,7 +496,7 @@ slurm_activity()
 	echo -e $_sh_color_bolt"SLURM CLUSTER: ACTIVE NODES"$_sh_color_nformat
 	echo -e $_sh_color_bolt"---------------------------"$_sh_color_nformat
 	echo
-	echo -e "\tFILTER: DATE: $_par_dat\n" 
+	echo -e "\tFILTER: DATE: $_par_date_start\n" 
 	echo "${_slurm_output}"
 	echo
 }
@@ -547,7 +561,7 @@ system_avail()
 	echo -e $_sh_color_bolt"SYSTEM: HOST/NODE AVAILABILITY AVERAGE"$_sh_color_nformat
 	echo -e $_sh_color_bolt"--------------------------------------"$_sh_color_nformat
 	echo
-	echo -e "\tFILTER: DATE: $_par_dat\n" 
+	echo -e "\tFILTER: DATE: $_par_date_start\n" 
 	echo "${_system_output}"
 	echo
 }
@@ -621,7 +635,7 @@ system_use()
 	echo -e $_sh_color_bolt"SYSTEM: CPU ACTIVITY AVERAGE"$_sh_color_nformat
 	echo -e $_sh_color_bolt"----------------------------"$_sh_color_nformat
 	echo
-	echo -e "\tFILTER: DATE: $_par_dat\n" 
+	echo -e "\tFILTER: DATE: $_par_date_start\n" 
 	echo "${_system_output}"
 	echo
 }
@@ -711,7 +725,7 @@ slurm_consumption()
 	echo -e $_sh_color_bolt"---------------------------------------"$_sh_color_nformat
 	echo
 	echo -e "\tSOURCES: [$( echo "${_slurm_sources}" | tr '\n' ',' | sed 's/,$//' )]"
-	echo -e "\tFILTER: DATE: $_par_dat" 
+	echo -e "\tFILTER: DATE: $_par_date_start" 
 	[ ! -z "$_slurm_filter_usr" ] && echo -e "\tFILTER USER: "$_slurm_filter_usr
 	echo 
 	echo "${_slurm_output}"
@@ -814,7 +828,7 @@ slurm_use()
 	echo
 	echo -e "\tSOURCES: [$( echo "${_slurm_sources}" | tr '\n' ',' | sed 's/,$//' )]"
 	echo -e "\tTOTAL NODES: $_slurm_nod_tot"
-	echo -e "\tFILTER: DATE: $_par_dat" 
+	echo -e "\tFILTER: DATE: $_par_date_start" 
 	[ ! -z "$_slurm_filter_usr" ] && echo -e "\tFILTER USER: "$_slurm_filter_usr
 	echo 
 	echo "${_slurm_output}"
@@ -878,49 +892,49 @@ init_defaults()
 {
 
 
-	if [ -z "$_par_dat" ]
+	if [ -z "$_par_date_start" ]
 	then
 		case "$_opt" in
 		system)
 			case "$_par_typ" in
 			status)
-				_par_dat="week"
+				_par_date_start="week"
 			;;
 			use)
-				_par_dat="week"
+				_par_date_start="week"
 			;;
 			esac
 		;;
 		slurm)
 			case "$_par_typ" in
 			status)
-				_par_dat="day"
+				_par_date_start="day"
 			;;
 			stats)
-				_par_dat="month"
+				_par_date_start="month"
 			;;
 			use)
-				_par_dat="year"
+				_par_date_start="year"
 			;;
 			watt)
-				_par_dat="week"
+				_par_date_start="week"
 			;;	
 			""|activity)
-				_par_dat="week"
+				_par_date_start="week"
 			;;
 			esac
 		;;
 		cyclops)
-			_par_dat="week"
+			_par_date_start="week"
 		;;
 		audit)
-			_par_dat="week"
+			_par_date_start="week"
 		;;
 		esac
 	fi
 }
 
-init_date()
+init_date_bkp()
 {
 
 	_date_tsn=$( date +%s )
@@ -1057,7 +1071,7 @@ init_special_opts()
 
 [ "$_par_act" == "all" ] && _par_act="slurm,cyclops,audit,critical,node"
 [ -z "$_par_typ" ] && _par_type="status"
-[ -z "$_par_dat" ] && _par_dat="day"
+[ -z "$_par_date_start" ] && _par_date_start="day"
 
 
 ####====== FILTER PROCESSING =======#####
@@ -1083,7 +1097,7 @@ fi
 for _opt in $( echo $_par_act | tr ',' '\n' )
 do
 	init_defaults
-	init_date
+	init_date $_par_date_start $_par_date_end
 	init_special_opts
 
 	case "$_opt" in
@@ -1103,7 +1117,7 @@ do
 			slurm_activity
 		;;
 		stats)
-			if [ "$_par_dat" == "hour" ]
+			if [ "$_par_date_start" == "hour" ]
 			then
 				echo "Slurm stats can't ask by hour range, try other range for get info"
 				exit 1
