@@ -291,7 +291,7 @@ node_real_status()
 		_node_list=$( awk -F\; -v _nl="$_node_list" '
 			BEGIN { 
 				split (_nl,n,",") 
-			} $1 !~ "|" { 
+			} $1 !~ "#" { 
 				for ( i in n ) { if ( $2 == n[i] ) { print $0 } }
 			}' $_type 
 			)
