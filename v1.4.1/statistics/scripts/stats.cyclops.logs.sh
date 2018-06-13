@@ -220,8 +220,8 @@ shift $((OPTIND-1))
 
 calc_data()
 {
-	_log_stats_data=$( cat $_log_file | sort -t\; -n | 
-                                awk -F " : " -v _dr="$_date_filter" -v _tsb="$_par_ds" -v _tse="$_par_de" -v _sf="$_par_itm" -v _tc="$_par_typ" '
+	#_log_stats_data=$( cat $_log_file | sort -t\; -n | 
+        _log_stats_data=$( awk -F " : " -v _dr="$_date_filter" -v _tsb="$_par_ds" -v _tse="$_par_de" -v _sf="$_par_itm" -v _tc="$_par_typ" '
                                         BEGIN { 
                                                 _to="START" ; 
                                                 t=0 ; 
@@ -307,7 +307,7 @@ calc_data()
 						} else {
 							print "no data" ;
 						}	
-                                        }' | 
+                                        }' $_log_file | 
                                 grep -v START )
 
 }
