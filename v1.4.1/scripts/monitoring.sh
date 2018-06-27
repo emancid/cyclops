@@ -1140,15 +1140,34 @@ ha_check()
 
 ha_slave_actions()
 {
+	_rsync_pid_file_slave=$_cyclops_temp_path"/mon_rsync_slave.pid"
+
 	if [ ! -z "$_base_path" ]
 	then
-		echo "$(date +%s);$_hostname;MON START SYNC FROM $_ha_master_mirror ( $_ha_role )" >> $_mon_log_path/$_mon_log_file
-		rsync --delete -auz --exclude-from $_ha_sync_exc $_ha_master_mirror:$_base_path/ $_base_path/ 2>> $_mon_log_path/$_mon_log_file > $_mon_log_path/rsync.$_hostname.sync.log
-		#rsync --del -auc --exclude-from $_ha_sync_exc $_ha_master_mirror:$_sensors_sot $_sensors_sot 2>> $_mon_log_path/$_mon_log_file 
+		if [ -f "$_rsync_pid_file_slave" ]
+		then
+			_rsync_pid_slave=$( cat $_rsync_pid_file_slave )
+			_rsync_pid_state=$( ps -eFl | awk -v _p="$_rsync_pid_slave" 'BEGIN { _s="AVAIL" } $4 == _p { _s="SYNC" } END { print _s }' ) 
+			echo "$(date +%s);$_hostname;MON PREVIOUS SYNC PID FILE EXISTING [$_rsync_pid_slave] STATUS [$_rsync_pid_state] ( ME:$_ha_role )" >> $_mon_log_path/$_mon_log_file
+			if [ "$_rsync_pid_state" == "AVAIL" ]
+			then
+				echo "$(date +%s);$_hostname;MON END LOCAL SYNC FROM [$_rsync_pid_slave] $_ha_master_mirror ( ME:$_ha_role )" >> $_mon_log_path/$_mon_log_file
+				rm -f $_rsync_pid_file_slave
+				echo "$(date +%s);$_hostname;MON START LOCAL SYNC FROM $_ha_master_mirror ( ME:$_ha_role )" >> $_mon_log_path/$_mon_log_file
+				rsync --delete -auz --exclude-from $_ha_sync_exc $_ha_master_mirror:$_base_path/ $_base_path/ 2> $_mon_log_path/$( date +%H%M ).rsync.$_hostname".sync.err.log" > $_mon_log_path/$( date +%H%M ).rsync.$_hostname".sync.log" &
+				echo $! > $_rsync_pid_file_slave 
+			else
+				echo "$(date +%s);$_hostname;MON STALL LOCAL SYNC FROM [$_rsync_pid_slave] $_ha_master_mirror ( ME:$_ha_role ) WAITING FOR LAST SYNC" >> $_mon_log_path/$_mon_log_file
+			fi
+		else
+			echo "$(date +%s);$_hostname;MON START LOCAL SYNC FROM $_ha_master_mirror ( ME:$_ha_role )" >> $_mon_log_path/$_mon_log_file
+			rsync --delete -auz --exclude-from $_ha_sync_exc $_ha_master_mirror:$_base_path/ $_base_path/ 2> $_mon_log_path/$( date +%H%M ).rsync.$_hostname".sync.err.log" > $_mon_log_path/$( date +%H%M ).rsync.$_hostname".sync.log" &
+			echo $! > $_rsync_pid_file_slave
+		fi
 		scp $_ha_master_mirror:$_sensors_sot $_sensors_sot 2>> $_mon_log_path/$_mon_log_file
-		echo "$(date +%s);$_hostname;MON END SYNC FROM $_ha_master_mirror ( $_ha_role )" >> $_mon_log_path/$_mon_log_file
+		echo "$(date +%s);$_hostname;CYCLOPS WORKSTATUS FILE SYNC EXIT: [$?]" >> $_mon_log_path/$_mon_log_file 
 	else
-		echo "$(date +%s);$_hostname;ERR BASE PATH VARIABLE EMPTY ( $_ha_role )" >> $_mon_log_path/$_mon_log_file
+		echo "$(date +%s);$_hostname;ERR BASE PATH VARIABLE EMPTY ( ME:$_ha_role )" >> $_mon_log_path/$_mon_log_file
 	fi
 }
 
@@ -1242,7 +1261,7 @@ pre_processing_plugins()
 {
 	#### Convert MON WIKI output to COMMAS output
 
-	[ "$_cyclops_monnod_status" == "ENABLED" ] && _nod_commas_output=$( echo "${_nod_print}" | tr '|' ';' | grep ";" | sed -e 's/\ *;\ */;/g' -e '/^$/d' -e '/:wiki:/d' -e "s/$_color_unk/UNK/g" -e "s/$_color_up/UP/g" -e "s/$_color_down/DOWN/g" -e "s/$_color_mark/MARK/g" -e "s/$_color_fail/FAIL/g" -e "s/$_color_check/CHECK/g" -e "s/$_color_ok/OK/g" -e "s/$_color_disable/DISABLE/" -e "s/$_color_title//g" -e "s/$_color_header//g" -e 's/^;//' -e 's/;$//' -e '/</d' -e 's/((.*))//' -e '/:::/d' | awk -F\; 'BEGIN { OFS=";" ; _print=0 } { if ( $1 == "family" ) { _print=1 } ; if ( $2 == "name" ) { _print=0 } ; if ( _print == 1 ) { print $0 }}' )
+	[ "$_cyclops_monnod_status" == "ENABLED" ] && _nod_commas_output=$( echo "${_nod_print}" | tr '|' ';' | grep ";" | sed -e 's/\ *;\ */;/g' -e '/^$/d' -e '/:wiki:/d' -e "s/$_color_unk/UNK/g" -e "s/$_color_up/UP/g" -e "s/$_color_down/DOWN/g" -e "s/$_color_mark/MARK/g" -e "s/$_color_fail/FAIL/g" -e "s/$_color_check/CHECK/g" -e "s/$_color_ok/OK/g" -e "s/$_color_disable/DISABLE/g" -e "s/$_color_title//g" -e "s/$_color_header//g" -e 's/^;//' -e 's/;$//' -e '/</d' -e 's/((.*))//' -e '/:::/d' | awk -F\; 'BEGIN { OFS=";" ; _print=0 } { if ( $1 == "family" ) { _print=1 } ; if ( $2 == "name" ) { _print=0 } ; if ( _print == 1 ) { print $0 }}' )
 	[ "$_cyclops_monsec_status" == "ENABLED" ] && _sec_commas_output=$( echo "${_sec_print}" | tr '|' ';'  | sed -e 's/; */;/g' -e 's/ *;/;/g' -e '/\[/d' -e '/>/d' -e '/^$/d' )
 	[ "$_cyclops_monenv_status" == "ENABLED" ] && _env_commas_output=$( echo "${_env_print}" | tr '|' ';' | grep ";" | sed -e 's/\ *;\ */;/g' -e '/^$/d' -e '/:wiki:/d' -e "s/$_color_unk/UNK/g" -e "s/$_color_up/UP/g" -e "s/$_color_down/DOWN/g" -e "s/$_color_mark/MARK/g" -e "s/$_color_fail/FAIL/g" -e "s/$_color_check/CHECK/g" -e "s/$_color_ok/OK/g" -e "s/$_color_disable/DISABLE/" -e "s/$_color_title//g" -e "s/$_color_header//g" -e 's/^;//' -e 's/;$//' -e '/</d' -e 's/((.*))//' -e '/:::/d' ) 
 
