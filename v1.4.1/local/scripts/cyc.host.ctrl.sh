@@ -148,7 +148,7 @@ host_launch()
 		repair|link|up|boot) 
 			[ "$_rsc_output" != "0" ] && [ "$_rsc_output" != "21" ] && _host_check_status="1" && break
 		;;
-		unlink|content|stop|drain)
+		unlink|content|stop)
 			[ "$_rsc_output" != "0" ] && [ "$_rsc_output" != "21" ] && _host_check_status="1" && break
 		;;
 		*) 
@@ -264,7 +264,7 @@ case "$_par_act" in
 			host_launch $_par_act 
 		fi
 	;;
-	start|up|link|repair|boot|init)
+	start|up|link|repair|init)
 		if [ -f "$_cyc_clt_rzr_cfg/hctrl.disable" ] 
 		then
 			[ "$_opt_show" == "yes" ] && echo "Host Ctrl is disabled, use -a enable for re-activate"

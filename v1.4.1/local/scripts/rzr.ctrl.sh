@@ -112,8 +112,13 @@ _rsc_rzr_file=$_cyc_clt_rzr_dat"/"$_par_rzr_stk"/"$_par_rzr_rsc".rzr.sh"
 case "$_par_rzr_act" in
 	check)
 		_rsc_rzr_output=$( $_rsc_rzr_file $_par_rzr_act 2>&1 >/dev/null ; echo $? )
+		[ "$_rsc_rzr_output" != "0" ] && [ -z "$_rsc_rzr_output" ] && _rsc_rzr_output=21
 	;;
-	stop|unlink|drain|content|boot)
+	boot)
+		_rsc_rzr_output=$( $_rsc_rzr_file $_par_rzr_act 2>&1 >/dev/null ; echo $? )
+		[ "$_rsc_rzr_output" != "0" ] && [ -z "$_rsc_rzr_output" ] && _rsc_rzr_output=21
+	;;
+	stop|unlink|drain|content)
 		_rsc_rzr_output=$( $_rsc_rzr_file check 2>&1 >/dev/null ; echo $? )
 		[ "$_rsc_rzr_output" == "0" ] && _rsc_rzr_output=$( $_rsc_rzr_file $_par_rzr_act 2>&1 >/dev/null ; echo $? ) || _rsc_rzr_output="0"
 	;;
@@ -132,6 +137,7 @@ case "$_par_rzr_act" in
 	;;
 	diagnose|info)
 		_rsc_rzr_output=$( $_rsc_rzr_file $_par_rzr_act 2>&1 >/dev/null ; echo $? )
+		[ "$_rsc_rzr_output" != "0" ] && [ -z "$_rsc_rzr_output" ] && _rsc_rzr_output=21
 	;;
 esac
 
