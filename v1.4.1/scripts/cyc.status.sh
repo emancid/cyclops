@@ -186,9 +186,61 @@ shift $((OPTIND-1))
 cyclops_status()
 {
 
+	if [ -f "$_sensors_sot" ]
+	then
+		_cyccodes=$( grep "^[0-9][0-9][0-9][0-9]" /etc/cyclops/system/cyc.codes.cfg | cut -d';' -f1 )
+		_cyccodes_status=$( awk -F\; -v _cc="${_cyccodes}" '
+			BEGIN { 
+				_ct=split(_cc,c,"\n") ; 
+				_ok=0 ; 
+				_bad=0 
+			} $1 == "CYC" { 
+				_to=0 ; 
+				_tb=0 ; 
+				for ( i in c ) { 
+					if ( c[i] == $2 ) { 
+						_to=1 
+					}
+				} ; 
+				if ( _to == 1 ) { 
+					_ok++ 
+				} else { 
+					_bad++ 
+				}
+			} END { 
+				if ( _ok == _ct ) { 
+					print "0" 
+				} else { 
+					if ( _bad == _ct ) {
+						print "ALL"
+					} else {
+						print _bad
+					}
+				} 
+			}' $_sensors_sot )
+
+		case "$_cyccodes_status" in
+		0)
+			_cycstatus=$_sh_color_green"GOOD"$_sh_color_nformat
+		;;
+		[0-9]*|ALL)
+			_cycstatus=$_sh_color_red"BAD"$_sh_color_nformat
+			_cycstatus_msg="MISS $_cyccodes_status CYCLOPS CODES: VERIFY $_sensors_sot FILE, USE INSTALL README"
+		;;
+		*)
+			_cycstatus=$_sh_color_red"CRITICAL"$_sh_color_nformat
+			_cycstatus_msg="UNKNOWN ERROR, CHECK CYCLOPS INSTALL"
+		;;
+		esac	
+	else
+		_cycstatus=$_sh_color_red"CRITICAL"$_sh_color_nformat
+		_cycstatus_msg="MISS $_sensors_sot FILE, CHECK CYCLOPS INSTALL"
+	fi
+
 	echo
-	echo -e $_sh_color_bolt"CYCLOPS: STATUS"$_sh_color_nformat
-	echo -e $_sh_color_bolt"---------------"$_sh_color_nformat
+	echo -e $_sh_color_bolt"CYCLOPS: STATUS: $_cycstatus"$_sh_color_nformat
+	echo -e $_sh_color_bolt"------------------------"$_sh_color_nformat
+	[ ! -z "$_cycstatus_msg" ] && echo -e $_cycstatus_msg
 	echo
 
 
@@ -291,7 +343,7 @@ node_real_status()
 		_node_list=$( awk -F\; -v _nl="$_node_list" '
 			BEGIN { 
 				split (_nl,n,",") 
-			} $1 !~ "|" { 
+			} $1 !~ "#" { 
 				for ( i in n ) { if ( $2 == n[i] ) { print $0 } }
 			}' $_type 
 			)
@@ -379,7 +431,7 @@ node_real_status()
 
 	_node_status=$( echo -e "${_new_line}" | sed '/^$/d' |  awk -F\; '{ _t[$1":"$2":"$4":"$5":"$6":"$7]=_t[$1":"$2":"$4":"$5":"$6":"$7]$3"," } END { for ( i in _t ) { print i":"_t[i] }}' | sed 's/,$//' | sort -t\: )
 
-	_new_line="Group;Family;Qty;Node Range;Mngt Cfg;Status;Slurm;Errors\n------;-------;---;----------;--------;------;-----;------\n"
+	_new_line="Group;Family;Qty;Mngt Cfg;Status;Slurm;Node Range;Errors\n------;-------;---;----------;--------;------;-------------;------\n"
 
 	for _line in $( echo "${_node_status}" )
 	do
@@ -407,16 +459,35 @@ node_real_status()
 		[ -z "$_node_err" ] && _node_err=" " 
 		[ "$_node_sta" == "UP" ] && _node_sta="OK"
 
-		_new_line=${_new_line}""$_extra_line""$_print_grp';'$_node_fam';'$_node_qty';'$_node_rng';'$_node_adm';'$_node_sta';'$_node_slm";"$_node_err'\n'
+		#_new_line=${_new_line}""$_extra_line""$_print_grp';'$_node_fam';'$_node_qty';'$_node_rng';'$_node_adm';'$_node_sta';'$_node_slm";"$_node_err'\n'
+		_new_line=${_new_line}""$_extra_line""$_print_grp';'$_node_fam';'$_node_qty';'$_node_adm';'$_node_sta';'$_node_slm';'$_node_rng';'$_node_err'\n'
 
 	done 
+
+	_monnod_status=$( awk -F\; '$1 == "CYC" && $2 == "0012" { print $4}' $_sensors_sot )
+
+	case "$_monnod_status" in
+	ENABLED)
+		_monnod_status=$_sh_color_green$_monnod_status$_sh_color_nformat
+	;;
+	DISABLED)
+		_monnod_status=$_sh_color_red$_monnod_status$_sh_color_nformat
+	;;
+	"")
+		_monnod_status=$_sh_color_red"CODE ERR MISS"$_sh_color_nformat
+	;;
+	*)
+		_monnod_status=$_sh_color_red"CODE ERR UNKN"$_sh_color_nformat
+	;;
+	esac
 
 	echo
 	echo -e $_sh_color_bolt"NODE: STATUS"$_sh_color_nformat
 	echo -e $_sh_color_bolt"------------"$_sh_color_nformat
 	echo
-	echo -e "LAST UPDATE: $_node_last_st$_node_last_up$_sh_color_nformat"
-	echo -e "CRITICAL ENV STATUS: $_critical_st_color$( echo "${_critical_st_simp}" | cut -d';' -f4  )$_sh_color_nformat"
+	echo -e "NODE MONITORING: 	$_monnod_status" 
+	echo -e "LAST UPDATE: 		$_node_last_st$_node_last_up$_sh_color_nformat"
+	echo -e "CRITICAL ENV STATUS: 	$_critical_st_color$( echo "${_critical_st_simp}" | cut -d';' -f4  )$_sh_color_nformat"
 	echo
 	[ "$_opt_node" == "yes" ] && echo -e "FILTER: "$_par_node"\n"
 	echo -e "${_new_line}" | column -t -s\; 
