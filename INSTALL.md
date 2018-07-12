@@ -87,17 +87,7 @@ CYCLOPS 1.4.1v INSTALL
 		cd /opt/cyclops/monitor/sensors 
 		mkdir -p temp status/data/ environment/conf environment/data
 
-	4. INITIALIZE BITACORAS ( LOGBOOKS ):
-		for _file in $( awk -F\; '$1 !~ "#" { print $1 }' /etc/cyclops/audit/bitacoras.cfg ) ; do touch /opt/cyclops/audit/data/$_file.bitacora.txt ; done
-
-	5. INSTALL SENSORS, IA RULES AND NODE RAZOR
-	- Decompress /opt/cyclops/monitor/packs for optain necesary sensors, rules and razors files
-		from root directory ( cd / )
-		tar xvf /opt/cyclops/monitor/packs/*.tar
-		OR
-		for _file in $( ls -1 /opt/cyclops/monitor/packs/* ) ; do tar xvf $_file ; done ## IF *.tar does not works 
-
-	6. CREATE SYMLINKS
+	4. CREATE SYMLINKS
 
 	- Configuration path
 		cd /etc
@@ -112,13 +102,25 @@ CYCLOPS 1.4.1v INSTALL
 			[REDHAT/CENTOS]	-> 	_apache_usr="apache"
 			[DEBIAN] 	->	_apache_usr="www-data"
 			[ALL DISTROS]	->	_apache_grp="cyclops"	## RECOMMENDED
-	
-	7. INIT CYCLOPS CONFIGURATION BASE
+		
+    5. INIT CYCLOPS CONFIGURATION BASE
 
 	- Copy /etc/cyclops/global.cfg.template to /etc/cyclops/global.cfg
 	- Copy /etc/cyclops/monitor/alert.email.cfg.template to /etc/cyclops/monitor/alert.email.cfg
 	- Copy /etc/cyclops/statistics/main.ext.cfg.template to /etc/cyclops/statistics/main.ext.cfg
 	- Copy /opt/cyclops/monitor/sensors/data/status/stateofthings.cyc.template /opt/cyclops/monitor/sensors/data/status/stateofthings.cyc
+	- Copy /etc/cyclops/audit/bitacoras.cfg.template to /etc/cyclops/audit/bitacoras.cfg
+	- Copy /etc/cyclops/audit/issuecodes.cfg.template to /etc/cyclops/audit/issuecodes.cfg
+		
+	6. INITIALIZE BITACORAS ( LOGBOOKS ):
+		for _file in $( awk -F\; '$1 !~ "#" { print $1 }' /etc/cyclops/audit/bitacoras.cfg ) ; do touch /opt/cyclops/audit/data/$_file.bitacora.txt ; done
+
+	7. INSTALL SENSORS, IA RULES AND NODE RAZOR
+	- Decompress /opt/cyclops/monitor/packs for optain necesary sensors, rules and razors files
+		from root directory ( cd / )
+		tar xvf /opt/cyclops/monitor/packs/*.tar
+		OR
+		for _file in $( ls -1 /opt/cyclops/monitor/packs/* ) ; do tar xvf $_file ; done ## IF *.tar does not works 
 
 	8. UPDATE CYCLOPS:
 
@@ -164,7 +166,8 @@ CYCLOPS 1.4.1v INSTALL
 
         chown -R cyclops:cyclops /opt/cyclops
         chown -R apache /opt/cyclops/www 			## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
-	chown -R www-data /opt/cyclops/www			## DEBIAN DEFAULT APACHE USER 
+            chown -R www-data /opt/cyclops/www			## DEBIAN DEFAULT APACHE USER 
+            chown -R wwwrun /opt/cyclops/wwwrun         ## SUSE DEFAULT APACHE USER
         
         chmod -R g+w,o-rwx /opt/cyclops/www/
 
@@ -184,7 +187,7 @@ CYCLOPS 1.4.1v INSTALL
             
 		RECOMENDED: change permissions from /etc/cyclops/system/cyclopsrc to 750 
 
-	- edit plugin.users.ctrl.cfg file with your favourite editor and change:
+	- edit /etc/cyclops/monitor/plugin.users.ctrl.cfg file with your favourite editor and change:
 		_pg_usr_ctrl_admin="[USER1],[USER2],..."                ### existing users for admin role
 		_pg_usr_ctrl_l1_support="[USER1],[USER2],..."           ### OPTIONAL: for Level 1 support users
 		_pg_usr_ctrl_l2_support="[USER1],[USER2],..."           ### OPTIONAL: for Level 2 support users
@@ -210,8 +213,8 @@ CYCLOPS 1.4.1v INSTALL
 		- [DEBIAN] not use cyclops pre-configure site.
 
 	- If you use cyclops apache templates you can access:
-		[REDHAT/CENTOS] https://[IP/DOMAIN NAME]/doku.php
-		[DEBIAN]	http://[IP/DOMAIN NAME]/cyclops/doku.php
+		[REDHAT/CENTOS]  https://[IP/DOMAIN NAME]/doku.php
+		[DEBIAN]	     http://[IP/DOMAIN NAME]/cyclops/doku.php
 
 	* Web access credentials:
 		User: admin
@@ -224,7 +227,7 @@ CYCLOPS 1.4.1v INSTALL
 
 	IMPORTANT: you need to have access to the hostname of nodes/hosts, with dns or /etc/hosts
 
-	1. check /etc/cyclops/nodes/node.type.cfg.template and rename it to same path with template at end of file.
+	1. check /etc/cyclops/nodes/node.type.cfg.template and rename it to same path without template at end of file.
 
 	2. check /etc/cyclops/nodes/critical.res.cfg.template and rename it to same path without template at end of the file/
 
@@ -236,7 +239,7 @@ CYCLOPS 1.4.1v INSTALL
 
 		- After you finished you need to configure option 19.
 
-	4. You have the next files for configure cyclops
+	4. You have the next files for configure cyclops ( rename then without template at the end for cyclops can read them )
 
         /etc/cyclops/
                 global.cfg.template *               ## MAIN CFG ( RECOMMENDED NOT CHANGE IF NOT NECESARY) - RENAME IT TO global.cfg 
@@ -258,6 +261,9 @@ CYCLOPS 1.4.1v INSTALL
                 monitor.cfg.template *              ## DEFINE MODULES AND GROUPS FOR MONITOR
                 plugin.users.ctrl.cfg.template      ## Define support and admin users for monitoring them with this plugin
                 procedure.ia.codes.cfg.template     ## NOT TOUCH IF NOT NECESARY - PROCEDURES CODES AND NAMES
+	    ./audit
+		bitacoras.cfg			    ## Create your generic logbooks
+		issuecodes.cfg.template		    ## Define your provider issue code, local or whatever code you need to follow your issues.
             ./security
                 login.node.list.cfg.template        ## Define nodes to monitor users in them
             ./services
@@ -316,13 +322,13 @@ CYCLOPS 1.4.1v INSTALL
 
 		NOTE: Use cron root user
 
-		13 4 * * * /opt/cyclops/scripts/backup.cyc.sh -t all &>>/opt/cyclops/logs/$HOSTNAME.bkp.log                                          #### OPTIONAL FOR BACKUP PROUPOSES
-		*/3 * * * * /opt/cyclops/scripts/monitoring.sh -d 2>>/opt/cyclops/logs/$HOSTNAME.mon.err.log                                         #### MANDATORY - MAIN CYCLOPS MONITOR ENTRY
-		36 * * * * /opt/cyclops/scripts/audit.nod.sh -d  2>&1 >>/opt/cyclops/logs/audit.err.log                                                    #### OPTIONAL - IF YOU WANT TO USE AUDIT MODULE
-		59 * * * * /opt/cyclops/scripts/historic.mon.sh  -d 2>>/opt/cyclops/logs/historic.err.log                                                  #### RECOMENDED - FOR SHOW HISTORIC MONITORING
-		20 * * * * /opt/cyclops/scripts/procedures.sh -t node -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/node_status.txt        #### OPTIONAL - UPDATE PROCEDURE STATUS
-		21 * * * * /opt/cyclops/scripts/procedures.sh -t env -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/env_status.txt          #### OPTIONAL - UPDATE PROCEDURE STATUS
-		42 * * * * /opt/cyclops/scripts/cyc.stats.sh -t daemon >/dev/null 2>/opt/cyclops/logs/cyc.stats.err.log					   #### OPTIONAL BUT MANDATORY IF YOU ENABLE AUDIT MODULE
+		13 4 * * * /opt/cyclops/scripts/backup.cyc.sh -t all &>>/opt/cyclops/logs/$HOSTNAME.bkp.log                                               #### OPTIONAL FOR BACKUP PROUPOSES
+		*/3 * * * * /opt/cyclops/scripts/monitoring.sh -d 2>>/opt/cyclops/logs/$HOSTNAME.mon.err.log                                              #### MANDATORY - MAIN CYCLOPS MONITOR ENTRY
+		36 * * * * /opt/cyclops/scripts/audit.nod.sh -d  2>&1 >>/opt/cyclops/logs/audit.err.log                                                   #### OPTIONAL - IF YOU WANT TO USE AUDIT MODULE
+		59 * * * * /opt/cyclops/scripts/historic.mon.sh  -d 2>>/opt/cyclops/logs/historic.err.log                                                 #### RECOMENDED - FOR SHOW HISTORIC MONITORING
+		20 * * * * /opt/cyclops/scripts/procedures.sh -t node -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/node_status.txt       #### OPTIONAL - UPDATE PROCEDURE STATUS
+		21 * * * * /opt/cyclops/scripts/procedures.sh -t env -v wiki >/opt/cyclops/www/data/pages/documentation/procedures/env_status.txt         #### OPTIONAL - UPDATE PROCEDURE STATUS
+		42 * * * * /opt/cyclops/scripts/cyc.stats.sh -t daemon >/dev/null 2>/opt/cyclops/logs/cyc.stats.err.log					                  #### OPTIONAL BUT MANDATORY IF YOU ENABLE AUDIT MODULE
 		17 * * * * /opt/cyclops/statistics/scripts/extract.main.slurm.sh -d 2>&1 >/opt/cyclops/logs/$HOSTNAME.slurm.extract.log                   #### OPTIONAL - SLURM STATISTICS
 
 	- We recomend enable one by one, trying it step by step.
