@@ -14,7 +14,7 @@ CYCLOPS 1.4.1v INSTALL
 
 	WE THINK IT WILL HELP TO:
 		- DEBIAN7/8
-		- OPENSUSE TUMBLEWEED
+		- OPENSUSE TUMBLEWEED ( detected problems with dokuwiki and php7 )
 		- SLES11/12/13
 		- FEDORA
 		- ARCHLINUX
