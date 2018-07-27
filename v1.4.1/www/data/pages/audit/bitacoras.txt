@@ -1,9 +1,0 @@
-====== MAIN BITACORAS ======
-
-|< 50% >|
-|  @#D7F2FF: Name  |  @#D7F2FF: Description  |  @#D7F2FF: Last Updated  |
-|  ** [[:audit:main.audit|main]] **  |  global bitacora, register all non specific information  |    |
-|  ** [[:audit:users.audit|users]] **  |  events and information relevant for cluster users  |    |
-|  ** [[:audit:dev.audit|dev]] **  |  bitacora for storage events links with development environment, tools, compile, etc.  |    |
-|  ** [[:audit:security.audit|security]] **  |  bitacora for security events, like users logins, etc.  |    |
-|  ** [[:audit:cyclops.audit|cyclops]] **  |  information about cyclops, like updates, modifications, problems, etc.  |  2017-07-26 16:30:13  |

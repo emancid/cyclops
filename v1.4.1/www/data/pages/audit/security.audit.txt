@@ -1,5 +1,0 @@
-====== SECURITY BITACORA ======
-
-  * bitacora for security events, like users logins, etc.
-
-

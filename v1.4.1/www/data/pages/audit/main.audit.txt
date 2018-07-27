@@ -1,5 +1,0 @@
-====== MAIN BITACORA ======
-
-  * global bitacora, register all non specific information
-
-
