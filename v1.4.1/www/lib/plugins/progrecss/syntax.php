@@ -4,17 +4,8 @@
  * @brief      DokuWiki Progress bars using CSS.
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Luis Machuca Bezzaza <luis [dot] machuca [at] gulix [dot] cl>
- * @version    1.8 RC (Dec 2010)
- * @date       2010-12-08
- *
- *   This plugin is intended to follow the same purpose as the
- *  "progressbar" plugin already available in the DW site; 
- *  however, "progrecss"'s inner works are more based on 
- *  CSS code by David Anaxagoras <www.davidanaxagoras.com>
- *
- *   With this plugin, you can create progress bars in your wiki pages, 
- *  using CSS styles only. The PHP side allows for some syntax and parameters
- *  such as bar caption, total width and style used.
+ * @version    1.9 (Mar 2018)
+ * @date       2018-03-27
  *
  *   For a live demo check the instructions on the plugin's wiki page.
  *
@@ -36,56 +27,22 @@ require_once(DOKU_PLUGIN.'syntax.php');
  */
 class syntax_plugin_progrecss extends DokuWiki_Syntax_Plugin {
 
-    /**
-     * return some info
-     */
-    // fully overriding the base behaviour until we can get i18n'd descriptions
-    // (http://www.freelists.org/post/dokuwiki/Internationalization-in-plugin-descriptions-via-plugininfotxt)
-    function getInfo(){
-        $parts = explode('_',get_class($this));
-        $info  = DOKU_PLUGIN.'/'.$parts[2].'/plugin.info.txt';
-        if(@file_exists($info)) {
-            $arr= confToHash($info);
-            if ( array_key_exists('lang', $arr) ) {
-                $pieces= explode(',', $arr['lang']);
-                if (in_array('desc', $pieces) && ''!==$this->getLang('plugin_desc') ) $arr['desc']= $this->getLang('plugin_desc');
-            }
-            return $arr;
-        }
-        trigger_error('getInfo() not implemented in '.get_class($this).' and '.$info.' not found', E_USER_WARNING);
-    }
-
-    /**
-     * What kind of syntax are we?
-     */
     function getType(){
         return 'formatting';
     }
 
-    /**
-     * What can we Do?
-     */
     function getAllowedTypes() { 
         return array('substition', 'formatting', 'disabled'); 
     }
 
-    /**
-     * Where to sort in?
-     */
     function getSort(){
         return 550;
     }
 
-    /**
-     * What's our code layout?
-     */    
     function getPType(){ 
         return 'normal'; 
     }
 
-    /**
-     * How do we get to the lexer?
-     */
     function connectTo($mode) {
          $p_param= ".*?";
          // option 1: a percentage (eg.: "45%")
@@ -102,7 +59,9 @@ class syntax_plugin_progrecss extends DokuWiki_Syntax_Plugin {
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, &$handler){
+	function handle($match, $state, $pos, Doku_Handler $handler) {
+    // function handle($match, $state, $pos, &$handler){
+
         /* The syntax is expected as follows:
           ppp% [param1=value1; [param2=value2; [...]]] 
          */
@@ -183,7 +142,8 @@ class syntax_plugin_progrecss extends DokuWiki_Syntax_Plugin {
     /**
      * Create output
      */
-    function render($mode, &$renderer, $data) {
+    function render($mode, Doku_Renderer $renderer, $data) {
+    //function render($mode, &$renderer, $data) {
         static $counter= 0;
         $percentage=  intval($data['p']);
         $fmted_p = $data['f'];

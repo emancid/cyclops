@@ -209,6 +209,22 @@ class renderer_plugin_odt_page extends Doku_Renderer {
                 break;
         }
 
+        // If we are using ODT for style import (a template or the default 'styles.xml')
+        // then adjust the pixel per em value to the font-size of the default paragraph style
+        // otherwise plugins might inherit a wrong font-size on CSS import!
+        if ($mode != 'CSS template') {
+            $default = $this->document->getDefaultStyle ('paragraph');
+            if ($default != NULL) {
+                $fontFize = $default->getProperty('font-size');
+                if (!empty($fontFize)) {
+                    $fontFizeInPx = $this->document->toPixel($fontFize);
+                    if (!empty($fontFizeInPx)) {
+                        $this->document->setPixelPerEm($fontFizeInPx);
+                    }
+                }
+            }
+        }
+
         // Setup page format.
         $this->document->setStartPageFormat ($this->config->getParam ('format'),
                                              $this->config->getParam ('orientation'),
@@ -296,58 +312,6 @@ class renderer_plugin_odt_page extends Doku_Renderer {
     }
 
     /**
-     * Convert exported ODT file if required.
-     * Supported formats: pdf
-     */
-    protected function convert () {
-        global $ID;
-                
-        $format = $this->config->getConvertTo ();
-        if ($format == 'pdf') {
-            // Prepare temp directory
-            $temp_dir = $this->config->getParam('tmpdir');
-            $temp_dir = $temp_dir."/odt/".str_replace(':','-',$ID);
-            if (is_dir($temp_dir)) { io_rmdir($temp_dir,true); }
-            io_mkdir_p($temp_dir);
-
-            // Set source and dest file path
-            $file = $temp_dir.'/convert.odt';
-            $pdf_file = $temp_dir.'/convert.pdf';
-
-            // Prepare command line
-            $command = $this->config->getParam('convert_to_pdf');
-            $command = str_replace('%outdir%', $temp_dir, $command);
-            $command = str_replace('%sourcefile%', $file, $command);
-
-            // Convert file
-            io_saveFile($file, $this->doc);
-            exec ($command, $output, $result);
-            if ($result) {
-                $errormessage = '';
-                foreach ($output as $line) {
-                    $errormessage .= $this->_xmlEntities($line);
-                }
-                $message = $this->getLang('conversion_failed_msg');
-                $message = str_replace('%command%', $command, $message);
-                $message = str_replace('%errorcode%', $result, $message);
-                $message = str_replace('%errormessage%', $errormessage, $message);
-                $message = str_replace('%pageid%', $ID, $message);
-                
-                $instructions = p_get_instructions($message);
-                $this->doc = p_render('xhtml', $instructions, $info);
-
-                $headers = array(
-                    'Content-Type' =>  'text/html; charset=utf-8',
-                );
-                p_set_metadata($ID,array('format' => array('odt_page' => $headers) ));
-            } else {
-                $this->doc = io_readFile($pdf_file, false);
-            }
-            io_rmdir($temp_dir,true);
-        }
-    }
-
-    /**
      * Completes the ODT file.
      */
     public function finalize_ODTfile() {
@@ -357,8 +321,6 @@ class renderer_plugin_odt_page extends Doku_Renderer {
 
         // Build/assign the document
         $this->doc = $this->document->getODTFileAsString ($ODTtemplate, $temp_dir);
-
-        $this->convert();
     }
 
     /**
@@ -1051,8 +1013,8 @@ class renderer_plugin_odt_page extends Doku_Renderer {
      * @param string $language programming language to use for syntax highlighting
      * @param string $filename file path label
      */
-    function file($text, $language=null, $filename=null) {
-        $this->_highlight('file', $text, $language);
+    function file($text, $language=null, $filename=null, $options=null) {
+        $this->_highlight('file', $text, $language, $options);
     }
 
     function quote_open() {
@@ -1070,8 +1032,8 @@ class renderer_plugin_odt_page extends Doku_Renderer {
      * @param string $language programming language to use for syntax highlighting
      * @param string $filename file path label
      */
-    function code($text, $language=null, $filename=null) {
-        $this->_highlight('code', $text, $language);
+    function code($text, $language=null, $filename=null, $options=null) {
+        $this->_highlight('code', $text, $language, $options);
     }
 
     /**
@@ -1141,14 +1103,15 @@ class renderer_plugin_odt_page extends Doku_Renderer {
      * @param string $text
      * @param string $language
      */
-    function _highlight($type, $text, $language=null) {
+    function _highlight($type, $text, $language=null, $options = null) {
+
         if (is_null($language)) {
             $this->_preformatted($text, $style_name);
             return;
         }
 
         // Use cached geshi
-        $highlighted_code = p_xhtml_cached_geshi($text, $language, '');
+        $highlighted_code = p_xhtml_cached_geshi($text, $language, '', $options);
 
         // Create Geshi styles required for ODT and get ODT sourcecode style
         $this->createGeshiListStyle ();
@@ -1168,6 +1131,7 @@ class renderer_plugin_odt_page extends Doku_Renderer {
         }
         $options ['list_ol_style'] = 'highlight_list_ol_style';
         $options ['list_p_style'] = 'highlight_list_paragraph_style';
+        $options ['p_style'] = $this->document->getStyleName('preformatted');
 
         // Open table with just one cell
         $this->document->tableOpen();

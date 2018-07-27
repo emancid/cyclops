@@ -3,8 +3,6 @@
 |< 100% >|
 ^  Code  ^  Descripcion ^          |            |                                                  |             |             |
 |  AD    |              |          |            | Administrativo                                   |             |             |
-|        |  BV          |  BS/AV*  |  [0-9]  | Administrativo: BULL - VALENCIA                  |             |             |
-|        |  BM          |  BS/AV*  |  [0-9]  | Administrativo: BULL - MADRID                    |             |             |
 |  NT    |              |          |            | Red                                              |             |             |
 |        |  CS          |  BS/AV*  |  [0-9]  | Red: Cisco                                       |             |             |
 |        |              |          |            |                                                  | NTCSAV0001  | ?           |
@@ -62,11 +60,7 @@
 
    - [[operation:procedures:ADAE0001|ADAE0001: VPN]]
 
-== BULL - Valencia  ==
-== BULL - Madrid  ==
-
 ===== Técnicos =====
-
 
 == Hardware ==
 - [[operation:procedures:hrblav0001|hrblav0001: Cambio de nodo]]

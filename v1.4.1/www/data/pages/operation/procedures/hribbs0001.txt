@@ -18,3 +18,5 @@
 
   * Ejecutar el siguiente comando:<code>
 ibms_fw upgrade --equipment [NOMBRE NODO|RANGO DE NODOS]</code>
+
+  * ** <fc red> NOTA: </fc> ** Si se usa cyclops, poner el nodo en estado unlink para tener desmotado todos los servicios que usan infiniband.

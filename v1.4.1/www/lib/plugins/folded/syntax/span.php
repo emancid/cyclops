@@ -8,14 +8,8 @@
  * @author     Esther Brunner <esther@kaffeehaus.ch>
  */
 
-if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
-if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-require_once(DOKU_PLUGIN.'syntax.php');
-
-// maintain a global count of the number of folded elements in the page, 
-// this allows each to be uniquely identified
-global $plugin_folded_count;
-if (!isset($plugin_folded_count)) $plugin_folded_count = 0;
+// must be run within DokuWiki
+if(!defined('DOKU_INC')) die();
 
 // global used to indicate that the localised folder link title tooltips 
 // strings have been written out
@@ -51,21 +45,31 @@ class syntax_plugin_folded_span extends DokuWiki_Syntax_Plugin {
     * Create output
     */
     function render($mode, Doku_Renderer $renderer, $data) {
-        global $plugin_folded_count;
-
         if (empty($data)) return false;
         list($state, $cdata) = $data;
 
         if($mode == 'xhtml') {
             switch ($state){
                case DOKU_LEXER_ENTER:
-                $plugin_folded_count++;
-                $renderer->doc .= '<a class="folder" href="#folded_'.$plugin_folded_count.'">';
+                if ($this->helper === NULL) {
+                    $this->helper = plugin_load('helper', 'folded');
+                }
+                $folded_id = $this->helper->getNextID();
+
+                if ($this->getConf('unfold_default')) {
+                    $renderer->doc .= '<a class="folder open" href="#'.$folded_id.'">';
+                } else {
+                    $renderer->doc .= '<a class="folder" href="#'.$folded_id.'">';
+                }
 
                 if ($cdata)
                     $renderer->doc .= ' '.$renderer->cdata($cdata);
 
-                $renderer->doc .= '</a><span class="folded fhidden" id="folded_'.$plugin_folded_count.'">';
+                if ($this->getConf('unfold_default')) {
+                    $renderer->doc .= '</a><span class="folded" id="'.$folded_id.'">';
+                } else {
+                    $renderer->doc .= '</a><span class="folded hidden" id="'.$folded_id.'">';
+                }
                 break;
                 
               case DOKU_LEXER_UNMATCHED:

@@ -25,7 +25,7 @@
 </hidden>
 <hidden AVANZADOS initialState="visible">
 
-  - ** LU - Lustre ( BULL SCS4 )**
+  - ** LU - Lustre **
     - [[operation:procedures:FSLUAV0001|FSLUAV0001 : Lustre Check Failure]] 
     - [[operation:procedures:FSLUAV0002|FSLUAV0002 : Inicialización Lustre]] 
     - [[operation:procedures:FSLUAV0003|FSLUAV0003 : Lustre, Problemas OST]] 
@@ -33,8 +33,8 @@
     - [[operation:procedures:FSLUAV0005|FSLUAV0005 : Lustre, Añadir OST en caliente]]
   - ** NF - NFS **
     - [[operation:procedures:FSNFAV0001|FSNFAV0001 : NFS File System FAIL ]]
-</hidden>
 
+</hidden>
 ===== Hardware =====
 
 <hidden BASICOS>
@@ -56,13 +56,11 @@
     - [[operation:procedures:HRSTBS0003|HRSTBS0003 : Apagar una cabina]]
   - BMC/ILO:
     - [[operation:procedures:HRBMBS0001|HRBMBS0001 : BMC Comprobar sensores]]
-    - [[operation:procedures:HRBMBS0002|HRBMBS0002 : BMC, Herramienta de Diagnostico Hardware BULL]]
   - B7xx Sistema Hidráulico:
     - [[operation:procedures:HRHYBS0001|HRHYBS0001 : HYC Comprobar el numero de hyc configuradas]]
     - [[operation:procedures:HRHYBS0002|HRHYBS0002 : HYC Cambiar el numero de hycs configuradas en un rack]]
     - [[operation:procedures:HRHYBS0003|HRHYBS0003 : HYC Balancear primaria a secundaria o viceversa]]
   - Chasis Blades:
-    - [[operation:procedures:HRCMBS0001|HRCMBS0001 : CMC, Herramienta de Diagnostico Hardware BULL]]
     - [[operation:procedures:HRCMBS0002|HRCMBS0002 : CMC B7xx Conexión interfaz web]]
     - [[operation:procedures:HRCMBS0003|HRCMBS0003 : CMC B7xx Verificación estado energético del nodo - interfaz web]]
     - [[operation:procedures:HRCMBS0004|HRCMBS0004 : CMC Cambiar el estado energético del nodo - interfaz web]]
@@ -81,11 +79,12 @@
   - ** BI - BIOS **
     - [[operation:procedures:HRBIAV0001|HRBIAV0001 : BIOS Log Trace Alert]]
   - ** BL - Blade **
+    - [[operation:procedures:HRBLAV0001|HRBLAV0001 : Cambio de Nodo B7xx]] : ** <fc orange>DEPRECATED</fc> **
     - [[operation:procedures:HRBLAV0002|HRBLAV0002 : Temperatura Blade]]
     - [[operation:procedures:HRBLAV0003|HRBLAV0003 : Contención de un nodo]]
     - [[operation:procedures:HRBLAV0004|HRBLAV0004 : B7xx Blade Fails]]
     - [[operation:procedures:HRBLAV0005|HRBLAV0005 : Comprobacion de estado de un nodo ]]
-    - [[operation:procedures:HRBLAV0006|HRBLAV0006 : Sustitucion Blade B7xx]]
+    - [[operation:procedures:HRBLAV0006|HRBLAV0006 : Sustitucion Blade B7xx]] : ** <fc green>NEW</fc> **
   - ** CP - CPU **
     - [[operation:procedures:HRCPAV0001|HRCPAV0001 : Temperatura CPU]]
     - [[operation:procedures:HRCPAV0002|HRCPAV0002 : Temperatura CPU B700]]
@@ -103,6 +102,7 @@
     - [[operation:procedures:HRHYAV0003|HRHYAV0003 : HYC1 Down, Refrigeration alert]]
     - [[operation:procedures:HRHYAV0004|HRHYAV0004 : HYC2 Down, Refrigeration alert]]
     - [[operation:procedures:HRHYAV0005|HRHYAV0005 : HYC Leak Alert]]
+    - [[operation:procedures:HRHYAV0006|HRHYAV0006 : HYC Inlet Pressure Sensor Control]]
   - ** RM - RMC Power Supply **
     - [[operation:procedures:HRRMAV0001|HRRMAV0001 : RMC Power Status alert]]
   - ** IB - Infiniband **
@@ -171,6 +171,9 @@
   - ** AU - Authentication **
     - [[operation:procedures:OSAUAV0001|OSAUAV0001 : Nis Server Alert]]
     - [[operation:procedures:OSAUAV0002|OSAUAV0002 : Nis Client Alert]]
+  - ** FS - Sistemas de ficheros **
+    - [[operation:procedures:OSFSAV0001|0SFSAV0001 : Filesystem space recovery ]]
+
 
 
 </hidden>
@@ -223,25 +226,29 @@
     - [[operation:procedures:SFSLBS0004|SFSLBS0004 : Estado de un nodo en Slurm]]
     - [[operation:procedures:SFSLBS0005|SFSLBS0005 : Ejecutar un job interactivo en slurm]]
     - [[operation:procedures:SFSLBS0006|SFSLBS0006 : Chequear el estado de un nodo dentro de slurm]]
+    - [[operation:procedures:SFSLBS0007|SFSLBS0007 : Actualizar en caliente la asignación de nodos de una particion]]
+    - [[operation:procedures:SFSLBS0008|SFSLBS0008 : Crear en caliente una particion]]
   - Cyclops
-    - [[operation:procedures:SFCYBS0001|SFCYBS0001 : MON  : Monitorizar el estado de los Nodos]] 
-    - [[operation:procedures:SFCYBS0002|SFCYBS0002 : MNGT : Cambiar el estado de los Nodos en Cyclops]] 
-    - [[operation:procedures:SFCYBS0003|SFCYBS0003 : TOOL : Comprobar si existen procesos zombie]]
-    - [[operation:procedures:SFCYBS0004|SFCYBS0004 : TOOL : Purgar procesos zombie]]
-    - [[operation:procedures:SFCYBS0005|SFCYBS0005 : AUDIT: Registrar información en el diario de seguimiento de un nodo]]
-    - [[operation:procedures:SFCYBS0006|SFCYBS0006 : TOOL : Actualizar Firmware Blade B700]]
-    - [[operation:procedures:SFCYBS0008|SFCYBS0008 : TOOL : configurar Acceso remoto BMC compatibles ipmitool]]
-    - [[operation:procedures:SFCYBS0009|SFCYBS0009 : TOOL : actualizar firmware Bull Newsca B7xx]]
-    - [[operation:procedures:SFCYBS0010|SFCYBS0010 : TOOL : obtención de direcciones MACs desde Log DHCP]]
-    - [[operation:procedures:SFCYBS0011|SFCYBS0011 : TOOL : activación/desactivación del sistema autolink]]
-    - [[operation:procedures:SFCYBS0012|SFCYBS0012 : TOOL : despliegue de configuraciones (kconf - Bull SCS4 )]]
-    - [[operation:procedures:SFCYBS0013|SFCYBS0013 : WEB:   Limpiar la cache del interfaz web]]
-    - [[operation:procedures:SFCYBS0014|SFCYBS0014 : AUDIT: Insertar Interactivamente un evento en la bitacora]]
+    - [[operation:procedures:SFCYBS0001|SFCYBS0001 : Monitorizar el estado de los Nodos]] 
+    - [[operation:procedures:SFCYBS0002|SFCYBS0002 : Cambiar el estado de los Nodos en Cyclops]] 
+    - [[operation:procedures:SFCYBS0003|SFCYBS0003 : TOOL: Comprobar si existen procesos zombie]]
+    - [[operation:procedures:SFCYBS0004|SFCYBS0004 : TOOL: Purgar procesos zombie]]
+    - [[operation:procedures:SFCYBS0005|SFCYBS0005 : Registrar información en el diario de seguimiento de un nodo]]
+    - [[operation:procedures:SFCYBS0006|SFCYBS0006 : TOOL: Actualizar Firmware Blade B700]]
+    - [[operation:procedures:SFCYBS0007|SFCYBS0007 : Cargar entornos de trabajo]]
+    - [[operation:procedures:SFCYBS0008|SFCYBS0008 : TOOL: configurar Acceso remoto BMC compatibles ipmitool]]
+    - [[operation:procedures:SFCYBS0009|SFCYBS0009 : TOOL: actualizar firmware Bull Newsca B7xx]]
+    - [[operation:procedures:SFCYBS0010|SFCYBS0010 : TOOL: obtención de direcciones MACs desde Log DHCP]]
+    - [[operation:procedures:SFCYBS0011|SFCYBS0011 : TOOL: activación/desactivación del sistema autolink]]
+    - [[operation:procedures:SFCYBS0012|SFCYBS0012 : TOOL: despliegue de configuraciones (kconf)]]
+    - [[operation:procedures:SFCYBS0013|SFCYBS0013 : WEB: Limpiar la cache del interfaz web]]
+    - [[operation:procedures:SFCYBS0014|SFCYBS0014 : Insertar Interactivamente un evento en la bitacora]]
   - Ksis - Bull Suit SCS4
     - [[operation:procedures:SFKSBS0001|SFKSBS0001 : Listado de Imágenes disponibles]]
     - [[operation:procedures:SFKSBS0002|SFKSBS0002 : Listado de Imágenes desplegadas]]
     - [[operation:procedures:SFKSBS0003|SFKSBS0003 : Crear Imagen]]
     - [[operation:procedures:SFKSBS0004|SFKSBS0004 : Desplegar Imagen]]
+
 </hidden>
 
 <hidden AVANZADOS initialState="visible">

@@ -31,6 +31,6 @@
 </code>
   * NODOS LOGIN Y COMPUTO:
             * En estos nodos arrancaremos el servicio desde el nodo de gestión utilizando:<code>
- ssh [nodo objetivo] /etc/int.d/slurm restart
+ ssh [nodo objetivo] /etc/init.d/slurm restart
 
 </code>

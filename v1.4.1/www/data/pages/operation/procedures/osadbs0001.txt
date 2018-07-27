@@ -20,14 +20,8 @@
 
   * Se ejecuta desde los nodos de gestión:
 
-  * ** OPCION A ** (Depende de la suit de hpc de bull)
     - se ejecuta el comando:<code>
-conman [nodo objetivo]
-</code>
-
-  * ** OPCION B ** (generica)
-    - se ejecuta el comando:<code>
-ipmiconsole -u [usuario] -p [clave] -h bmc[nodo objetivo]
+ipmiconsole -u [usuario] -p [clave] -h [bmc/ilo objetivo]
 </code>
 
 ** NOTA **

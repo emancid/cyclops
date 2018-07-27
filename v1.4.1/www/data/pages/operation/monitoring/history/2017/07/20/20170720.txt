@@ -1,0 +1,183 @@
+
+|< 100% >|
+|  @#8FD8FF: {{ :wiki:cyclops_title.png?nolink }}  |
+|  @#D7F2FF: ** HISTORIC MONITOR DATA **  |
+
+|< 100% >|
+|  @#D7F2FF: Date  |  2017-07-20  |
+
+<hidden HOUR: 10 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:20:1500539409| 10:30:09 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2017:07:20:1500539588| 10:33:08 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 8 </fc>  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  1   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2017:07:20:1500539764| 10:36:04 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 6 </fc>  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  2   |
+|   [[ :operation:monitoring:history:2017:07:20:1500539943| 10:39:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500540124| 10:42:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500540303| 10:45:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500540483| 10:48:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500540663| 10:51:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500540843| 10:54:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500541023| 10:57:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>
+
+<hidden HOUR: 11 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:20:1500541203| 11:00:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500541383| 11:03:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500541562| 11:06:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500541742| 11:09:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500541923| 11:12:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500542102| 11:15:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500542283| 11:18:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500542462| 11:21:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500542643| 11:24:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500542822| 11:27:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500543003| 11:30:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500543182| 11:33:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500543364| 11:36:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500543543| 11:39:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500543722| 11:42:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500543903| 11:45:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500544083| 11:48:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500544262| 11:51:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500544443| 11:54:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500544622| 11:57:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>
+
+<hidden HOUR: 12 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:20:1500544802| 12:00:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500544983| 12:03:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500545162| 12:06:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500545343| 12:09:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500545522| 12:12:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500545703| 12:15:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500545883| 12:18:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500546063| 12:21:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500546242| 12:24:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500546423| 12:27:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500546603| 12:30:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500546782| 12:33:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500546964| 12:36:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500547142| 12:39:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500547323| 12:42:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500547503| 12:45:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500547682| 12:48:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500547863| 12:51:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500548042| 12:54:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500548223| 12:57:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>
+
+<hidden HOUR: 13 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:20:1500548403| 13:00:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500548583| 13:03:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500548762| 13:06:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500548943| 13:09:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500549123| 13:12:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500549302| 13:15:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500549483| 13:18:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500549663| 13:21:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500549843| 13:24:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500550022| 13:27:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500550203| 13:30:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500550383| 13:33:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500550563| 13:36:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500550743| 13:39:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500550922| 13:42:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500551103| 13:45:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500551283| 13:48:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500551463| 13:51:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500551642| 13:54:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500551823| 13:57:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>
+
+<hidden HOUR: 14 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:20:1500552003| 14:00:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500552182| 14:03:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500552363| 14:06:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500552543| 14:09:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500552722| 14:12:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500552903| 14:15:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500553083| 14:18:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500553262| 14:21:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500553443| 14:24:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500553623| 14:27:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500553803| 14:30:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500553983| 14:33:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500554164| 14:36:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500554343| 14:39:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500554523| 14:42:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500554703| 14:45:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500554883| 14:48:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500555063| 14:51:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500555243| 14:54:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500555423| 14:57:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>
+
+<hidden HOUR: 15 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:20:1500555603| 15:00:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500555782| 15:03:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500555964| 15:06:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500556143| 15:09:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500556323| 15:12:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500556503| 15:15:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500556684| 15:18:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500556863| 15:21:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500557043| 15:24:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500557223| 15:27:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500557403| 15:30:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500557582| 15:33:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500557765| 15:36:05 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500557943| 15:39:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500558123| 15:42:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500558302| 15:45:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500558483| 15:48:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500558663| 15:51:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500558843| 15:54:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500559022| 15:57:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>
+
+<hidden HOUR: 16 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:20:1500559203| 16:00:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500559383| 16:03:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500559563| 16:06:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500559743| 16:09:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500559923| 16:12:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500560103| 16:15:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500560282| 16:18:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500560464| 16:21:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500560643| 16:24:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500560823| 16:27:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500561004| 16:30:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500561182| 16:33:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500561364| 16:36:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500561543| 16:39:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500561723| 16:42:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500561903| 16:45:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500562083| 16:48:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500562263| 16:51:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500562443| 16:54:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500562622| 16:57:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>
+
+<hidden HOUR: 17 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:20:1500562803| 17:00:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500562983| 17:03:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500563163| 17:06:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500563344| 17:09:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500563523| 17:12:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:20:1500563704| 17:15:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>

@@ -18,9 +18,9 @@
 ===== Procedimiento =====
 
   * Se ejecuta el siguiente comando desde los nodos de gestión: <code>
-[root@[MANAGEMENT NODES] ~]# clmctrl status [nombre de host]
+clmctrl status [nombre de nodo|rango de nodos]
 </code>
   * Un ejemplo de salida:<code>
-[root@[MANAGEMENT NODES] ~]# clmctrl status [NODE]2
-[NODE]2#login@node/cmd: Chassis Power is on
+nodo5114#compute@node/cmd: Blade Power is on
+nodo5105#compute@node/cmd: Blade Power is on
 </code>

@@ -12,4 +12,4 @@
 ===== Procedimiento =====
 
   * Se ejecuta el siguiente comando:<code>
-/opt/cyclops/tools/approved/tool.configure.bmc.sh -n [nombre de nodo|nombre de nodo[rango]]</code>
+/opt/cyclops/tools/approved/tool.configure.bmc.sh -n [nombre de bmc/ilo|nombre de bmc[rango]]</code>

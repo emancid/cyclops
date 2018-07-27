@@ -1,0 +1,138 @@
+
+|< 100% >|
+|  @#8FD8FF: {{ :wiki:cyclops_title.png?nolink }}  |
+|  @#D7F2FF: ** HISTORIC MONITOR DATA **  |
+
+|< 100% >|
+|  @#D7F2FF: Date  |  2018-04-16  |
+
+<hidden HOUR: 12 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523873362| 12:09:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 13   |  @#EAFFD5: 0   |  9   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523873542| 12:12:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523873722| 12:15:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523873903| 12:18:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523874081| 12:21:21 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523874263| 12:24:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523874442| 12:27:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523874622| 12:30:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523874803| 12:33:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523874983| 12:36:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523875162| 12:39:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523875343| 12:42:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523875523| 12:45:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523875703| 12:48:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523875882| 12:51:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523876062| 12:54:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523876243| 12:57:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+</hidden>
+
+<hidden HOUR: 13 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523876422| 13:00:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523876602| 13:03:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523876783| 13:06:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523876962| 13:09:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523877143| 13:12:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523877322| 13:15:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523877502| 13:18:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523877683| 13:21:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523877862| 13:24:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523878043| 13:27:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523878222| 13:30:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523878402| 13:33:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523878582| 13:36:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523878762| 13:39:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523878942| 13:42:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523879122| 13:45:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523879303| 13:48:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523879482| 13:51:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523879661| 13:54:21 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523879845| 13:57:25 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+</hidden>
+
+<hidden HOUR: 14 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523880024| 14:00:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523880202| 14:03:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523880382| 14:06:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523880563| 14:09:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523880744| 14:12:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523880924| 14:15:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523881103| 14:18:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523881282| 14:21:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523881462| 14:24:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523881643| 14:27:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523881822| 14:30:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523882003| 14:33:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523882183| 14:36:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523882362| 14:39:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523882542| 14:42:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523882722| 14:45:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523882903| 14:48:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523883082| 14:51:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523883263| 14:54:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523883442| 14:57:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+</hidden>
+
+<hidden HOUR: 15 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523883623| 15:00:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523883802| 15:03:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523883982| 15:06:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523884164| 15:09:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523884342| 15:12:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523884524| 15:15:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523884702| 15:18:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523884883| 15:21:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523885062| 15:24:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523885243| 15:27:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523885422| 15:30:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523885602| 15:33:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523885782| 15:36:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523885963| 15:39:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523886142| 15:42:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523886322| 15:45:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523886503| 15:48:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523886682| 15:51:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523886863| 15:54:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523887044| 15:57:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+</hidden>
+
+<hidden HOUR: 16 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523887223| 16:00:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523887403| 16:03:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523887584| 16:06:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523887763| 16:09:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523887941| 16:12:21 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523888124| 16:15:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523888302| 16:18:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523888483| 16:21:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523888662| 16:24:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523888842| 16:27:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523889023| 16:30:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523889202| 16:33:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523889382| 16:36:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523889563| 16:39:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523889743| 16:42:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523889922| 16:45:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523890103| 16:48:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523890282| 16:51:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523890462| 16:54:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523890642| 16:57:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+</hidden>
+
+<hidden HOUR: 17 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523890822| 17:00:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523891002| 17:03:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523891183| 17:06:23 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:16:1523891364| 17:09:24 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 12 </fc>  |  @#FFFF00: 8   |  @#EAFFD5: 0   |  3   |
+</hidden>

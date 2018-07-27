@@ -1,0 +1,20 @@
+
+|< 100% >|
+|  @#8FD8FF: {{ :wiki:cyclops_title.png?nolink }}  |
+|  @#D7F2FF: ** HISTORIC MONITOR DATA **  |
+
+|< 100% >|
+|  @#D7F2FF: Date  |  2018-04-05  |
+
+<hidden HOUR: 16 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:05:1522937901| 16:18:21 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 16 </fc>  |  @#FFFF00: 9   |  @#EAFFD5: 0   |  5   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:05:1522938080| 16:21:20 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 16 </fc>  |  @#FFFF00: 9   |  @#EAFFD5: 0   |  34   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:05:1522938260| 16:24:20 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 16 </fc>  |  @#FFFF00: 7   |  @#EAFFD5: 0   |  9   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:05:1522938442| 16:27:22 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 16 </fc>  |  @#FFFF00: 7   |  @#EAFFD5: 0   |  9   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:05:1522938619| 16:30:19 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 16 </fc>  |  @#FFFF00: 7   |  @#EAFFD5: 0   |  9   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:05:1522938805| 16:33:25 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 16 </fc>  |  @#FFFF00: 7   |  @#EAFFD5: 0   |  9   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:05:1522938989| 16:36:29 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 16 </fc>  |  @#FFFF00: 7   |  @#EAFFD5: 0   |  9   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2018:04:05:1522939160| 16:39:20 ]]  **  |  @#EAFFD5: 0   |  @#F7BE81: <fc white> 16 </fc>  |  @#FFFF00: 7   |  @#EAFFD5: 0   |  10   |
+</hidden>

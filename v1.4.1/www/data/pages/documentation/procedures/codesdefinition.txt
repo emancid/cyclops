@@ -22,9 +22,6 @@
 |              |  PW           |  BS/AV*         |  [0-9]{4}             | Hardware: Power                                  |
 |              |  ST           |  BS/AV*         |  [0-9]{4}             | Hardware: Storage                                |
 |              |  BM           |  BS/AV*         |  [0-9]{4}             | Hardware: BMC/ILO                                |
-|              |  RM           |  BS/AV*         |  [0-9]{4}             | Hardware: RMC - Bull Rack NEWSCA                 |
-|              |  CM           |  BS/AV*         |  [0-9]{4}             | Hardware: CMC - Bull Chassis NEWSCA              |
-|              |  HY           |  BS/AV*         |  [0-9]{4}             | Hardware: HYC - Bull Hidraulic Refrigeration NEWSCA  |
 |  FS          |               |                 |                       | File System                                      |
 |              |  LU           |  BS/AV*         |  [0-9]{4}             | File System: Lustre                              |
 |              |  CM           |  BS/AV*         |  [0-9]{4}             | File System: Common (ext3,ext4,xfs...)           |
@@ -35,14 +32,12 @@
 |              |  AU           |  BS/AV*         |  [0-9]{4}             | Operating System: Security: Authentication       |
 |  SF          |               |                 |                       | Software                                         |
 |              |  SL           |  BS/AV*         |  [0-9]{4}             | Slurm                                            |
-|              |  CB           |  BS/AV*         |  [0-9]{4}             | ClusterDB (Bull HPC SCS4)                        |
 |              |  PM           |  BS/AV*         |  [0-9]{4}             | HA: Pacemaker                                    |
 |              |  HB           |  BS/AV*         |  [0-9]{4}             | HA: HeartBeat                                    |
 |              |  FT           |  BS/AV*         |  [0-9]{4}             | FTP                                              |
 |              |  MU           |  BS/AV*         |  [0-9]{4}             | Munge                                            |
 |              |  MY           |  BS/AV*         |  [0-9]{4}             | Mysql                                            |
 |              |  CY           |  BS/AV*         |  [0-9]{4}             | Cyclops                                          |
-|              |  KS           |  BS/AV*         |  [0-9]{4}             | Ksis (Bull HPC SCS4)                             |
 |  DV          |               |                 |                       | Software Development                             |
 |              |  LM           |  BS/AV*         |  [0-9]{4}             | LMOD                                             |
 |              |  CP           |  BS/AV*         |  [0-9]{4}             | Compiling                                        |

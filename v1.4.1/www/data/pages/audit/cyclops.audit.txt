@@ -1,0 +1,9 @@
+====== CYCLOPS BITACORA ======
+
+  * information about cyclops, like updates, modifications, problems, etc.
+
+<hidden 2017 >
+|< 100% 4% 4% 4% 4% 8% 68% 8% >|
+|  @#D7F2FF: year  |  @#D7F2FF: month  |  @#D7F2FF:day   |  @#D7F2FF: hour  |  @#D7F2FF: event  |  @#D7F2FF: message  |  @#D7F2FF: status  |
+|  2017  |  Jul  |  26 Wed  |  16:30:13  |  @#EAFFD5: INFO  |  root : actualizado cyclops a la version v1.4.2  |  @#A5DF00: OK  |
+</hidden>

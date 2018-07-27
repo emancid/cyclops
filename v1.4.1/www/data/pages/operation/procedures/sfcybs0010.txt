@@ -13,7 +13,7 @@
 
   * Se ejecuta el siguiente comandos:
   - Obtención de direcciones MAC:<code>
-/opt/cyclops/tools/approved/tool.mac.extract.sh -n [nombre de nodo|nombre de nodo[rango]] -o clusterdb</code>
+/opt/cyclops/tools/approved/tool.mac.extract.sh -o clusterdb -n [nombre de nodo|nombre de nodo[rango]]</code>
   - ** [OPCIONAL]: ** Actualizacion de direcciones MACs:<code>
 . /opt/cyclops/temp/tool.ext.macs.cdb.[timestamp].sh</code>
 

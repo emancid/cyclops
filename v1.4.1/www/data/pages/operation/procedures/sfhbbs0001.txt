@@ -6,16 +6,12 @@
 
 |< 100% >| 
 ^  Grupo         ^  Nodos          ^  Descripción                                                     ^  Criticidad  ^  Implicacion  ^ 
-|  Login         |  LOGIN NODES (CRITICAL)    |  Acceso de los usuarios al sistema productivo                    |  @#FFFF00:MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
-|  IO            |  LOGIN NODES    |  Transferencia de Informacion con el entorno de la organizacion  |  @#FFFF00:MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
 
 
 ===== Sistemas Colaterales =====
 
 |< 100% >| 
 ^  Grupo  ^  Nodos              ^  Descripción                                                                                ^  Criticidad  ^  Implicacion  ^
-|  Login         |  LOGIN NODES (CRITICAL)    |  Acceso de los usuarios al sistema productivo                    |  @#FFFF00:MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
-|  IO            |  LOGIN NODES    |  Transferencia de Informacion con el entorno de la organizacion  |  @#FFFF00:MEDIA       |  Caida en el nivel de integridad del sistema productivo  |
 
 
 ===== Procedimiento =====

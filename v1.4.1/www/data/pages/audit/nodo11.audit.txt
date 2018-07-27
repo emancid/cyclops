@@ -1,0 +1,125 @@
+====== NODE INFO ======
+|< 100% 20% 16% 16% 16% 16% 16% >|
+|  @#8FD8FF: {{ :wiki:cyclops_title.png |}}  ||||||
+|  @#D7F2FF: HOST NAME  |  @#D7F2FF: TYPE  |  @#D7F2FF: GROUP  |  @#D7F2FF: OS  |  @#D7F2FF: MNG STATUS  |  @#D7F2FF: LAST UPDATE  |
+|  nodo11               |  slurm_cp          |  compute          |  redhat6          |  up           |  2018-04-26 15:36:02             |
+
+<tabbox Events Graphs>
+|< 100% 50% 50% >|
+|  @#D7F2FF: nodo11 Year 2017-07-27 events  ||
+|  <gchart 850x350 line #0040FF #ffffff center>
+2017-July=0
+August=0
+September=0
+October=0
+November=0
+December=0
+2018-March=8
+April=0
+May=0
+June=0
+July=0
+</gchart>  ||
+|  @#D7F2FF: Management Activity Last 10  ||
+|  <gchart 850x350 bar @#A5DF00 #ffffff center>
+M07-17=0
+D18=0
+D19=0
+D20=0
+D21=0
+D22=0
+D23=0
+D24=0
+D25=0
+D26=0
+D27=0
+</gchart>  ||
+|  @#D7F2FF: Alerts Activity Last 10  |  @#D7F2FF: Incident Activity Last 10  |
+|  <gchart 700x350 line @#F7BE81 #ffffff center>
+M07-17=0
+D18=0
+D19=0
+D20=0
+D21=0
+D22=0
+D23=0
+D24=0
+D25=0
+D26=0
+D27=0
+</gchart>  |  <gchart 700x350 line @#FA5858 #ffffff center>
+M07-17=0
+D18=0
+D19=0
+D20=0
+D21=0
+D22=0
+D23=0
+D24=0
+D25=0
+D26=0
+D27=0
+</gchart>  |
+<tabbox Sensors Graphs>
+
+<tabbox Host Settings>
+<hidden System Information >
+|< 100% 20% >|
+|  @#8FD8FF: Manufacturer  |  innotek GmbH  |
+|  @#8FD8FF: Product Name  |  VirtualBox  |
+|  @#8FD8FF: Serial Number  |  0  |
+|  @#8FD8FF: Version  |  1.2  |
+</hidden>
+<hidden Base Board Information >
+|< 100% 20% >|
+|  @#8FD8FF: Manufacturer  |  Oracle Corporation  |
+|  @#8FD8FF: Product Name  |  VirtualBox  |
+|  @#8FD8FF: Serial Number  |  0  |
+|  @#8FD8FF: Version  |  1.2  |
+</hidden>
+<hidden BIOS Information >
+|< 100% 20% >|
+|  @#8FD8FF: Release Date  |  12/01/2006  |
+|  @#8FD8FF: Vendor  |  innotek GmbH  |
+|  @#8FD8FF: Version  |  1.2  |
+|  :::  |  VirtualBox  |
+</hidden>
+<hidden cpu info >
+|< 100% 20% >|
+|  @#8FD8FF: vendor  |  GenuineIntel  |
+|  @#8FD8FF: model  |  Intel(R) Core(TM) i7-5500U CPU @ 2.40GHz  |
+|  @#8FD8FF: cores  |  2  |
+</hidden>
+<hidden local disk >
+|< 100% 20% >|
+|  @#8FD8FF: sr0  |  Product  |  CD-ROM            |
+|  :::  |  Revision  |  1.0   |
+|  :::  |  Serial number  |    |
+|  :::  |  Vendor  |  VBOX      |
+|  @#8FD8FF: sda  |  Device Model  |  VBOX HARDDISK  |
+|  :::  |  Firmware Version  |  1.0  |
+|  :::  |  Serial Number  |  VB854e4513-4304a198  |
+|  :::  |  User Capacity  |  21,474,836,480 bytes [21.4 GB]  |
+</hidden>
+<hidden packages >
+|< 100% 20% >|
+|  @#8FD8FF: total install  |  335  |
+|  @#8FD8FF: Installed Kernels  |  kernel-2.6.32-358.el6.x86_64  |
+|  @#8FD8FF: slurm version  |  14.11.9  |
+</hidden>
+<tabbox Host Activity Events>
+|< 100% 10% 10% 10% 10% 10% 40% 10% >|
+|  @#D7F2FF: YEAR  |  @#D7F2FF: MONTH  |  @#D7F2FF: DAY  |  @#D7F2FF: HOUR  |  @#D7F2FF: EVENT  |  @#D7F2FF:  ACTIVITY  |  @#D7F2FF:  STATUS  |
+|  2018  |  03 Mar  |  14 Wed  |  13:44:56  |  @#088A68: REACTIVE  |  link action  |  @#F7BE81: FAIL  |
+|  :::  |  :::  |  :::  |  13:45:14  |  @#088A68: REACTIVE  |  repair action ok, please change to up if status is ok  |  @#EAFFD5: UP  |
+|  :::  |  :::  |  :::  |  13:46:04  |  @#088A68: REACTIVE  |  link action  |  @#F7BE81: FAIL  |
+|  :::  |  :::  |  :::  |  13:49:45  |  @#088A68: REACTIVE  |  link action  |  @#F7BE81: FAIL  |
+|  :::  |  :::  |  :::  |  13:51:12  |  @#088A68: REACTIVE  |  repair action  |  @#A5DF00: OK  |
+|  :::  |  :::  |  :::  |  13:54:30  |  @#088A68: REACTIVE  |  link action  |  @#A5DF00: OK  |
+|  :::  |  :::  |  :::  |  15:07:20  |  @#088A68: REACTIVE  |  link action  |  @#A5DF00: OK  |
+|  :::  |  :::  |  :::  |  15:08:12  |  @#088A68: REACTIVE  |  link action  |  @#A5DF00: OK  |
+<tabbox Host Bitacora>
+|< 100% 10% 10% 10% 10% 10% 40% 10% >|
+|  @#D7F2FF: YEAR  |  @#D7F2FF: MONTH  |  @#D7F2FF: DAY  |  @#D7F2FF: HOUR  |  @#D7F2FF: EVENT  |  @#D7F2FF:  ACTIVITY  |  @#D7F2FF:  STATUS  |
+|    |
+</tabbox>

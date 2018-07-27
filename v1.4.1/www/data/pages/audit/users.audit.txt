@@ -1,0 +1,5 @@
+====== USERS BITACORA ======
+
+  * events and information relevant for cluster users
+
+

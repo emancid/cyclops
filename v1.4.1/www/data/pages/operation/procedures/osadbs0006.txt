@@ -1,45 +1,27 @@
-====== Procedimientos Básicos ======
+====== Procedimientos Técnicos - Básicos ======
 
-===== Kill Zombies  =====  
+** Sistema Operativo - Administración : Eliminar procesos Zombies **  
 
-===== Sistemas Vinculados =====
+===== Sistemas Objetivo =====
 
 |< 100% >| 
-^  Grupo         ^  Nodos          ^  Descripción  ^  Criticidad  ^  Implicacion  ^ 
-|  Gestión       |  MANAGEMENT NODES    |  Permiten la administracion del servicio|  MUY ALTA        |        |
-|  Login         |  LOGIN NODES (CRITICAL)    |  Acceso de los usuarios al sistemaproductivo                    |  ALTA        |    |
-|  Computo/Aire  |  node[RANGE]  |  Uso del servicio por el sistemaproductivo                      |  ALTA        |  Merma en el rendimiento productivo  |
-|  Computo/Agua  |  node[RANGE]      |  Uso del servicio por el sistema productivo                      |  ALTA        |  Merma en el rendimiento productivo  |
- 
+^  Grupo     ^  Nodos                      ^  Descripción                                                                             ^  Criticidad          ^  Implicación  ^
+|  Todos     |  Todos                      |                                                                                          |  @#EAFFD5: BAJA      |  Cambios en la configuración de la BMC  |
+
+===== Sistemas Colaterales =====
+
+|< 100% >| 
+^  Grupo         ^  Nodos           ^  Descripción                                                     ^  Criticidad  ^  Implicación  ^ 
+|  Todos         |  Depende         |                                                                  |  @#EAFFD5: BAJA       |  Ninguno Conocido  |
 
 ===== Procedimiento =====
 
-
-    - Ejecutar el siguiente comando: <code>
-  for _node in $( /opt/cyclops/scripts/sensors.nodes.mon.sh -v commas | grep FAIL | cut -d';' -f2 | cut -d' ' -f2 ) ; do ssh $_node "bash -s" < /opt/cyclops/tools/zombie.restore.sh ; done
+  * Ejecutar el siguiente comando para comprobar si existen procesos zombies: <code>
+/opt/cyclops/tools/approved/zombie.restore.sh -n [NOMBRE DE NODO O RANGO DE NODOS] -t zombie -v human
 </code>
- <hidden Elemplo>
-<code>1443021472;[MANAGEMENT NODES];root;1;31587;Z;--daemon;0
-1443021472;[MANAGEMENT NODES];apache;16856;31770;Z;/usr/sbin/httpd;0
-1443021472;[MANAGEMENT NODES];root;2;31953;Z;[flush-253:21];0
-1443021472;[MANAGEMENT NODES];root;11093;32292;Z;[priv];0
-1443021472;[MANAGEMENT NODES];emc;32292;32473;Z;emc@pts/161;0
-1443021472;[MANAGEMENT NODES];emc;32473;32474;Z;-bash;0
-1443021472;[MANAGEMENT NODES];root;32474;32631;Z;-;1
-</code></hidden>
-
-
-  * En la ultima linea del anterior ejemplo podemos observar :
-    * ** 1443021472 ** -> fecha.
-    * ** [MANAGEMENT NODES] **  -> nodo con ejecución de Zombies
-    * ** root ** -> usuario
-    * ** 32474 ** -> pid proceso
-    * ** 32631 ** -> pid proceso padre
-    * ** Z ** -> estado Zombie
-    * ** [0,1] **  -> resultado de la ejecución:
-      * ** 0 ** : Todos los zombies en ese nodo han sido eliminados correctamente.
-      * ** 1 ** : Algunos procesos  zombies en ese nodo NO han sido eliminados .
-
+  * Ejecutar el siguiente comando para eliminar procesos zombies: <code>
+/opt/cyclops/tools/approved/zombie.restore.sh -n [NOMBRE DE NODO O RANGO DE NODOS] -t zombie -v human -k
+</code>
 
 
 

@@ -44,7 +44,7 @@ Monitor Cycles                   Cyclops Status
 
 Uptime Control Plugin
 Uptime Record Host               Days            Code Description
-nimbus5                          99              UPTIME_RECORD
+nodo5                          99              UPTIME_RECORD
 
 Audit Status Option
 Code Description                 Status
@@ -60,7 +60,7 @@ SOUND                            ENABLED
 
 HA Status
 Code Description                 Status          Master Host
-HA                               ENABLED         nimbus0
+HA                               ENABLED         nodo0
 </code>
 </hidden>
   * Activar la monitorizacion:<code>
@@ -176,8 +176,8 @@ tail -f /opt/cyclops/logs/[HOSTNAME].mon.log  | awk -F\; '{ if ( $1 ~ "^[0-9]" )
 
 <hidden Ejemplo salida: Estado nodos>
 <code>
-[2017-04-27T11:07:06][root@nimbus0][~]# cyc.status.sh -a node
-HA CHECK: ENABLED : MASTER CYCLOPS: [nimbus0] : BACKUP : [nimbus1] : ME=[nimbus0] ROL : [MASTER] : LOCAL EXEC : [nimbus0]
+[2017-04-27T11:07:06][root@nodo0][~]# cyc.status.sh -a node
+HA CHECK: ENABLED : MASTER CYCLOPS: [nodo0] : BACKUP : [nodo1] : ME=[nodo0] ROL : [MASTER] : LOCAL EXEC : [nodo0]
 
 NODE: STATUS
 ------------
@@ -187,48 +187,48 @@ LAST UPDATE: 2017-04-27 11:12:45
 Group            Family        Qty  Node Range                                       Mngt Cfg  Status  Slurm    Errors
 ------           -------       ---  ----------                                       --------  ------  -----    ------
  
-compute_desa128  chasis62      18   nimbus[6201-6218]                                UP        OK      idle      
-                 chasis63      18   nimbus[6301-6318]                                UP        OK      idle      
-                 chasis72      18   nimbus[7201-7218]                                UP        OK      idle      
-                 chasis73      18   nimbus[7301-7318]                                UP        OK      idle      
-                 chasis82      18   nimbus[8201-8218]                                UP        OK      idle      
-                 chasis83      18   nimbus[8301-8318]                                UP        OK      idle      
+compute_desa128  chasis62      18   nodo[6201-6218]                                UP        OK      idle      
+                 chasis63      18   nodo[6301-6318]                                UP        OK      idle      
+                 chasis72      18   nodo[7201-7218]                                UP        OK      idle      
+                 chasis73      18   nodo[7301-7318]                                UP        OK      idle      
+                 chasis82      18   nodo[8201-8218]                                UP        OK      idle      
+                 chasis83      18   nodo[8301-8318]                                UP        OK      idle      
  
-compute_desa64   chasis31      9    nimbus[3103-3109,3111-3112]                      UP        OK      idle      
-                 chasis31      6    nimbus[3113-3118]                                UP        OK      working   
-                 chasis32      16   nimbus[3202-3209,3211-3218]                      UP        OK      working   
-                 chasis33      1    nimbus[3318]                                     UP        OK      idle      
-                 chasis33      17   nimbus[3301-3317]                                UP        OK      working   
-                 chasis41      7    nimbus[4103-4109]                                UP        OK      idle      
-                 chasis41      8    nimbus[4111-4118]                                UP        OK      working   
-                 chasis42      16   nimbus[4202-4209,4211-4218]                      UP        OK      working   
-                 chasis43      6    nimbus[4313-4318]                                UP        OK      idle      
-                 chasis43      12   nimbus[4301-4312]                                UP        OK      working   
-                 chasis51      8    nimbus[5102-5109]                                UP        OK      idle      
-                 chasis51      8    nimbus[5111-5118]                                UP        OK      working   
-                 chasis52      2    nimbus[5217-5218]                                UP        OK      idle      
-                 chasis52      14   nimbus[5202-5209,5211-5216]                      UP        OK      working   
+compute_desa64   chasis31      9    nodo[3103-3109,3111-3112]                      UP        OK      idle      
+                 chasis31      6    nodo[3113-3118]                                UP        OK      working   
+                 chasis32      16   nodo[3202-3209,3211-3218]                      UP        OK      working   
+                 chasis33      1    nodo[3318]                                     UP        OK      idle      
+                 chasis33      17   nodo[3301-3317]                                UP        OK      working   
+                 chasis41      7    nodo[4103-4109]                                UP        OK      idle      
+                 chasis41      8    nodo[4111-4118]                                UP        OK      working   
+                 chasis42      16   nodo[4202-4209,4211-4218]                      UP        OK      working   
+                 chasis43      6    nodo[4313-4318]                                UP        OK      idle      
+                 chasis43      12   nodo[4301-4312]                                UP        OK      working   
+                 chasis51      8    nodo[5102-5109]                                UP        OK      idle      
+                 chasis51      8    nodo[5111-5118]                                UP        OK      working   
+                 chasis52      2    nodo[5217-5218]                                UP        OK      idle      
+                 chasis52      14   nodo[5202-5209,5211-5216]                      UP        OK      working   
  
-compute_expl     hi_expl       8    nimbus[3101,3110,3201,3210,4201,4210,5201,5210]  UP        OK      idle      
-                 hr_expl       72   nimbus[5301-5318,6101-6118,7101-7118,8101-8118]  UP        OK      idle      
+compute_expl     hi_expl       8    nodo[3101,3110,3201,3210,4201,4210,5201,5210]  UP        OK      idle      
+                 hr_expl       72   nodo[5301-5318,6101-6118,7101-7118,8101-8118]  UP        OK      idle      
  
-compute_misc     desalt        2    nimbus[5101,5110]                                UP        OK      idle      
-                 desalt        2    nimbus[4101,4110]                                UP        OK      working   
-                 mocage        2    nimbus[3102,4102]                                UP        OK      idle      
+compute_misc     desalt        2    nodo[5101,5110]                                UP        OK      idle      
+                 desalt        2    nodo[4101,4110]                                UP        OK      working   
+                 mocage        2    nodo[3102,4102]                                UP        OK      idle      
  
-operation        dev           2    nimbus[4-5]                                      UP        OK      n/a       
-                 login         2    nimbus[2-3]                                      UP        OK      n/a       
-                 ls_mds        2    nimbus[6-7]                                      UP        OK      n/a       
-                 ls_oss        2    nimbus[8-9]                                      UP        OK      n/a       
-                 management    2    nimbus[0-1]                                      UP        OK      n/a       
-                 nfs_srv       2    nimbus[10,12]                                    UP        OK      n/a       
-                 virtualizers  2    nimbus[11,13]                                    UP        OK      n/a
+operation        dev           2    nodo[4-5]                                      UP        OK      n/a       
+                 login         2    nodo[2-3]                                      UP        OK      n/a       
+                 ls_mds        2    nodo[6-7]                                      UP        OK      n/a       
+                 ls_oss        2    nodo[8-9]                                      UP        OK      n/a       
+                 management    2    nodo[0-1]                                      UP        OK      n/a       
+                 nfs_srv       2    nodo[10,12]                                    UP        OK      n/a       
+                 virtualizers  2    nodo[11,13]                                    UP        OK      n/a
 </code>
 </hidden>
 <hidden Ejemplo salida: Estado cyclops>
 <code>
-[2017-04-27T11:03:34][root@nimbus0][~]# cyc.status.sh -a cyclops
-HA CHECK: ENABLED : MASTER CYCLOPS: [nimbus0] : BACKUP : [nimbus1] : ME=[nimbus0] ROL : [MASTER] : LOCAL EXEC : [nimbus0]
+[2017-04-27T11:03:34][root@nodo0][~]# cyc.status.sh -a cyclops
+HA CHECK: ENABLED : MASTER CYCLOPS: [nodo0] : BACKUP : [nodo1] : ME=[nodo0] ROL : [MASTER] : LOCAL EXEC : [nodo0]
 
 CYCLOPS: STATUS
 ---------------
@@ -251,8 +251,8 @@ Host Control Razor Management       ENABLED
 
 <hidden Ejemplo salida: Uso Slurm>
 <code> 
-[2017-04-27T11:03:28][root@nimbus0][~]# cyc.status.sh -a slurm -t status
-HA CHECK: ENABLED : MASTER CYCLOPS: [nimbus0] : BACKUP : [nimbus1] : ME=[nimbus0] ROL : [MASTER] : LOCAL EXEC : [nimbus0]
+[2017-04-27T11:03:28][root@nodo0][~]# cyc.status.sh -a slurm -t status
+HA CHECK: ENABLED : MASTER CYCLOPS: [nodo0] : BACKUP : [nodo1] : ME=[nodo0] ROL : [MASTER] : LOCAL EXEC : [nodo0]
 
 SLURM CLUSTER: ACTIVE NODES
 ---------------------------
@@ -332,9 +332,9 @@ SLURM CLUSTER: ACTIVE NODES
 NODE MONITORING IA PROCEDURES
 CODE        DESCRIPTION                              PRIORITY  HOST                             SENSORS                             WIKI FILE       WIKI INDEX  WIKI VER  OPERATIVE  VERIFICATED
 
-FSLUAV0001  Lustre Shutdown                          20        nimbus6,nimbus7,nimbus8,nimbus9  lustre,lustre,lustre,lustre         fsluav0001.txt  YES (1)     0.2       SI         NO
-FSLUAV0002  lustre MDT failure                       40        nimbus6,ALL                      uptime,lustre,lustre                fsluav0002.txt  YES (1)     0.3       SI         NO
-FSLUAV0003  lustre OST failure                       40        nimbus8,nimbus9,ALL              update,lustre,update,lustre,lustre  fsluav0003.txt  YES (1)     0.2       SI         NO
+FSLUAV0001  Lustre Shutdown                          20        nodo6,nodo7,nodo8,nodo9  lustre,lustre,lustre,lustre         fsluav0001.txt  YES (1)     0.2       SI         NO
+FSLUAV0002  lustre MDT failure                       40        nodo6,ALL                      uptime,lustre,lustre                fsluav0002.txt  YES (1)     0.3       SI         NO
+FSLUAV0003  lustre OST failure                       40        nodo8,nodo9,ALL              update,lustre,update,lustre,lustre  fsluav0003.txt  YES (1)     0.2       SI         NO
 FSLUAV0004  Client lustre offline                    20        ALL                              lustre                              fsluav0004.txt  YES (1)     0.2       SI         NO
 HRBIAV0001  BIOS Log Trace alert                     50        ALL                              bios_log                            hrbiav0001.txt  YES (1)     0.1       SI         NO
 HRBLAV0002  B7xx Blade Temp alert                    30        ALL                              bld_temp_b7                         hrblav0002.txt  YES (1)     0.2       NO         NO
@@ -441,8 +441,8 @@ z                  exist
 OK NODE STATUS - OPERATIVE
 
 family  hostname    mon_time  uptime       cpu    cpu_temp  swap  disk_space  bios_log  lsidisk  network  daemon_status  lustre    heartbeat  munge  vsftpd  crond  z
-login   UP nimbus2  12.00.46  CHECKING 3d  UP 1%  UP 33%    UP    UP          UP        UP       UP       UP/36/36/      UP mount  UP         UP     UP      UP     UP 
-login   UP nimbus3  12.00.46  CHECKING 3d  UP 1%  UP 36%    UP    UP          UP        UP       UP       UP/36/36/      UP mount  UP         UP     UP      UP     UP
+login   UP nodo2  12.00.46  CHECKING 3d  UP 1%  UP 33%    UP    UP          UP        UP       UP       UP/36/36/      UP mount  UP         UP     UP      UP     UP 
+login   UP nodo3  12.00.46  CHECKING 3d  UP 1%  UP 36%    UP    UP          UP        UP       UP       UP/36/36/      UP mount  UP         UP     UP      UP     UP
 </code>
 </hidden>
 
@@ -506,13 +506,13 @@ rmc     rmc50  UP     OK ok  OK hyc1   UP hyc2       UP 64%       UP 64%       U
 
 <hidden Ejemplo de Salida (sin filtro)>
 <code>
-[root@nimbus0 scripts]# audit.nod.sh -n nimbus4 -v human 
+[root@nodo0 scripts]# audit.nod.sh -n nodo4 -v human 
 
-INFO: nimbus4
+INFO: nodo4
 ===================================
 
 host name  host type  host group  host os  host mng status
-nimbus4    io         operation   redhat6  drain
+nodo4    io         operation   redhat6  drain
 
 SETTINGS INFO:
 -----------------------------------
@@ -680,9 +680,9 @@ DATE        TIME      EVENT  ACTIVITY                                   STATUS
 
 <hidden Ejemplo de Salida (con filtro de actividad)>
 <code>
-[root@nimbus0 scripts]# audit.nod.sh -n nimbus4 -v human -f activity
+[root@nodo0 scripts]# audit.nod.sh -n nodo4 -v human -f activity
 
-INFO: nimbus4
+INFO: nodo4
 ===================================
 
 ACTIVITY INFO:
@@ -702,42 +702,42 @@ DATE        TIME      EVENT   ACTIVITY       STATUS
 
 <hidden Ejemplo de Salida>
 <code>
-2015-12-21;00:00:22;NOD;nimbus4106;ALERT;z;FAIL
-2015-12-21;00:00:22;NOD;nimbus4115;ALERT;z;FAIL
-2015-12-21;00:00:24;NOD;nimbus3203;ALERT;z;FAIL
-2015-12-28;11:53:24;NOD;nimbus4113;INFO;Aplicada Pasta Termica;INFO
-2015-12-28;11:55:29;NOD;nimbus4113;STATUS;mon status;DIAGNOSE
-2015-12-28;11:55:40;NOD;nimbus4104;STATUS;mon status;DIAGNOSE
-2015-12-30;11:43:06;NOD;nimbus4104;STATUS;mon status;UP
-2015-12-30;22:00:15;NOD;nimbus0;ALERT;z;FAIL
-2015-12-31;19:51:32;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
-2016-01-01;02:12:26;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
-2016-01-02;20:33:24;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
-2016-01-03;08:27:22;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
-2016-01-03;14:33:23;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
-2016-01-03;20:21:25;NOD;nimbus4308;ALERT;bld_temp_b7;DOWN
-2016-01-03;20:42:22;NOD;nimbus4308;ALERT;bios_log;FAIL
-2016-01-04;01:30:18;NOD;nimbus4308;STATUS;mon status;CONTENT
-2016-01-04;01:44:28;NOD;nimbus4308;STATUS;mon status;UP
-2016-01-04;01:45:22;NOD;nimbus4308;ALERT;slurm_node_status;FAIL
-2016-01-04;01:52:02;NOD;nimbus4308;STATUS;mon status;CONTENT
-2016-01-04;07:28:24;NOD;nimbus4113;STATUS;mon status;UP
-2016-01-04;07:53:03;NOD;nimbus4308;STATUS;mon status;DIAGNOSE
-2016-01-04;08:24:23;NOD;nimbus5111;ALERT;z;FAIL
-2016-01-04;11:21:26;NOD;nimbus4113;ALERT;bios_log;FAIL
-2016-01-04;11:26:51;NOD;nimbus4113;STATUS;mon status;DIAGNOSE
-2016-01-05;00:00:37;NOD;nimbus3118;ALERT;z;FAIL
-2016-01-05;09:19:58;NOD;nimbus4113;STATUS;mon status;REPAIR
-2016-01-05;09:20:10;NOD;nimbus4308;STATUS;mon status;REPAIR
-2016-01-05;09:29:05;NOD;nimbus4317;STATUS;mon status;DRAIN
-2016-01-05;10:14:59;NOD;nimbus4317;STATUS;mon status;UP
-2016-01-05;10:15:04;NOD;nimbus4308;STATUS;mon status;UP
-2016-01-05;13:00:28;NOD;nimbus4308;STATUS;mon status;DIAGNOSE
-2016-01-06;00:00:27;NOD;nimbus4115;ALERT;z;FAIL
-2016-01-07;07:25:56;NOD;nimbus4308;STATUS;mon status;UP
-2016-01-07;16:18:42;NOD;nimbus4113;STATUS;mon status;DIAGNOSE
-2016-01-08;12:12:41;NOD;nimbus4113;STATUS;mon status;REPAIR
-2016-01-11;00:00:27;NOD;nimbus4101;ALERT;z;FAIL
+2015-12-21;00:00:22;NOD;nodo4106;ALERT;z;FAIL
+2015-12-21;00:00:22;NOD;nodo4115;ALERT;z;FAIL
+2015-12-21;00:00:24;NOD;nodo3203;ALERT;z;FAIL
+2015-12-28;11:53:24;NOD;nodo4113;INFO;Aplicada Pasta Termica;INFO
+2015-12-28;11:55:29;NOD;nodo4113;STATUS;mon status;DIAGNOSE
+2015-12-28;11:55:40;NOD;nodo4104;STATUS;mon status;DIAGNOSE
+2015-12-30;11:43:06;NOD;nodo4104;STATUS;mon status;UP
+2015-12-30;22:00:15;NOD;nodo0;ALERT;z;FAIL
+2015-12-31;19:51:32;NOD;nodo4308;ALERT;bld_temp_b7;DOWN
+2016-01-01;02:12:26;NOD;nodo4308;ALERT;bld_temp_b7;DOWN
+2016-01-02;20:33:24;NOD;nodo4308;ALERT;bld_temp_b7;DOWN
+2016-01-03;08:27:22;NOD;nodo4308;ALERT;bld_temp_b7;DOWN
+2016-01-03;14:33:23;NOD;nodo4308;ALERT;bld_temp_b7;DOWN
+2016-01-03;20:21:25;NOD;nodo4308;ALERT;bld_temp_b7;DOWN
+2016-01-03;20:42:22;NOD;nodo4308;ALERT;bios_log;FAIL
+2016-01-04;01:30:18;NOD;nodo4308;STATUS;mon status;CONTENT
+2016-01-04;01:44:28;NOD;nodo4308;STATUS;mon status;UP
+2016-01-04;01:45:22;NOD;nodo4308;ALERT;slurm_node_status;FAIL
+2016-01-04;01:52:02;NOD;nodo4308;STATUS;mon status;CONTENT
+2016-01-04;07:28:24;NOD;nodo4113;STATUS;mon status;UP
+2016-01-04;07:53:03;NOD;nodo4308;STATUS;mon status;DIAGNOSE
+2016-01-04;08:24:23;NOD;nodo5111;ALERT;z;FAIL
+2016-01-04;11:21:26;NOD;nodo4113;ALERT;bios_log;FAIL
+2016-01-04;11:26:51;NOD;nodo4113;STATUS;mon status;DIAGNOSE
+2016-01-05;00:00:37;NOD;nodo3118;ALERT;z;FAIL
+2016-01-05;09:19:58;NOD;nodo4113;STATUS;mon status;REPAIR
+2016-01-05;09:20:10;NOD;nodo4308;STATUS;mon status;REPAIR
+2016-01-05;09:29:05;NOD;nodo4317;STATUS;mon status;DRAIN
+2016-01-05;10:14:59;NOD;nodo4317;STATUS;mon status;UP
+2016-01-05;10:15:04;NOD;nodo4308;STATUS;mon status;UP
+2016-01-05;13:00:28;NOD;nodo4308;STATUS;mon status;DIAGNOSE
+2016-01-06;00:00:27;NOD;nodo4115;ALERT;z;FAIL
+2016-01-07;07:25:56;NOD;nodo4308;STATUS;mon status;UP
+2016-01-07;16:18:42;NOD;nodo4113;STATUS;mon status;DIAGNOSE
+2016-01-08;12:12:41;NOD;nodo4113;STATUS;mon status;REPAIR
+2016-01-11;00:00:27;NOD;nodo4101;ALERT;z;FAIL
 </code>
 </hidden>
 
@@ -818,7 +818,7 @@ cyc.stats.sh -t [TIPO[cyclops|users|daemon|mix|...]] -b [FECHA DE COMIENZO] -f [
 
 <hidden Ejemplo salida>
 <code>
-[2017-04-27T11:19:38][root@nimbus0][~]# stats.cyclops.audit.totals.sh -b Jan  -s bitacora  -v human
+[2017-04-27T11:19:38][root@nodo0][~]# stats.cyclops.audit.totals.sh -b Jan  -s bitacora  -v human
 SOURCE: bitacora
 DATE RANGE FROM 2017-01-01 TO 2017-01-31
 TOTAL REGISTER PROCESSED: 583
@@ -882,7 +882,7 @@ DAY         NUM REG
 
 <hidden Ejemplo de salida>
 <code>
-[2017-04-27T11:29:58][root@nimbus0][~]# stats.cyclops.logs.sh -n nimbus4202 -r cpu -d hour
+[2017-04-27T11:29:58][root@nodo0][~]# stats.cyclops.logs.sh -n nodo4202 -r cpu -d hour
 2017-04-27   10:30::################################################### 51%
              10:33::# 1%
              10:36::# 1%
@@ -929,7 +929,7 @@ DAY         NUM REG
 
 <hidden Ejemplo salida>
 <code>
-[2017-04-27T11:31:17][root@nimbus0][~]# stats.slurm.total.jobs.sh -s dev -b Jan-2017 -g user 
+[2017-04-27T11:31:17][root@nodo0][~]# stats.slurm.total.jobs.sh -s dev -b Jan-2017 -g user 
 SOURCE: dev
 DATE RANGE FROM 2017-01-01 TO 2017-01-31 
 TOTAL REGISTER PROCESSED: 4369840

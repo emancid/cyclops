@@ -1,0 +1,35 @@
+
+|< 100% >|
+|  @#8FD8FF: {{ :wiki:cyclops_title.png?nolink }}  |
+|  @#D7F2FF: ** HISTORIC MONITOR DATA **  |
+
+|< 100% >|
+|  @#D7F2FF: Date  |  2017-07-14  |
+
+<hidden HOUR: 12 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:14:1500029641| 12:54:01 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  0   |
+|   [[ :operation:monitoring:history:2017:07:14:1500029822| 12:57:02 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  0   |
+</hidden>
+
+<hidden HOUR: 13 >
+|< 100% 25% 15% 15% 15% 15% 15% >|
+|  @#D7F2FF:  File  |  @#D7F2FF: Down Errs  |  @#D7F2FF: Fail Errs  |  @#D7F2FF: Warnings  |  @#D7F2FF: Unknown Errs  |  @#D7F2FF: Other Msgs  |
+|   [[ :operation:monitoring:history:2017:07:14:1500030001| 13:00:01 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  0   |
+|   [[ :operation:monitoring:history:2017:07:14:1500030183| 13:03:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  0   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2017:07:14:1500030363| 13:06:03 ]]  **  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#FFFF00: 1   |  @#EAFFD5: 0   |  0   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2017:07:14:1500030543| 13:09:03 ]]  **  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#FFFF00: 5   |  @#EAFFD5: 0   |  0   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2017:07:14:1500030723| 13:12:03 ]]  **  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#FFFF00: 5   |  @#EAFFD5: 0   |  0   |
+|  @#F3F781:  ** [[ :operation:monitoring:history:2017:07:14:1500030903| 13:15:03 ]]  **  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#FFFF00: 1   |  @#EAFFD5: 0   |  4   |
+|   [[ :operation:monitoring:history:2017:07:14:1500031083| 13:18:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500031264| 13:21:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500031444| 13:24:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500031623| 13:27:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500031803| 13:30:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500031983| 13:33:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500032164| 13:36:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500032343| 13:39:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500032524| 13:42:04 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+|   [[ :operation:monitoring:history:2017:07:14:1500032703| 13:45:03 ]]  |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  @#EAFFD5: 0   |  5   |
+</hidden>

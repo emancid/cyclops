@@ -1,0 +1,29 @@
+.
+.
+~~NOCACHE~~
+	
+
+|< 100% 15% 11% 11% 11% 11% 11% 15% 15% >|
+|  @#FA5858: ** <fc white > COMPUTE </fc> **  |  @#FBEFEF: Time  |  @#FBEFEF: Total Nodes  |  @#FBEFEF: Active Nodes  |  @#FBEFEF: Sensor Alerts  |  @#FBEFEF: Warnings  |  @#FBEFEF: Max Uptime  |  @#FBEFEF: Min Uptime    |
+|  :::  |  10.42.22  |  8              |  @#FFFF00: 0  |  @#F7BE81: 2  |  @#FFFF00: 6  |  @#F2F2F2: none  |  @#F2F2F2: none  |
+
+|< 100% 10% 10% 10% 10% 25% 5% 30% >|
+|  @#FA5858: {{ :wiki:rules_detected.gif?nolink }}  |  @#FBEFEF: PRIORITY  |   @#FBEFEF: PROBABILITY  |   @#FBEFEF: CODE  |   @#FBEFEF: DESCRIPTION  |   @#FBEFEF: HOST QTY  |   @#FBEFEF: HOST(s) NAME  |
+|  :::  |  40  |  100%  |  {{:wiki:proc_code.gif }} {{popup>:operation:procedures:OSRHAV0006?[%100x700%]&[keepOpen] |OSRHAV0006}}  |  node not available  |  2  |  minion-d[01-02]  |
+
+<hidden compute initialState="visible">
+
+|< 100% 8% 8% 8% 8% >|
+|  @#8FD8FF:family  |  @#8FD8FF:hostname  |  @#8FD8FF:mon_time  |  @#8FD8FF:uptime  |  @#8FD8FF:cpu  |  @#8FD8FF:mem  |  @#8FD8FF:swap  |  @#8FD8FF:disk_space  |  @#8FD8FF:nfs_fs  |  @#8FD8FF:slurm  |  @#8FD8FF:squeue  |  @#8FD8FF:slurm_status  |  @#8FD8FF:log_err  |  @#8FD8FF:orphanps  |  @#8FD8FF:z  |  @#8FD8FF:rzr  |
+|  slurm_cp  |  @#FFFF00: nodo11  |  10.42.17  |  @#F2F2F2: MAINTENANCE  |    |
+|  slurm_cp  |  @#FFFF00: nodo12  |  10.42.17  |  @#F2F2F2: MAINTENANCE  |    |
+|  slurm_cp  |  @#FFFF00: nodo13  |  10.42.17  |  @#F2F2F2: MAINTENANCE  |    |
+|  slurm_cp  |  @#FFFF00: nodo14  |  10.42.17  |  @#F2F2F2: MAINTENANCE  |    |
+
+|< 100% 8% 8% 8% 8% >|
+|  @#8FD8FF:family  |  @#8FD8FF:hostname  |  @#8FD8FF:mon_time  |  @#8FD8FF:uptime  |  @#8FD8FF:cpu  |  @#8FD8FF:mem  |  @#8FD8FF:swap  |  @#8FD8FF:disk_space  |  @#8FD8FF:log_err  |  @#8FD8FF:orphanps  |  @#8FD8FF:z  |  @#8FD8FF:rzr  |
+|  virtualbox  |  @#F7BE81: minion-d01  |  10.42.17  |  @#F7BE81: not send  |
+|  virtualbox  |  @#F7BE81: minion-d02  |  10.42.17  |  @#F7BE81: not send  |
+|  virtualbox  |  @#F3F781: minion-d03  |  10.42.17  |  @#FFFF00: LINK   |
+|  virtualbox  |  @#F3F781: minion-d04  |  10.42.17  |  @#FFFF00: LINK   |
+</hidden>
