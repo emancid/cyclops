@@ -238,7 +238,7 @@ do
 done
 
 
-[ -z "$_ia_codes" ] && _ia_codes=$( echo ";UNKNOWN[$_var_line_level];UNKNOWN;UNKNOWN;No relevant procedure rules detected (must be more than 40% success to considerate it);$_host_quantity;show detail table below" )
+[ -z "$_ia_codes" ] && _ia_codes=$( echo ";UNKNOWN;UNKNOWN;UNKNOWN;No relevant procedure rules detected (must be more than 40% success to considerate it);$_host_quantity;show detail table below" )
 
 let "_level=$_err_detected + $_rules_detected"
 
