@@ -14,7 +14,7 @@ CYCLOPS 1.4.1v INSTALL
 
 	WE THINK IT WILL HELP TO:
 		- DEBIAN7/8
-		- OPENSUSE TUMBLEWEED ( detected problems with dokuwiki and php7 )
+		- OPENSUSE TUMBLEWEED
 		- SLES11/12/13
 		- FEDORA
 		- ARCHLINUX
@@ -26,6 +26,7 @@ CYCLOPS 1.4.1v INSTALL
     - install -> git
 	- yum install git 			## REDHAT/CENTOS PACKAGE INSTALL 
 	- apt-get install git			## DEBIAN
+	- zypper install git			## OPENSUSE
     - install -> apache + php + php gd + ssl module
         - yum install httpd php php-gd mod_ssl 	## REDHAT/CENTOS PACKAGE INSTALL
 	- apt-get install apache2 php php-gd	## DEBIAN
@@ -101,6 +102,7 @@ CYCLOPS 1.4.1v INSTALL
 		- Edit wiki.cfg file and change default user and group if is necesary:
 			[REDHAT/CENTOS]	-> 	_apache_usr="apache"
 			[DEBIAN] 	->	_apache_usr="www-data"
+			[OPENSUSE]	->	_apache_usr="wwwrun"
 			[ALL DISTROS]	->	_apache_grp="cyclops"	## RECOMMENDED
 		
     5. INIT CYCLOPS CONFIGURATION BASE
@@ -121,34 +123,11 @@ CYCLOPS 1.4.1v INSTALL
 		tar xvf /opt/cyclops/monitor/packs/*.tar
 		OR
 		for _file in $( ls -1 /opt/cyclops/monitor/packs/* ) ; do tar xvf $_file ; done ## IF *.tar does not works 
-
-	8. UPDATE CYCLOPS:
-
-	- BEFORE UPDATE/UPGRADE BEWARE WITH THIS:
-		- DO BACKUP FROM root cyclops directoty 
-		- WITH rsync USE --exclude="[FILE|DIR|STRING]" with any customization that you change in www cyclops web directory
-
-	- UPDATE IS EXPERIMENTAL YET
-
-	- MORE SAFETY, WITH STABLE GITHUB OPTION:
-		- from /opt/git/cyclops
-			git pull
-		- after git update, use:
-			rsync -vrltDuc /opt/git/cyclops/[version]/ /opt/cyclops/
-		* Recommeded first execute rsync with --dry-run option to see changes before update.
-
-	- LESS SAFETY BUT MORE CONFORTABLE  
-		- use GITHUB EXPERIMENTAL OPTION INSTALL FOR CYCLOPS
-		- from /opt/git/cyclops
-			git pull
-
-	- WITHOUT GITHUB
-		- download zip from github
-		- descompress file in temp dir
-		- rsync with -vrltDuc optins from temp dir to cyclops dir ( BEWARE use --dry-run rsync option to verify right update before do it )
-
-	NOTE: beware with update, sometimes owner or permissions could change, use chown or/and chmod commands to recovery right file and directory status, next step detail actions.
-
+	
+	8. PREPARE LAST FILES:
+	- initializate files:
+		touch /opt/cyclops/logs/dashboard.plugin.log
+		touch /opt/cyclops/www/data/pages/operation/monitoring/dashboard.txt
     
     3. CREATE AND CONFIGURE PERMISSIONS AND OWNERS
     ----------------------------------------------------------------------------------------------------------
@@ -167,7 +146,7 @@ CYCLOPS 1.4.1v INSTALL
         chown -R cyclops:cyclops /opt/cyclops
         chown -R apache /opt/cyclops/www 			## REDHAT DEFAULT APACHE USER , CHANGE IT IF YOU HAS DIFERENT DISTRO OR USER
             chown -R www-data /opt/cyclops/www			## DEBIAN DEFAULT APACHE USER 
-            chown -R wwwrun /opt/cyclops/wwwrun         ## SUSE DEFAULT APACHE USER
+            chown -R wwwrun /opt/cyclops/wwwrun         	## SUSE DEFAULT APACHE USER
         
         chmod -R g+w,o-rwx /opt/cyclops/www/
 
@@ -399,3 +378,30 @@ CYCLOPS 1.4.1v INSTALL
 	5. Enable Cyclops in operative mode with:
 		cyclops.sh -y enable -c
 
+    8. UPDATE CYCLOPS
+    ----------------------------------------------------------------------------------------------------------
+
+	- BEFORE UPDATE/UPGRADE BEWARE WITH THIS:
+		- DO BACKUP FROM root cyclops directoty 
+		- WITH rsync USE --exclude="[FILE|DIR|STRING]" with any customization that you change in www cyclops web directory
+
+	- UPDATE IS EXPERIMENTAL YET
+
+	- MORE SAFETY, WITH STABLE GITHUB OPTION:
+		- from /opt/git/cyclops
+			git pull
+		- after git update, use:
+			rsync -vrltDuc /opt/git/cyclops/[version]/ /opt/cyclops/
+		* Recommeded first execute rsync with --dry-run option to see changes before update.
+
+	- LESS SAFETY BUT MORE CONFORTABLE  
+		- use GITHUB EXPERIMENTAL OPTION INSTALL FOR CYCLOPS
+		- from /opt/git/cyclops
+			git pull
+
+	- WITHOUT GITHUB
+		- download zip from github
+		- descompress file in temp dir
+		- rsync with -vrltDuc optins from temp dir to cyclops dir ( BEWARE use --dry-run rsync option to verify right update before do it )
+
+	NOTE: beware with update, sometimes owner or permissions could change, use chown or/and chmod commands to recovery right file and directory status, next step detail actions.
