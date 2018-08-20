@@ -48,6 +48,14 @@ fi
 _hctrl_rzrrol_file=$_cyc_clt_rzr_cfg"/"$_hostname".rol.cfg"
 _hctrl_rzr_last=$_cyc_clt_rzr_cfg"/"$_hostname".rzr.last"
 
+## AUTOCTRL
+
+_torquemada="/opt/cyclops/local/scripts/torquemada.sensor.sh"
+_my_pid=$( echo $$ )
+_my_pid_file="/opt/cyclops/local/lock/"$_my_pid".cyc.host.ctrl.pid"
+
+trap 'kill -TERM -- -$$' EXIT
+
 ################ LIBS #####################
 
 ###########################################
@@ -132,6 +140,8 @@ host_mon()
 host_launch()
 {
 	## USE IT'S OWN SCRIPT.... WITH START, STOP, LINK, UNKLINK... ALL ACTIONS, AND OWN ERROR CODES
+
+	$_torquemada $_my_pid $_my_pid_file &
 
 	_host_launch_act=$1
 	_host_check_status="0"

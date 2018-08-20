@@ -33,6 +33,7 @@ then
         exit 1
 else
         source $_config_path/global.cfg
+	source $_libs_path/node_group.sh
 fi
 
 _system_status="OK"
@@ -43,87 +44,6 @@ _ia_codes=""
 _audit_status=$( awk -F\; '$1 == "CYC" && $2 == "0003" && $3 == "AUDIT" { print $4 }' $_sensors_sot )
 
 #### FUNCTIONS ####
-
-node_group()
-{
-
-        _prefix=$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sed 's/^\([a-zA-Z_-]*\)[0-9]*$/\1/' | sort -u )
-
-        for _node_prefix in $( echo "${_prefix}" )
-        do
-               _node_range=$_node_range""$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | grep "^$_node_prefix" | sed 's/[0-9]*$/;&/' | sort -t\; -k2,2n -u | awk -F\; '
-                { if ( NR == "1" ) { _sta=$2 ; _end=$2  ; _string=$1"[" }
-                else {
-                    if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end"," }
-                                else {
-                                    _string=_string""_sta"," }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                    }
-                }
-
-                END { if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end }
-                                else {
-                                    _string=_string""_sta }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                        print _string"]" }' )","
-        done
-
-        echo "$_node_range" | sed 's/\,$//'
-}
-
-node_group_old()
-{
-
-	#### DEPRECATED - IF NEW ONE WORKS FINE - DELETE OLD ONE
-
-        _nodelist=$1
-
-        echo "${_nodelist}" | tr ' ' '\n' | sed -e '/^$/d' -e 's/[0-9]*$/;&/' | sort -t\; -k2,2n -u | awk -F\; '
-                { if ( NR == "1" ) { _sta=$2 ; _end=$2  ; _string=$1"[" }
-                else {
-                    if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end"," }
-                                else {
-                                    _string=_string""_sta"," }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                    }
-                }
-
-                END {
-                        if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end }
-                        else {
-                                _string=_string""_sta","_end }
-                        print _string"]" }'
-
-
-}
 
 alerts_gen()
 {
@@ -172,85 +92,112 @@ alerts_del()
 ia_analisis()
 {
 
-for _ia_file in $(ls -1 $_sensors_ia_path | sort -nr | grep rule$ )
-do
+	for _ia_file in $(ls -1 $_sensors_ia_path | sort -nr | grep rule$ )
+	do
 
-        _priority=`echo $_ia_file | cut -d'.' -f1`
-        _ia_code=`echo $_ia_file | cut -d'.' -f2`
+		_priority=`echo $_ia_file | cut -d'.' -f1`
+		_ia_code=`echo $_ia_file | cut -d'.' -f2`
 
-        _ia_code_level=0
-        _var_line_level=0
-        _ia_code_max=`awk -F\; '{ total=total + ( $1 * $2 ) } END { print total }' $_sensors_ia_path/$_ia_file` 
+		_ia_code_level=0
+		_var_line_level=0
+		_ia_code_max=`awk -F\; '$1 ~ "^[0-9]+$" { total=total + ( $1 * $2 ) } END { print total }' $_sensors_ia_path/$_ia_file` 
 
-        _host_list=""
-        _host_quantity=0
+		_host_list=""
+		_host_quantity=0
 
+		unset _erroutput
+		unset _errflag
 
-        for _line in $(echo "${_nodes_err}" )
-        do
-                _node_name=`echo $_line | cut -d';' -f1`
-                _node_family=$(awk -F\; -v _node=$_node_name '$2 == _node { print $3 }' $_type)
-                _service_num=`echo $_line | cut -d';' -f3`
-                _service_name=$(awk -F\; -v _sn="$_service_num" 'NR == _sn { print $1 }' $_config_path_nod/$_node_family.mon.cfg )
+		for _line in $(echo "${_nodes_err}" )
+		do
+			_node_name=$(    echo $_line | cut -d';' -f1 )
+			_node_family=$(  awk -F\; -v _node=$_node_name '$2 == _node { print $3 }' $_type)
+			_service_num=$(  echo $_line | cut -d';' -f3 )
+			_service_name=$( awk -F\; -v _sn="$_service_num" 'NR == _sn { print $1 }' $_config_path_nod/$_node_family.mon.cfg )
 
-		_var_line_level=$( awk -F\; -v _name="$_node_name" -v _service="$_service_name" '
-			$1 ~ "^[0-9]+$" && ( $3 == "" || $3 == _name ) {
-				split($4,s,",") ;
-				for ( i in s ) { 
-					if ( _service == s[i] ) {
-						_t=_t+($1/$2)
-					} 
-				}
-			} END {
-				print _t 
-			}' $_sensors_ia_path/$_ia_file )
+			_var_line_level=$( awk -F\; -v _name="$_node_name" -v _service="$_service_name" '
+				BEGIN { 
+					_nf=0
+					_t=0
+				} $1 ~ "^[0-9]+$" && ( $3 == "" || $3 == _name ) {
+					split($4,s,",") ;
+					for ( i in s ) { 
+						if ( _service == s[i] ) {
+							_t=_t+($1/$2)
+						} 
+					}
+				} END {
+					print _t
+				}' $_sensors_ia_path/$_ia_file )
 
-                if [ ! -z "$_var_line_level" ]
-                then
-                        let "_rules_detected++"
-                        let "_ia_code_level=_ia_code_level + _var_line_level"
+			if [ "$_var_line_level" -gt 0 ]
+			then
+				_errflag="yes"
+				_erroutput=$_erroutput""$_node_name";"$_var_line_level"\n"
+			fi
 
-                        if [ $(echo $_host_list | grep $_node_name | wc -l) == 0 ]
-                        then
-                                _host_list=$_host_list" "$_node_name
-                                let "_host_quantity++"
-                        fi
-                fi
+		done
 
-        done
+		if [ "$_errflag" == "yes" ]
+		then
+			_err_ia=$( echo -e "${_erroutput}" | sed '/^$/d' | awk -F\; -v _iacm="$_ia_code_max" '
+				{
+					node[$1]=node[$1]+$2
+				} END {
+					for ( i in node ) {
+						_m=int(( node[i]*100 )/_iacm )
+						if ( _m > 35 ) { print i";"_m }
+					}
+				}' ) 
 
-        #[ "$_ia_code_level" -ne 0 ] && let "_ia_code_percent=(($_ia_code_level * 100) / $_ia_code_max) / $_host_quantity "
-        [ "$_ia_code_level" -ne 0 ] && let "_ia_code_percent=(($_ia_code_level * 100) / $_ia_code_max)"
+			if [ ! -z "$_err_ia" ] 
+			then
+				_ia_code_des=$( cat $_sensors_ia_codes_file 2>/dev/null | grep $_ia_code | cut -d';' -f2 )
+				[ -z "$_ia_code_des" ] && _ia_code_des="No Description"
+				_ia_codes=$_ia_codes""$( echo "${_err_ia}" | awk -F\; -v _p="$_priority" -v _iac="$_ia_code" -v _iad="$_ia_code_des" '
+					{ 
+						per[$2]=per[$2]","$1
+						c[$2]++
+					} END {
+						for ( i in per ) {
+							print _p";"i"%;"_iac";"_iad";"c[i]";"per[i]
+						}
+					}' )"\n"
+			fi
+		fi
 
-        [ -z "$_ia_code_percent" ] && _ia_code_percent=0
-        [ -z "$_ia_code_level" ] && _ia_code_level=0
+	done
 
-        if [ "$_ia_code_percent" -ge 20 ] && [ "$_ia_code_level" -ne 0 ]
-        then
-                _ia_code_des=$(cat $_sensors_ia_codes_file 2>/dev/null | grep $_ia_code | cut -d';' -f2)
+	_ia_codes=$( echo "${_ia_codes}" | sed '/^$/d' )
+	_rules_detected=$( echo "${_ia_codes}" | wc -l )
 
-                [ -z "$_ia_code_des" ] && _ia_code_des="No Description"
+	if [ -z "$_ia_codes" ] 
+	then
+		_ia_codes=$( echo ";UNKNOWN;UNKNOWN;UNKNOWN;No relevant procedure rules detected (must be more than 40% success to considerate it);$_host_quantity;show detail table below" )
+	else
+		for _line in $( echo -e "${_ia_codes}" )
+		do
+			_line_pri=$( echo "$_line" | cut -d';' -f1 )
+			_line_pro=$( echo "$_line" | cut -d';' -f2 )
+			_line_cod=$( echo "$_line" | cut -d';' -f3 )
+			_line_des=$( echo "$_line" | cut -d';' -f4 )
+			_line_qty=$( echo "$_line" | cut -d';' -f5 )
+			_line_hst=$( echo "$_line" | cut -d';' -f6 )
+			_line_rng=$( node_group $_line_hst )
 
-		[ "$_host_quantity" -gt 1 ] && _host_range=$( node_group $_host_list ) || _host_range=$_host_list
-                _ia_codes=$_ia_codes$( echo "$_priority;$_ia_code_percent%[$_ia_code_level,$_ia_code_max,$_host_quantity];$_ia_code;$_ia_code_des;$_host_quantity;$_host_range" )"\n"
-        fi
+			_ia_codes_new=$_ia_codes_new""$_line_pri";"$_line_pro";"$_line_cod";"$_line_des";"$_line_qty";"$_line_rng"\n"
+		done
 
-done
+		_ia_codes=$( echo -e "${_ia_codes_new}" )
+	fi
 
-
-[ -z "$_ia_codes" ] && _ia_codes=$( echo ";UNKNOWN;UNKNOWN;UNKNOWN;No relevant procedure rules detected (must be more than 40% success to considerate it);$_host_quantity;show detail table below" )
-
-let "_level=$_err_detected + $_rules_detected"
-
-#echo  ";DOWN NODE STATUS - IA ALERT;\n"
-
-if [ "$_rules_detected" != "0" ]
-then
-        echo "PRIORITY@PROBABILITY@CODE@DESCRIPTION@HOST QTY@HOST(s) NAME"
-        echo -e "${_ia_codes}" | sed '/^$/d' | sort -t\; -k1,2n 
-else
-        echo "UNKNOWN ERRORS DETECTED;;;;;"
-fi
+	if [ "$_rules_detected" != "0" ]
+	then
+		echo "PRIORITY@PROBABILITY@CODE@DESCRIPTION@HOST QTY@HOST(s) NAME"
+		echo -e "${_ia_codes}" | sed '/^$/d' | sort -t\; -k1,2n 
+	else
+		echo "UNKNOWN ERRORS DETECTED;;;;;"
+	fi
 
 }
 

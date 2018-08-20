@@ -10,4 +10,4 @@ then
         $_sensor_remote_path/torquemada.sensor.sh $_sensor_pid $_sensor_remote_path/sensor.pid &
 fi
 
-trap 'kill $(jobs -p)' EXIT
+trap 'kill -TERM -- -$$' EXIT
