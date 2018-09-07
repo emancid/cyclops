@@ -20,8 +20,6 @@ then
 	echo $(date +%s)" : "$_log_msg" : alive "$_alive_soul" : BURN TO HELL!!" >> ./torquemada.log
 	[ -f "$_my_sensor_soul_file" ] && rm -f $_my_sensor_soul_file 2>&1 >/dev/null
 	kill $_alive_soul
-
-	echo ";FAIL mon timeout"
 	exit 1
 fi
 

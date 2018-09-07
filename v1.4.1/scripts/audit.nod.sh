@@ -301,51 +301,6 @@ shift $((OPTIND-1))
 #              FUNCTIONs                  #
 ###########################################
 
-node_group_old()
-{
-
-        _prefix=$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sed 's/^\([a-zA-Z_-]*\)[0-9]*$/\1/' | sort -u )
-
-        for _node_prefix in $( echo "${_prefix}" )
-        do
-               _node_range=$_node_range""$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | grep "^$_node_prefix" | sed 's/[0-9]*$/;&/' | sort -t\; -k2,2n -u | awk -F\; '
-                { if ( NR == "1" ) { _sta=$2 ; _end=$2  ; _string=$1"[" }
-                else {
-                    if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end"," }
-                                else {
-                                    _string=_string""_sta"," }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                    }
-                }
-
-                END { if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end }
-                                else {
-                                    _string=_string""_sta }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                        print _string"]" }' )","
-        done
-
-        echo "$_node_range" | sed 's/\,$//'
-}
-
 extract_static_data()
 {
 
@@ -433,6 +388,23 @@ read_data()
 
 }
 
+generate_arch_wiki()
+{
+	_hyth=$( sort -t\; -k4 -k3 -k2 $_type | awk -F\; '{ if ( _gold != $4 ) { _gold=$4 ; _fold=$3 ; print $4";"$3";"$2 } else { if ( _fold != $3 ) { _fold=$3 ; print ":::;"$3";"$2 } else { print ":::;:::;"$2 }}}' )
+	
+	_wiki_output=$( echo "${_hyth}" | awk -F\; -v _pw="$_wiki_audit_path" -v _ch="$_color_header" -v _ct="$_color_title" '
+		BEGIN { 
+			print "|<50% 20% 20% 60%>|"
+			print "|  "_ct" ** GROUP **  |  "_ct" ** FAMILY **  |  "_ct" ** NODE **  |"
+		} {	
+			if ( $1 == ":::" ) { _gch="" } else { _gch=_ch } 
+			if ( $2 == ":::" ) { _fch="" } else { _fch=_ch } 
+			print "|  "_gch" "$1"  |  "_fch" "$2"  |  [["_pw":"$3".audit|"$3"]]  |"
+		}' )
+
+	echo "${_wiki_output}"
+}
+
 generate_wiki_view()
 {
 
@@ -450,6 +422,10 @@ generate_wiki_view()
 	_node_graph_mngt=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_node_gbegin -v wiki -w Tbar -e mngt -g day -n $_host_name )
 	_node_graph_alerts=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_node_gbegin -v wiki -w W700 -e alerts -g day -n $_host_name )
 	_node_graph_issues=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_node_gbegin -v wiki -w W700 -e issues -g day -n $_host_name )
+
+	## CHECK INDEX WIKI PAGE ##
+
+	[ ! -f "$_pages_path/documentation/cyclops/architecture.txt" ] && generate_arch_wiki > $_pages_path/documentation/cyclops/architecture.txt
 
 	unset _node_graph_sensors
 

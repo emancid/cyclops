@@ -17,16 +17,41 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
-_config_path="/etc/cyclops"
+        IFS="
+        "
 
-if [ -f $_config_path/global.cfg ]
-then
-        source $_config_path/global.cfg
-	source $_color_cfg_file
-else
-        echo "Global config don't exits" 
-        exit 1
-fi
+        _command_opts=$( echo "~$@~" | tr -d '~' | tr '@' '#' | sed 's/-\([0-9]*\)/~\1/g' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' | tr '#' '@'  | tr '~' '-' )
+        _command_name=$( basename "$0" )
+        _command_dir=$( dirname "${BASH_SOURCE[0]}" )
+        _command="$_command_dir/$_command_name $_command_opts"
+
+        [ -f "/etc/cyclops/global.cfg" ] && source /etc/cyclops/global.cfg || _exit_code="111"
+
+        [ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
+        [ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="113"
+        [ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
+        [ -f "$_libs_path/init_date.sh" ] && source $_libs_path/init_date.sh || _exit_code="115"
+        [ -f "$_color_cfg_file" ] && source $_color_cfg_file || _exit_code="116"
+
+        source $_color_cfg_file
+
+        case "$_exit_code" in
+        111)
+                echo "Main Config file doesn't exists, please revise your cyclops installation"
+                exit 1
+        ;;
+        112)
+                echo "HA Control Script doesn't exists, please revise your cyclops installation"
+                exit 1
+        ;;
+        11[3-5])
+                echo "Necesary libs files doesn't exits, please revise your cyclops installation"
+                exit 1
+        ;;
+        116)
+                echo "WARNING: Color file doesn't exits, you see data in black"
+        ;;
+        esac
 
 _stat_slurm_data=$( cat $_stat_main_cfg_file | awk -F\; '$2 == "slurm" { print $0 }' | head -n 1 )
 _stat_slurm_cfg_file=$_config_path_sta"/"$( echo $_stat_slurm_data | cut -d';' -f3 )
@@ -91,12 +116,13 @@ do
 			then
 				_long=$( cat $_type | sed -e '/^#/d' -e '/^$/d' | cut -d';' -f2 )
 			else
-				_name=$( echo $_par_nod | cut -d'[' -f1 | sed 's/[0-9]*$//' )
-				_range=$( echo $_par_nod | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
-				_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
-				_long=$( echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
+				#_name=$(   echo $_par_nod | cut -d'[' -f1 | sed 's/[0-9]*$//' )
+				#_range=$(  echo $_par_nod | sed -e "s/$_name\[/{/" -e 's/\([0-9]*\)\-\([0-9]*\)/\{\1\.\.\2\}/g' -e 's/\]$/\}/' -e "s/$_name\([0-9]*\)/\1/"  )
+				#_values=$( eval echo $_range | tr -d '{' | tr -d '}' )
+				#_long=$(   echo "${_values}" | tr ' ' '\n' | sed "s/^/$_name/" )
+				_long=$( node_ungroup $_par_nod | tr ' ' '\n' )
 
-				[ -z $_range ] && echo "Need nodename or range of nodes" && exit 1
+				#[ -z $_range ] && echo "Need nodename or range of nodes" && exit 1
 			fi
 
 			_total_nodes=$( echo "${_long}" | wc -l )

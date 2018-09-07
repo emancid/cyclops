@@ -54,7 +54,7 @@ _torquemada="/opt/cyclops/local/scripts/torquemada.sensor.sh"
 _my_pid=$( echo $$ )
 _my_pid_file="/opt/cyclops/local/lock/"$_my_pid".cyc.host.ctrl.pid"
 
-trap 'kill -TERM -- -$$' EXIT
+trap 'kill -TERM -- -$$ 2>/dev/null' EXIT
 
 ################ LIBS #####################
 

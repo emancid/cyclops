@@ -138,6 +138,7 @@ mon_analisys()
 {
         _mon_nod_input=$( echo "${_mon[*]}" | tr '|' ';' | awk -F\; 'NF > 5 { print $0 }' | sed -e 's/ //g' -e "s/$_color_up/UP /g" -e "s/$_color_fail/FAIL /g" -e "s/$_color_ok/OK /g" -e "s/$_color_down/DOWN /g" -e 's/@#[0-9A-F]*\://g' -e 's/^;//' -e 's/ ;/;/g' -e 's/;$//' )
         _env_status_pg_status="OPERATIVE"
+	_env_status_pg_global="OPERATIVE"
         _env_status_pg_alert=0
 	
 
@@ -159,14 +160,18 @@ mon_analisys()
                         _env_status_pg_alert=1
                         let "_env_status_pg_total=_env_status_pg_total_real - _env_status_pg_health"
 
-
                         if [ "$_env_status_pg_total" -lt "$_env_status_pg_min_nod" ]
 			then
                                 _env_status_pg_status="NOT OPERATIVE"
+				if [ "$_env_status_pg_global" == "OPERATIVE" ] || [ "$_env_status_pg_global" == "OPERATIVE WITH WARNINGS" ] 
+				then
+					_env_status_pg_global="NOT OPERATIVE"
+				fi
 			else
 				if [ "$_env_status_pg_total" -lt "$_env_status_pg_total_nod" ]
 				then
 					_env_status_pg_status="OPERATIVE WITH WARNINGS"
+					[ "$_env_status_pg_global" == "0" ] && _env_status_pg_global="OPERATIVE WITH WARNINGS"
 				else
 					_env_status_pg_status="OPERATIVE"
 				fi
@@ -187,7 +192,7 @@ print_output()
 	[ "$_par_type" == "pasive" ] && echo "analisys type;PASIVE"
 	[ "$_par_type" == "active" ] && echo "analisys type;ACTIVE"
 	echo "${_env_array_health[*]}"
-	echo "final result;$_env_status_pg_status"
+	echo "final result;$_env_status_pg_global"
 	
 }
 
