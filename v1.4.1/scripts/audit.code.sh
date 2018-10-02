@@ -70,7 +70,7 @@
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":c:d:e:n:h:" _optname
+while getopts ":c:d:e:n:f:h:" _optname
 do
         case "$_optname" in
                 "c")
@@ -100,6 +100,10 @@ do
                                 _par_node=$_par_node""$_par_node_grp
                                 [ -z "$_par_node" ] && echo "ERR: Don't find nodes in [$_par_node_grp] definited group(s)/family(s)" && exit 1
                         fi
+		;;
+		"f")
+			_opt_filter="yes"
+			_par_filter=$OPTARG
 		;;
                 "h")
                         _opt_help="yes"
@@ -144,6 +148,7 @@ do
                                 echo "		[YYYY-MM-DD]: Implies data from date to now if you dont use -e"
                                 echo "	-e [YYYY-MM-DD], end date for concrete start date" 
                                 echo "		mandatory use the same format with -d parameter"
+				echo
 
 				exit 0
 			;;
@@ -162,10 +167,10 @@ issue_processing()
 {
 	audit.nod.sh -v eventlog -f bitacora | 
 		sort -t\; -k1n | 
-		awk -F\; -v tsb="$_par_ds" -v tse="$_par_de" -v cip="$_code_pattern" '
+		awk -F\; -v tsb="$_par_ds" -v tse="$_par_de" -v cip="$_code_pattern" -v nd="$_par_node" '
 			BEGIN { 
 				_fecha=systime() 
-			} $1 > tsb && $1 < tse && $0 ~ cip { 
+			} $1 > tsb && $1 < tse && $3 ~ nd && $0 ~ cip { 
 				split($5,ni,":") ; 
 				gin[ni[2]]=gin[ni[2]]"\n\t"strftime("%F - %T",$1)" | "$6" | "$3" | "ni[3] 
 			} END { 
@@ -175,8 +180,30 @@ issue_processing()
 						finc=gensub(/.(..)(..)(..)/,"\\1 \\2 \\3","g",inc[1]) ; 
 						fts=mktime( "20"finc" 0 0 0") ; 
 						_result=(_fecha-fts)/86400 ; 
-						print i": ("int(_result)"d age)"gin[i] 
+						print i": ("int(_result)"d age)"gin[i]"\n" 
 					} 
+				}
+			}'
+}
+
+
+issue_processing_temp_all()
+{
+	audit.nod.sh -v eventlog -f bitacora | 
+		sort -t\; -k1n | 
+		awk -F\; -v tsb="$_par_ds" -v tse="$_par_de" -v cip="$_code_pattern" -v nd="$_par_node" '
+			BEGIN { 
+				_fecha=systime() 
+			} $1 > tsb && $1 < tse && $3 ~ nd && $0 ~ cip { 
+				split($5,ni,":") ; 
+				gin[ni[2]]=gin[ni[2]]"\n\t"strftime("%F - %T",$1)" | "$6" | "$3" | "ni[3] 
+			} END { 
+				for ( i in gin ) { 
+					split(i,inc,"-") ; 
+					finc=gensub(/.(..)(..)(..)/,"\\1 \\2 \\3","g",inc[1]) ; 
+					fts=mktime( "20"finc" 0 0 0") ; 
+					_result=(_fecha-fts)/86400 ; 
+					print i": ("int(_result)"d age)"gin[i]"\n" 
 				}
 			}'
 }
@@ -345,8 +372,18 @@ init_date()
 	
 	[ ! -z "$_par_code_pattern" ] && _code_pattern=$( awk -F\; -v cp="$_par_code_pattern" 'NF == 2 && $1 !~ "^[ #]" && $1 == cp { _sd=$2 } END { print _sd }' $_config_path/audit/issuecodes.cfg )
 	[ -z "$_code_pattern" ] && echo "Not have a valid issue code pattern" && exit 1
+
+	[ ! -z "$_par_node" ] && _par_node=$( node_ungroup $_par_node | sed -e 's/ /$|^/g' -e 's,^,/,' -e 's,$,/,' )
 	
 
 ################ LAUNCHING ###################
 
-	issue_processing	
+
+	case $_par_filter in
+	"all")
+		issue_processing_temp_all
+	;;
+	*)
+		issue_processing	
+	;;
+	esac

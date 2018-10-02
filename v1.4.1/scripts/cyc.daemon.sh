@@ -65,8 +65,6 @@
 	_cyc_sts_pid_file=$_lock_path"/cyc.sts.pid"
 	_cyc_his_pid_file=$_lock_path"/cyc.his.pid"
 
-	#_cyc_dae_pid=$$
-
 ###########################################
 #              PARAMETERs                 #
 ###########################################
@@ -521,7 +519,7 @@ cyc_service_start()
 		_daemon="$_script_path/audit.nod.sh -d  2>>$_mon_log_path/audit.err.log >>$_mon_log_path/audit.err.log"
 	;;
 	razor)
-		return 1 #echo "WORKING ON IT"
+		_daemon="$_script_path/razor.sh -d 2>>$_mon_log_path/razor.srv.err.log >>$_mon_log_path/razor.srv.log"
 	;;
 	hasync)
 		return 1 #echo "WORKING ON IT"

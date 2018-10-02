@@ -112,6 +112,10 @@ _pg_dashboard_log=$_mon_log_path"/dashboard.plugin.log"				## MONITORING DASHBOA
 _sensor_remote_path=$_cyc_clt_data_path"/sensors"                               ## NEW CLIENT SENSOR MON PATH
 #_sensor_remote_path="/opt/cyclops/local/data/sensors"
 
+# RAZOR SETTINGS
+
+_razordb_file=$_config_path_rea"/razor.nod.cfg"					## RAZOR GLOBAL WORKING FILE
+
 # CONFIG FILEs
 
 _mon_cfg_file=$_config_path_mon"/monitor.cfg"					## MONITOR CFG FILE 

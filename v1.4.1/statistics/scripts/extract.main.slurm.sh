@@ -206,7 +206,7 @@ main_action()
 	[ "$_sh_action" != "daemon" ] && echo -e "WRITE EXTRATED DATA TO FILE IN $_main_output_path/$_par_dst"	
 	_main_output_path=$_stat_slurm_data_dir"/"$_par_dst
 	[ ! -d "$_main_output_path" ] && mkdir -p $_main_output_path
-	[ ! -z "$_process_tmp_file" ] && awk -F\; -v _p="$_main_output_path" -v _sh="$_sh_action" '{ _y=strftime("%Y",$1); _m=strftime("%m",$1) ; print $0 >> _p"/"_y"."_m".main.data.txt" }  END {  if ( _sh != "daemon" ) { print "NUMBER OF REG PROCESSED:"NR  }}' $_process_tmp_file && rm -f $_process_tmp_file
+	[ ! -z "$_process_tmp_file" ] && awk -F\; -v _p="$_main_output_path" -v _sh="$_sh_action" '{ _y=strftime("%Y",$1); _m=strftime("%m",$1) ; print $0 >> _p"/"_y"."_m".main.data.txt" }  END {  if ( _sh != "daemon" ) { print "NUMBER OF REG PROCESSED:"NR  }}' $_process_tmp_file #&& rm -f $_process_tmp_file
 
 }
 
@@ -280,8 +280,15 @@ case "$_sh_action" in
 			then
 				_par_date_start=$( date +%Y )"-01-01" 
 			else
-				_par_date_start=$( tail -n 1 $_last_file | cut -d';' -f1 ) 
-				_par_date_start=$( date -d @$_par_date_start +%Y-%m-%dT%H:%M:%S ) 
+				_par_date_start=$( awk -F\; 'BEGIN { _out="FAIL" } $1 ~ "^[0-9]+$" { _out=$1 } END { print _out }' $_last_file ) 
+				if [ "$_par_date_start" != "FAIL" ] 
+				then
+					_par_date_start=$( date -d @$_par_date_start +%Y-%m-%dT%H:%M:%S )
+				else
+					[ -f "$_last_file" ] && rm $_last_file
+					echo "$( date +%s ) : SLURM EXTRACT DATA, GET DATE: [FAIL]"  >> $_mon_log_path/$_hostname.$_command_name.log
+					exit
+				fi
 			fi
 
 			echo "$( date +%s ) : PROCESSING: $_par_xtr : $_par_src : $_par_dst : FROM: $_par_date_start END: $_par_date_end" >> $_mon_log_path/$_hostname.$_command_name.log
