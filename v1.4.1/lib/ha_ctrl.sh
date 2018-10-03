@@ -39,7 +39,7 @@ ha_check()
                 then
                         if [ "$_sh_action" == "daemon" ]
                         then
-				echo "DEBUG: [$_sh_action]" 
+				echo "DEBUG: [$_sh_action]" >&2 
                                 exit 0
                         else
 				echo "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : TRYING REMOTE EXEC : [$_ha_master_host] : DEBUG [$_sh_action]" >&2 

@@ -27,6 +27,30 @@
 IFS="
 "
 
+_command_opts=$( echo "~$@~" | 
+	tr -d '~' | 
+	tr '@' '#' | 
+	sed 's/-\([0-9]*\)/~\1/g' | 
+	awk -F\- '
+		BEGIN { 
+			OFS=" -" 
+		} { 
+			for (i=2;i<=NF;i++) { 
+				if ( $i ~ /^[a-z] / ) { 
+					gsub(/^[a-z] /,"&@",$i) ; 
+					gsub(/ $/,"",$i) ; 
+					gsub (/$/,"@",$i) 
+				}
+			}; 
+			print $0 
+		}' | 
+	tr '@' \' | 
+	tr '#' '@'  | 
+	tr '~' '-' )
+_command_name=$( basename "$0" )
+_command_dir=$( dirname "${BASH_SOURCE[0]}" )
+_command="$_command_dir/$_command_name $_command_opts"
+
 _pid=$( echo $$ )
 _debug_code="AUDIT NODES "
 _debug_prefix_msg="Audit Nodes Main: "
@@ -55,8 +79,27 @@ source $_color_cfg_file
 
 #### LIBS ####
 
-        source $_libs_path/node_group.sh
-        source $_libs_path/node_ungroup.sh
+        [ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
+        [ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="113"
+        [ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
+
+        case "$_exit_code" in
+        111)
+                echo "Main Config file doesn't exists, please revise your cyclops installation"
+                exit 1
+        ;;
+        112)
+                echo "HA Control Script doesn't exists, please revise your cyclops installation"
+                exit 1
+        ;;
+        11[3-5])
+                echo "Necesary libs files doesn't exits, please revise your cyclops installation"
+                exit 1
+        ;;
+        116)
+                echo "WARNING: Color file doesn't exits, you see data in black"
+        ;;
+        esac
 
 ## CYCLOPS OPTION STATUS CHECK
 
@@ -301,6 +344,51 @@ shift $((OPTIND-1))
 #              FUNCTIONs                  #
 ###########################################
 
+node_group_old()
+{
+
+        _prefix=$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sed 's/^\([a-zA-Z_-]*\)[0-9]*$/\1/' | sort -u )
+
+        for _node_prefix in $( echo "${_prefix}" )
+        do
+               _node_range=$_node_range""$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | grep "^$_node_prefix" | sed 's/[0-9]*$/;&/' | sort -t\; -k2,2n -u | awk -F\; '
+                { if ( NR == "1" ) { _sta=$2 ; _end=$2  ; _string=$1"[" }
+                else {
+                    if ( $2 == _end + 1 ) {
+                        _sep="-" ;
+                        _end=$2 }
+                        else
+                        {
+                            if ( _sep == "-" ) { 
+                                _string=_string""_sta"-"_end"," }
+                                else {
+                                    _string=_string""_sta"," }
+                            _sep="," ;
+                            _sta=$2 ;
+                            _end=$2 ;
+                        }
+                    }
+                }
+
+                END { if ( $2 == _end + 1 ) {
+                        _sep="-" ;
+                        _end=$2 }
+                        else
+                        {
+                            if ( _sep == "-" ) { 
+                                _string=_string""_sta"-"_end }
+                                else {
+                                    _string=_string""_sta }
+                            _sep="," ;
+                            _sta=$2 ;
+                            _end=$2 ;
+                        }
+                        print _string"]" }' )","
+        done
+
+        echo "$_node_range" | sed 's/\,$//'
+}
+
 extract_static_data()
 {
 
@@ -388,23 +476,6 @@ read_data()
 
 }
 
-generate_arch_wiki()
-{
-	_hyth=$( sort -t\; -k4 -k3 -k2 $_type | awk -F\; '{ if ( _gold != $4 ) { _gold=$4 ; _fold=$3 ; print $4";"$3";"$2 } else { if ( _fold != $3 ) { _fold=$3 ; print ":::;"$3";"$2 } else { print ":::;:::;"$2 }}}' )
-	
-	_wiki_output=$( echo "${_hyth}" | awk -F\; -v _pw="$_wiki_audit_path" -v _ch="$_color_header" -v _ct="$_color_title" '
-		BEGIN { 
-			print "|<50% 20% 20% 60%>|"
-			print "|  "_ct" ** GROUP **  |  "_ct" ** FAMILY **  |  "_ct" ** NODE **  |"
-		} {	
-			if ( $1 == ":::" ) { _gch="" } else { _gch=_ch } 
-			if ( $2 == ":::" ) { _fch="" } else { _fch=_ch } 
-			print "|  "_gch" "$1"  |  "_fch" "$2"  |  [["_pw":"$3".audit|"$3"]]  |"
-		}' )
-
-	echo "${_wiki_output}"
-}
-
 generate_wiki_view()
 {
 
@@ -422,10 +493,6 @@ generate_wiki_view()
 	_node_graph_mngt=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_node_gbegin -v wiki -w Tbar -e mngt -g day -n $_host_name )
 	_node_graph_alerts=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_node_gbegin -v wiki -w W700 -e alerts -g day -n $_host_name )
 	_node_graph_issues=$( $_stat_extr_path/stats.cyclops.audit.totals.sh -b $_node_gbegin -v wiki -w W700 -e issues -g day -n $_host_name )
-
-	## CHECK INDEX WIKI PAGE ##
-
-	[ ! -f "$_pages_path/documentation/cyclops/architecture.txt" ] && generate_arch_wiki > $_pages_path/documentation/cyclops/architecture.txt
 
 	unset _node_graph_sensors
 
@@ -975,7 +1042,7 @@ interactive_event()
 
 }
 
-ha_check()
+ha_check_old()
 {
 
 	_ha_master_host=$( cat $_sensors_sot | grep "^CYC;0006;HA" | cut -d';' -f5 )
@@ -1333,27 +1400,27 @@ init_date()
 	gen)
 		case $_par_gen in 
 		bitacoras)
-			[ "$_cyclops_ha" == "ENABLED" ] && ha_check
+			[ "$_cyclops_ha" == "ENABLED" ] && ha_check $_command
 			main_bitacoras > $_audit_wiki_path/bitacoras.txt 
 		;;
 		data)
-			[ "$_cyclops_ha" == "ENABLED" ] && ha_check
+			[ "$_cyclops_ha" == "ENABLED" ] && ha_check $_command
 			extract_static_data
 		;;
 		wiki)
 			_par_show="wiki"
 
-			[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check
+			[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command
 			read_data	
 
 		;;
 		index)
 
-			[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check
+			[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command
 
 		;;
 		all)
-			[ "$_cyclops_ha" == "ENABLED" ] && ha_check
+			[ "$_cyclops_ha" == "ENABLED" ] && ha_check $_command
 
 			_par_show="wiki"
 			_opt_graph="yes"
@@ -1367,7 +1434,7 @@ init_date()
 	fail)
 		_par_show="wiki"
 
-		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check
+		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command
 
 		extract_static_data
 		read_data
@@ -1376,13 +1443,13 @@ init_date()
 	show)
 		[ -z $_par_show ] && _par_show="human"
 
-		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check
+		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command
 
 		read_data
 	;;
 	insert)
 
-		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check
+		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command
 
 		[ -z $_par_node ] && _par_node="main" && _audit_code_type="GEN" && _check_par_filter="1" 
 		[ -z $_opt_msg ] && [ "$_par_insert" != "issue" ] && echo "ERR: Need a Message to insert in bitacora node" && exit 1 
@@ -1396,7 +1463,7 @@ init_date()
 		_opt_graph="yes"
 		_check_par_filter="0"
 
-		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check
+		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command 2>/dev/null
 
 		[ ! -d $_audit_wiki_path ] && mkdir -p $_audit_wiki_path
 

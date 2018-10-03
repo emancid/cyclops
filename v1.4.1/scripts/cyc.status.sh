@@ -263,7 +263,7 @@ audit_status()
 {
 
 	_cmd_audit_status="-v eventlog -f bitacora "$( [ ! -z "$_par_node" ] && echo "-n $_par_node" )
-	_audit_status=$( eval exec $_script_path/audit.nod.sh $_cmd_audit_status | awk -F\; -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
+	_audit_status=$( eval exec $_script_path/audit.nod.sh $_cmd_audit_status 2>/dev/null | awk -F\; -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
 		$1 >= _tsb && $1 <= _tse { 
 			print strftime("%Y-%m-%d;%H:%M",$1)";"$3";"$4";"$6";"$5  
 		}' | sort -t\; -k1,1n -k1,2nr 
@@ -464,27 +464,28 @@ node_real_status()
 
 	done 
 
-	_monnod_status=$( awk -F\; '$1 == "CYC" && $2 == "0012" { print $4}' $_sensors_sot )
-
-	case "$_monnod_status" in
-	ENABLED)
-		_monnod_status=$_sh_color_green$_monnod_status$_sh_color_nformat
-	;;
-	DISABLED)
-		_monnod_status=$_sh_color_red$_monnod_status$_sh_color_nformat
-	;;
-	"")
-		_monnod_status=$_sh_color_red"CODE ERR MISS"$_sh_color_nformat
-	;;
-	*)
-		_monnod_status=$_sh_color_red"CODE ERR UNKN"$_sh_color_nformat
-	;;
-	esac
+	_monnod_status=$( awk -F\; -v _sg="$_sh_color_green" -v _sr="$_sh_color_red" -v _sn="$_sh_color_nformat" '
+		$1 == "CYC" && $2 == "0012" { 
+			if ( $4 == "ENABLED" ) { 
+				print _sg""$4""_sn 
+			} else { 
+				print _sr""$4""_sn 
+			}
+		}' $_sensors_sot )
+	_cyc_status=$( awk -F\; -v _sg="$_sh_color_green" -v _sr="$_sh_color_red" -v _sn="$_sh_color_nformat" '
+		$1 == "CYC" && $2 == "0001" { 
+			if ( $4 == "ENABLED" ) { 
+				print _sg""$4""_sn 
+			} else { 
+				print _sr""$4""_sn 
+			}
+		}' $_sensors_sot )
 
 	echo
 	echo -e $_sh_color_bolt"NODE: STATUS"$_sh_color_nformat
 	echo -e $_sh_color_bolt"------------"$_sh_color_nformat
 	echo
+	echo -e "CYCLOPS STATUS :	$_cyc_status"
 	echo -e "NODE MONITORING: 	$_monnod_status" 
 	echo -e "LAST UPDATE: 		$_node_last_st$_node_last_up$_sh_color_nformat"
 	echo -e "CRITICAL ENV STATUS: 	$_critical_st_color$( echo "${_critical_st_simp}" | cut -d';' -f4  )$_sh_color_nformat"
