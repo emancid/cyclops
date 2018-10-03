@@ -313,6 +313,18 @@ CYCLOPS 1.4.1v INSTALL
 	- We recomend enable one by one, trying it step by step.
 
 	NOTE: we really try to get time to make a daemon services, please be patient and use this "old and ugly" method, we apologize 
+	NOTE: we have a EXPERIMENTAL DAEMON, you can use it with systemd or sysV, in this case don't configure cron entries
+		- systemd:
+			- copy /opt/cyclops/docs/cyclops.service on multi-user.target.wants inside of your systemd lib directory distro.
+			- execute for run on boot -> systemctl enable cyclops.service
+			- for start service/daemon use systemctl start cyclops.service
+		- sysV:
+			- link with ln -s /opt/cyclops/scripts/cyc.daemon.sh on /etc/rc3.d directory with S[0-9][0-9]cyclops name 
+			- use chkconfig for enable it at boot
+		- Both:
+			- you can use cyc.daemon.sh command for configure or enable different cyclops modules
+			
+		
 
     8. NODES CONFIG
     ----------------------------------------------------------------------------------------------------------

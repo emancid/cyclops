@@ -1681,20 +1681,20 @@ mon_uptime_edges_pg()
         _mon_ue_pg_max_stats_fil="max_uptime_pg_stats"
         _mon_ue_pg_max_stats_link="** {{popup>:operation:monitoring:"$_mon_ue_pg_max_stats_fil"?[keepOpen] |MAX UP Node}} **"
 
-	_mon_ue_pg_min=$( cat $_pg_dashboard_log | awk -F\: '$4 ~ /100/ { split($10,u,"=") ; split(u[2],d," - ") ;  if ( n[d[1]] <= d[2] ) n[d[1]]=d[2] } END { for ( i in n ) { if ( n[i] != "0" ) { print i"="n[i] }}}' | sort -t\= -k2,2nr )
-	_mon_ue_pg_max=$( cat $_pg_dashboard_log | awk -F\: '$4 ~ /100/ { split($9,u,"=") ; split(u[2],d," - ") ;  if ( n[d[1]] <= d[2] ) n[d[1]]=d[2] } END { for ( i in n ) { print i"="n[i]  }}' | sort -t\= -k2,2nr )
+	_mon_ue_pg_min=$( cat $_pg_dashboard_log | awk -F\: '$4 ~ /100/ { split($10,u,"=") ; split(u[2],d," - ") ;  if ( n[d[1]] <= d[2] ) n[d[1]]=d[2] } END { for ( i in n ) { if ( n[i] != "0" ) { print i"="n[i] }}}' | sort -t\= -k2,2nr | head -n 20 )
+	_mon_ue_pg_max=$( cat $_pg_dashboard_log | awk -F\: '$4 ~ /100/ { split($9,u,"=") ; split(u[2],d," - ") ;  if ( n[d[1]] <= d[2] ) n[d[1]]=d[2] } END { for ( i in n ) { print i"="n[i]  }}' | sort -t\= -k2,2nr | head -n 20 )
 
 	_mon_ue_pg_min_output=$(
 		echo "<html>" 
 		echo "<meta http-equiv=\"refresh\" content=\"300\">" 
 		echo "</html>"
 		echo 
-		echo "== HISTORIC STATS - MAX MINIMAL LIFE TOP NODES =="
+		echo "== HISTORIC STATS - MAX MINIMAL LIFE TOP 20 NODES =="
 		echo "//Last Update: $_mon_date//"
 		echo "  * <fc green> INFO: </fc> Only cyclops get data  when system is at 100% of health"
 		echo
 		echo "|< 100% >|" 
-		echo "|  $_color_title MAX MINIMAL LIFE NODES  |"
+		echo "|  $_color_title MAX MINIMAL LIFE TOP 20 NODES  |"
 		echo "|  <gchart 600x350 hbar value #A5DF00 #FFFFFF center>"
 		echo "${_mon_ue_pg_min}"
 		echo "</gchart>  |"
@@ -1708,12 +1708,12 @@ mon_uptime_edges_pg()
                 echo "<meta http-equiv=\"refresh\" content=\"300\">" 
                 echo "</html>"
                 echo 
-                echo "== HISTORIC STATS - MAX LIFE TOP NODES =="
+                echo "== HISTORIC STATS - MAX LIFE TOP 20 NODES =="
                 echo "//Last Update: $_mon_date//"
                 echo "  * <fc green> INFO: </fc> Only cyclops get data when system is at 100% of health"
                 echo
                 echo "|< 100% >|" 
-                echo "|  $_color_title MAX LIFE NODES  |"
+                echo "|  $_color_title MAX LIFE TOP 20 NODES  |"
                 echo "|  <gchart 600x350 hbar value #A5DF00 #FFFFFF center>"
                 echo "${_mon_ue_pg_max}"
                 echo "</gchart>  |"
