@@ -24,7 +24,7 @@
 	IFS="
 	"
 
-	_command_opts=$( echo "~$@~" | tr -d '~' | tr '@' '#' | sed 's/-\([0-9]*\)/~\1/g' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' | tr '#' '@'  | tr '~' '-' ) 
+	_command_opts=$( echo "~$@~" | tr -d '~' | tr '@' '#' | awk -F\- 'BEGIN { OFS=" -" } { for (i=2;i<=NF;i++) { if ( $i ~ /^[a-z] / ) { gsub(/^[a-z] /,"&@",$i) ; gsub(/ $/,"",$i) ; gsub (/$/,"@",$i) }}; print $0 }' | tr '@' \' | tr '#' '@'  | tr '~' '-' ) 
 	_command_name=$( basename "$0" )
 	_command_dir=$( dirname "${BASH_SOURCE[0]}" )
 	_command="$_command_dir/$_command_name $_command_opts"

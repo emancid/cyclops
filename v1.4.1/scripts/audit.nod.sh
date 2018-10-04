@@ -30,7 +30,6 @@ IFS="
 _command_opts=$( echo "~$@~" | 
 	tr -d '~' | 
 	tr '@' '#' | 
-	sed 's/-\([0-9]*\)/~\1/g' | 
 	awk -F\- '
 		BEGIN { 
 			OFS=" -" 

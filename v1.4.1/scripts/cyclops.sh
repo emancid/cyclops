@@ -537,27 +537,33 @@ mng_node_status_check()
 	echo "do backup before apply changes..." 
 	echo
 
-	echo -ne "\tPROCESSING: "
+	echo -e "\tPROCESSING: "
+	_total_nodes=$( echo "${_long}" | wc -l )
+	[ -z "$_total_nodes" ] && _total_nodes=0
 
 	for _host_node in $( echo "${_long}" )
 	do
-		sed "s/\(.*;$_host_node;.*;\)[a-z]*$/\1$_par_action/" $_type | grep $_host_node";" 2>&1 >/dev/null
-		if [ "$?" -ne 0 ]
+		let "_total_num++"
+		_ctrl_node=$( awk -F\; -v _n="$_host_node" 'BEGIN { _s="X" } $2 == _n { _s="#" } END { print _s }' $_type ) 
+		if [ "$_ctrl_node" == "#" ]
 		then
-			echo -n 'X' 
-			_node_change_bad=$_node_change_bad" "$_host_node
-		else
-			echo -n '#'
 			_node_change_ok=$_node_change_ok" "$_host_node
+			let "_total_ok++"
+		else
+			_node_change_bad=$_node_change_bad" "$_host_node
+			let "_total_bad++"
 		fi
+		let "_total_per =  _total_num * 100  / _total_nodes "
+		let "_ok_per =  _total_ok * 100  / _total_nodes "
+		let "_bad_per =  _total_bad * 100  / _total_nodes "
 
+		echo -ne "\t TOTAL:[$_total_per%] OK:[$_sh_color_green""$_ok_per%""$_sh_color_nformat] FAIL:[$_sh_color_red""$_bad_per%""$_sh_color_nformat]\r"
 	done
 
-	echo -n " 100%"
 	echo
 	echo -e "\tNODE CHANGES:"
-	[ ! -z "$_node_change_ok" ] && echo -e "\tOK: $( node_group $_node_change_ok ) --> $_par_action" 
-	[ ! -z "$_node_change_bad" ] && echo -e "\tFAIL: $( node_group $_node_change_bad ) --> not match"
+	[ ! -z "$_node_change_ok" ] && echo -e  "\t OK  :[$_total_ok]\t $( node_group $_node_change_ok ) --> $_par_action" 
+	[ ! -z "$_node_change_bad" ] && echo -e "\t FAIL:[$_total_bad]\t $( node_group $_node_change_bad ) --> not match"
 
 	echo 
 	echo "Finish test changes, use -c parameter for apply them" 
@@ -570,26 +576,33 @@ mng_node_status_do()
 	echo
 	
 	echo -ne "\tPROCESSING: "
+	_total_nodes=$( echo "${_long}" | wc -l )
+	[ -z "$_total_nodes" ] && _total_nodes=0
 
 	for _host_node in $( echo "${_long}" )
 	do
-		sed -i "s/\(.*;$_host_node;.*;\)[a-z]*$/\1$_par_action/" $_type
-		if [ "$?" -ne 0 ]
+		_ctrl_node=$( awk -F\; -v _n="$_host_node" 'BEGIN { _s="X" } $2 == _n { _s="#" } END { print _s }' $_type ) 
+		if [ "$_ctrl_node" == "#" ]
 		then
-			echo -n 'X' 
-			_node_change_bad=$_node_change_bad" "$_host_node
-		else
-			echo -n '#'
+			sed -i "s/\(.*;$_host_node;.*;\)[a-z]*$/\1$_par_action/" $_type
 			_node_change_ok=$_node_change_ok" "$_host_node
 			[ "$_audit_status" == "ENABLED" ] &&  $_script_path/audit.nod.sh -i event -e status -m "mon status" -s $_par_action -n $_host_node 2>>$_mon_log_path/audit.log
+			let "_total_ok++"
+		else
+			_node_change_bad=$_node_change_bad" "$_host_node
+			let "_total_bad++"
 		fi
+		let "_total_per =  _total_num * 100  / _total_nodes "
+		let "_ok_per =  _total_ok * 100  / _total_nodes "
+		let "_bad_per =  _total_bad * 100  / _total_nodes "
+
+		echo -ne "\t TOTAL:[$_total_per%] OK:[$_sh_color_green""$_ok_per%""$_sh_color_nformat] FAIL:[$_sh_color_red""$_bad_per%""$_sh_color_nformat]\r"
 	done
 
-	echo -n " 100%"
 	echo
 	echo -e "\tNODE CHANGES:"
-	[ ! -z "$_node_change_ok" ] && echo -e "\tOK: $( node_group $_node_change_ok ) --> $_par_action" 
-	[ ! -z "$_node_change_bad" ] && echo -e "\tFAIL: $( node_group $_node_change_bad ) --> not match"
+	[ ! -z "$_node_change_ok" ] && echo -e  "\t OK  :[$_total_ok]\t $( node_group $_node_change_ok ) --> $_par_action" 
+	[ ! -z "$_node_change_bad" ] && echo -e "\t FAIL:[$_total_bad]\t $( node_group $_node_change_bad ) --> not match"
 
 	echo
 	echo "Cyclops System Notified"
