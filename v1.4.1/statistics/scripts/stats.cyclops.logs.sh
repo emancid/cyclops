@@ -298,7 +298,8 @@ calc_data()
 										if ( t >= _fld ) { t=_fld }
 									}
 								}
-								_reg_c="yes"
+								_reg_c="yes" ;
+								break ;
 							} 
 						} ;
                                         } END { 
