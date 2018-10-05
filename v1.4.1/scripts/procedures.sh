@@ -160,7 +160,7 @@ show_node_procedures()
 
         ## NODE IA PROCEDURES
 
-        for _proc_file in $( ls -1 $_sensors_ia_path/*.rule )
+        for _proc_file in $( ls -1 $_sensors_ia_path/* | awk '$1 ~ "rule$" { print $1 }' )
         do
                 _code=$( echo $_proc_file | cut -d'.' -f2 )
                 _priority=$( echo $_proc_file | awk -F\/ '{ print $NF }' | cut -d'.' -f1 )

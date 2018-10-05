@@ -136,6 +136,8 @@ do
 				echo "	status: check razor status in host"
 				echo "	sync: syncronize razor modules and files"
 				echo
+				echo "-i initializate razor" 
+				echo
 				echo "-d Daemon Option"
 				echo 
 				echo "-n [node|node range] node filter"

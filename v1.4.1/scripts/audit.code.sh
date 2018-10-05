@@ -370,8 +370,20 @@ init_date()
 
 	init_date
 	
-	[ ! -z "$_par_code_pattern" ] && _code_pattern=$( awk -F\; -v cp="$_par_code_pattern" 'NF == 2 && $1 !~ "^[ #]" && $1 == cp { _sd=$2 } END { print _sd }' $_config_path/audit/issuecodes.cfg )
-	[ -z "$_code_pattern" ] && echo "Not have a valid issue code pattern" && exit 1
+	if [ "$_par_code_pattern" == "help" ]
+	then
+		echo
+		echo "Cyclops Audit Module"
+		echo "Available codenames for show issues reports"
+		echo ""
+		awk -F\; 'BEGIN { print "CODENAME;| PATTERN\n-----------;|----------------" } $1 ~ "^[0-9a-z]+$" && NF == 2 { print $1";| "$2 }' $_config_path/audit/issuecodes.cfg | column -t -s\; 
+		echo ""
+		exit 0
+	else
+		[ ! -z "$_par_code_pattern" ] && _code_pattern=$( awk -F\; -v cp="$_par_code_pattern" 'NF == 2 && $1 !~ "^[ #]" && $1 == cp { _sd=$2 } END { print _sd }' $_config_path/audit/issuecodes.cfg )
+		[ -z "$_code_pattern" ] && echo "Not have a valid issue code pattern" && exit 1
+	fi
+
 
 	[ ! -z "$_par_node" ] && _par_node=$( node_ungroup $_par_node | sed -e 's/ /$|^/g' -e 's,^,/,' -e 's,$,/,' )
 	

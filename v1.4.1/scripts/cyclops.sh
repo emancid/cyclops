@@ -541,6 +541,8 @@ mng_node_status_check()
 	_total_nodes=$( echo "${_long}" | wc -l )
 	[ -z "$_total_nodes" ] && _total_nodes=0
 
+	_color_tot=$_sh_color_green
+
 	for _host_node in $( echo "${_long}" )
 	do
 		let "_total_num++"
@@ -557,7 +559,9 @@ mng_node_status_check()
 		let "_ok_per =  _total_ok * 100  / _total_nodes "
 		let "_bad_per =  _total_bad * 100  / _total_nodes "
 
-		echo -ne "\t TOTAL:[$_total_per%] OK:[$_sh_color_green""$_ok_per%""$_sh_color_nformat] FAIL:[$_sh_color_red""$_bad_per%""$_sh_color_nformat]\r"
+		[ "$_total_bad" == "1" ] && _color_tot=$_sh_color_red
+
+		echo -ne "\t TOTAL:[$_color_tot""$_total_per%""$_sh_color_nformat] OK:[$_sh_color_green""$_ok_per%""$_sh_color_nformat] FAIL:[$_sh_color_red""$_bad_per%""$_sh_color_nformat]\r"
 	done
 
 	echo
@@ -579,8 +583,11 @@ mng_node_status_do()
 	_total_nodes=$( echo "${_long}" | wc -l )
 	[ -z "$_total_nodes" ] && _total_nodes=0
 
+	_color_tot=$_sh_color_green
+
 	for _host_node in $( echo "${_long}" )
 	do
+		let "_total_num++"
 		_ctrl_node=$( awk -F\; -v _n="$_host_node" 'BEGIN { _s="X" } $2 == _n { _s="#" } END { print _s }' $_type ) 
 		if [ "$_ctrl_node" == "#" ]
 		then
@@ -591,12 +598,13 @@ mng_node_status_do()
 		else
 			_node_change_bad=$_node_change_bad" "$_host_node
 			let "_total_bad++"
+			_color_tot=$_sh_color_red
 		fi
 		let "_total_per =  _total_num * 100  / _total_nodes "
 		let "_ok_per =  _total_ok * 100  / _total_nodes "
 		let "_bad_per =  _total_bad * 100  / _total_nodes "
 
-		echo -ne "\t TOTAL:[$_total_per%] OK:[$_sh_color_green""$_ok_per%""$_sh_color_nformat] FAIL:[$_sh_color_red""$_bad_per%""$_sh_color_nformat]\r"
+		echo -ne "\t TOTAL:[$_color_tot""$_total_per%""$_sh_color_nformat] OK:[$_sh_color_green""$_ok_per%""$_sh_color_nformat] FAIL:[$_sh_color_red""$_bad_per%""$_sh_color_nformat]\r"
 	done
 
 	echo
