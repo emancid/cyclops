@@ -65,7 +65,7 @@ _date_now=$( date +%s )
 _par_grp="day"
 _par_show="commas"
 
-while getopts ":g:s:b:f:n:e:w:v:cxzh:" _optname
+while getopts ":g:s:b:f:n:e:w:v:r:cxzh:" _optname
 do
         case "$_optname" in
 		"g")
@@ -106,6 +106,10 @@ do
 				_par_eve=$( echo $_par_eve | tr '[:lower:]' '[:upper:]' )
 			;;
 			esac
+		;;
+		"r")
+			_opt_sts="yes"
+			_par_sts=$OPTARG
 		;;
 		"n")
 			# field node [ FACTORY NODE RANGE ] 
@@ -198,6 +202,7 @@ do
 				echo "		mngt: group of STATUS,INFO,ISSUE, register type, that show administrator task"
 				echo "		alerts: group of ALERT, FAIL, DOWN, register type, that show system problems"
 				echo "		[others]: you can specify other register type"
+				echo "	-r [status], filter data status type"
 				echo
 				echo "STATS:"
 				echo "	By default: Number of Cyc Audit Events"
@@ -217,6 +222,7 @@ do
 				echo "			Tbar:	Bar graph"
 				echo "			Tline:	Line graph"
 				echo "			Tpie:	Pie graph"
+				echo "	-x disable info head"
 				echo
 				echo "HELP:"
 				echo "	-h [|des] help, this help"
@@ -246,7 +252,7 @@ calc_data()
 
         case "$_par_grp" in
 	month)
-                cat $_files | sort -n -t\; | awk -F\; -v _e="$_par_eve" -v _ds="$_par_ds" -v _de="$_par_de" -v _ov="$_opt_avg" -v _nn="$_total_nodes" '
+                cat $_files | sort -n -t\; | awk -F\; -v _e="$_par_eve" -v _ds="$_par_ds" -v _de="$_par_de" -v _ov="$_opt_avg" -v _nn="$_total_nodes" -v _sts="$_par_sts" '
                 BEGIN {
                         _doh=strftime("%Y-%m",_ds) ;
                         split(_doh,r,"-") ;
@@ -256,7 +262,7 @@ calc_data()
                         a=0 ;
                 } 
 
-                $1 >= _ds && $1 <= _de && $4 ~ _e { 
+                $1 >= _ds && $1 <= _de && $4 ~ _e && $6 ~ _sts { 
                         _dnh=strftime("%Y-%m",$1) ;
                         if ( _dnh == _doh ) {
                                 a++

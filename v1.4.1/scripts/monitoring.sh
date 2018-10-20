@@ -683,8 +683,17 @@ mon_section_services_background()
 	## BEWARE WITH OTHER SCRIPTS , PARAMETERS ARE AJUST FOR SLURM MON JOB SCRIPT
 	## IA PARAMETER DISABLE, FAILS AND DONT WORK PROPERLY
 
-	$_script_path/$_srv_mon_script -v $_opt_show -f $_config_path_srv/$_srv_mon_parameters > $_sensors_temp_path/$_srv_mon_wiki_dst.txt 
-        echo $_srv_mon_field_num";"$? >> $_sensors_temp_path/$_srv_mon_script.$_pid.tmp
+	case "$_srv_mon_script" in
+	service.slurm.sh)
+		$_script_path/$_srv_mon_script -v $_opt_show -f $_config_path_srv/$_srv_mon_parameters > $_sensors_temp_path/$_srv_mon_wiki_dst.txt 
+        	echo $_srv_mon_field_num";"$? >> $_sensors_temp_path/$_srv_mon_script.$_pid.tmp
+	;;
+	service.quota.sh)
+		$_script_path/$_srv_mon_script -v $_opt_show -n $_srv_mon_parameters > $_sensors_temp_path/$_srv_mon_wiki_dst.txt
+        	echo $_srv_mon_field_num";"$? >> $_sensors_temp_path/$_srv_mon_script.$_pid.tmp
+	;;
+	esac
+
 	cp $_sensors_temp_path/$_srv_mon_wiki_dst.txt $_mon_path/$_srv_mon_wiki_dst.txt
 
 }
@@ -721,8 +730,12 @@ mon_section_services()
         	done
 		wait
 
-        	_srv_mon_status=";"$( cat $_sensors_temp_path/$_srv_mon_script.$_pid.tmp | sort -t\; -k1,1n | cut -d';' -f2 | tr '\n' ';' )
-        	[ -f $_sensors_temp_path/$_srv_mon_script.$_pid.tmp ] && rm $_sensors_temp_path/$_srv_mon_script.$_pid.tmp
+        	_srv_mon_status=";"$( cat $_sensors_temp_path/service.*.$_pid.tmp | sort -t\; -k1,1n | cut -d';' -f2 | tr '\n' ';' )
+
+		for _file in $( ls -1 $_sensors_temp_path/service.*.$_pid.tmp ) 
+		do
+        		[ -f $_file ] && rm $_file 
+		done
 
 		_srv_mon_end_date=$(date +%s)
 

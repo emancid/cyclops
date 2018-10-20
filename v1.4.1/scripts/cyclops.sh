@@ -579,7 +579,7 @@ mng_node_status_do()
 	echo "Doing changes..."
 	echo
 	
-	echo -ne "\tPROCESSING: "
+	echo -e "\tPROCESSING: "
 	_total_nodes=$( echo "${_long}" | wc -l )
 	[ -z "$_total_nodes" ] && _total_nodes=0
 

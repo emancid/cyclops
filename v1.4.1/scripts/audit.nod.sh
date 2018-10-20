@@ -905,7 +905,7 @@ insert_event()
 		do
 			case "$_ask_ok" in 
 			Y|y)
-				[ -z $_ask_node ] && $_script_path/audit.nod.sh -i bitacora -e $_ask_event -s $_ask_state -m $_msg_insert || $_script_path/audit.nod.sh -i bitacora -e $_ask_event -s $_ask_state -n $_ask_node -m $_msg_insert
+				[ -z $_ask_node ] && $_script_path/audit.nod.sh -i bitacora -e $_ask_event -s $_ask_state -m $_msg_insert 2>/dev/null || $_script_path/audit.nod.sh -i bitacora -e $_ask_event -s $_ask_state -n $_ask_node -m $_msg_insert 2>/dev/null
 				if [ "$_ask_email" == "Y" ] || [ "$_ask_email" == "y" ]
 				then
 					$_script_path/cyclops.sh -p medium -m $_ask_node" : "$_msg_insert -l
