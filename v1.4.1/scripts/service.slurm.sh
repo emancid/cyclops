@@ -36,6 +36,7 @@ else
 	exit 1 
 fi
 
+source $_libs_path/node_ungroup.sh
 source $_color_cfg_file
 
 ## LOCAL --
@@ -281,26 +282,36 @@ format_output()
 		0) 
 			_slurm_state_color=$_color_ok
 			_slurm_title_color=$_color_up
+			_slurm_status="UP"
 			_output_ia=""
 		;;
 		2)
 			_slurm_state_color=$_color_down
 			_slurm_title_color=$_color_red
+			_slurm_status="DOWN"
 		;;
 		3)
-		
-		_slurm_state_color=$_color_fail
+			_slurm_state_color=$_color_fail
 			_slurm_title_color=$_color_fail
 			_ia_alert=";DOWN SLURM CONTROLLERS NOT RESPONDING;"
+			_slurm_status="FAIL"
 		;;
 		"*")
                         _slurm_state_color=$_color_unk
                         _slurm_title_color=$_color_unk
+			_slurm_status="UNKNOWN"
 		;;
 		esac
 
+		## PRINT LOG --
+
+		_node_total=$( node_ungroup $_node_total | tr ' ' '\n' | sort -u | wc -l )
+		_per_nodes=$( echo "${_node_total}" | awk -v _r="$_if_var_ava_compute_nodes" '$1 ~ "[0-9]+" { _s=$1 } END { if ( _s != 0 ) { print int(( _r * 100 ) / _s) } else { print _s }}' )
+		_slurm_source=$( echo "$_slurm_cluster_name" | tr [:upper:] [:lower:] ) 
+		echo "$( date +%s ) : $_slurm_source : $_slurm_status : mon_time=$_if_var_date : master=$_ctl_main_node : backup=$_ctl_bkp_node : tnodes=$_node_total : running=$_if_var_ava_compute_nodes : pernodes=$_per_nodes% : jobs=$_if_var_run_jobs : wjobs=$_if_var_wait_jobs : users=$_if_var_users" >> $_mon_log_path/$_slurm_source.sl.mon.log 
+
 		## PRINT OUTPUT --	
-		
+
 		echo '\\'
 		 
 		echo "|< 100% 15% 10% 10% 10% 10% 10% 15% 15% >|"
@@ -424,10 +435,12 @@ check_ctl_status()
 		
 				case "$_ctl_main_node" in
         			"localhost"|$HOSTNAME|"127.0.0.1")
+					_node_total=$( sinfo -shl | awk '$2 == "up" { _o=_o""$NF"," } END { print _o}' | sed 's/,$//' )
                         		_output=$( active_jobs $_par_mon $_slurm_cfg_file  )
                         		_output_wait=$( waiting_jobs 2>/dev/null )
         			;;
        				 *)
+					_node_total=$( ssh -o ConnectTimeout=10 $_ctl_main_node sinfo -shl | awk '$2 == "up" { _o=_o""$NF"," } END { print _o}' | sed 's/,$//' )
 					_output=$( ssh -o ConnectTimeout=10 $_ctl_main_node "$(typeset -f);active_jobs" $_par_mon $_slurm_cfg_file 2>/dev/null )
                                 	_output_wait=$( ssh -o ConnectTimeout=10 $_ctl_main_node "$(typeset -f);waiting_jobs " 2>/dev/null )
         			;;
@@ -448,10 +461,12 @@ check_ctl_status()
 
                                 case "$_ctl_bkp_node" in
                                 "localhost"|$HOSTNAME|"127.0.0.1")
+					_node_total=$( sinfo -shl | awk '$2 == "up" { _o=_o""$NF"," } END { print _o}' | sed 's/,$//' )
                                         _output=$( active_jobs $_par_mon $_slurm_cfg_file  )
                                         _output_wait=$( waiting_jobs 2>/dev/null )
                                 ;;
                                  *)
+					_node_total=$( ssh -o ConnectTimeout=10 $_ctl_bkp_node sinfo -shl | awk '$2 == "up" { _o=_o""$NF"," } END { print _o}' | sed 's/,$//' )
                                         _output=$( ssh -o ConnectTimeout=10 $_ctl_bkp_node "$(typeset -f);active_jobs" $_par_mon $_slurm_cfg_file 2>/dev/null )
                                         _output_wait=$( ssh -o ConnectTimeout=10 $_ctl_bkp_node "$(typeset -f);waiting_jobs " 2>/dev/null )
                                 ;;

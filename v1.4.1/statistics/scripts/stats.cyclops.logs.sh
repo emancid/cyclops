@@ -58,7 +58,7 @@ _par_ref="empty"
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":r:d:e:t:f:n:v:w:k:xlh:" _optname
+while getopts ":r:d:e:t:f:n:v:w:k:s:xlh:" _optname
 do
         case "$_optname" in
 		"n")
@@ -613,13 +613,30 @@ init_date()
 check_items()
 {
 	
-	case "$_par_nod" in 
+	case "$_par_src" in 
 	dashboard)
 		_sensor_help=$( cat $_log_file | 
 					awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
 					{ 
 						_type="unknown"
 						for (i=4;i<=NF;i++) { 
+							split($i,f,"=") ; 
+							if ( f[2] ~ "^[0-9]+" ) { 
+								if ( f[2] ~ "^[0-9]+$" ) { _type="numeric:acumulative/maximun values/average" }
+								if ( f[2] ~ "%$" ) { _type="percent:percent average" }
+								if ( f[2] ~ "^[0-9]+[.][0-9]+$" ) { _type="decimals:acumalative/maximun values/average" }
+								if ( f[2] ~ "^[0-9]+w$" ) { _type="watts:watts" }
+								print "["f[1]"]:"_type 
+							}
+						} 
+					}' | sort -u )
+	;;
+	slurm)
+		_sensor_help=$( cat $_log_file | 
+					awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
+					{ 
+						_type="unknown"
+						for (i=5;i<=NF;i++) { 
 							split($i,f,"=") ; 
 							if ( f[2] ~ "^[0-9]+" ) { 
 								if ( f[2] ~ "^[0-9]+$" ) { _type="numeric:acumulative/maximun values/average" }
@@ -694,17 +711,33 @@ check_items()
 			exit 41
 		;;
 		dashboard)
-			_log_file=$_pg_dashboard_log
+			_par_src=$_par_nod
+
 		;;
 		"")
 			echo -e "\nNeed Log "$_par_src"name\nUse -h for help\n" 
 			exit 42 
 		;;
+		esac 
+
+		case "$_par_src" in
+		dashboard)
+			_log_file=$_pg_dashboard_log
+		;;
+		slurm)
+			_log_file=$_mon_log_path"/"$_par_nod".sl.mon.log"
+		;;
+		quota)
+			echo "Not Available yet"
+			exit 41
+		;;	
+		node|env)
+			_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
+		;;
 		*)
 			_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
-			#_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
 		;;
-		esac 
+		esac
 
 		[ -z "$_par_itm" ] && echo -e "\nNeed Log Item\nUse -h for help\n" && exit 43 
 		[ -z "$_par_date_start" ]  && _par_date_start="day" && unset _par_date_end
