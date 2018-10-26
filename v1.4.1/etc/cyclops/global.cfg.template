@@ -105,6 +105,8 @@ _cyclops_log=$_mon_log_path"/cyclops.log"
 _last_event_log=$_mon_log_path"/last.event.log"
 _sys_dashboard_log=$_mon_log_path"/dashboard.system.log"			## MONITORING DASHBOARD MAIN SYS LOG
 _pg_dashboard_log=$_mon_log_path"/dashboard.plugin.log"				## MONITORING DASHBOARD PLUGIN LOG
+_srv_quota_logs=$_mon_log_path"/services/quota"                                 ## SERVICE QUOTA LOG DIRECTORY
+_srv_slurm_logs=$_mon_log_path"/services/slurm"                                 ## SERVICE SLURM LOG DIRECTORY
 
 # REMOTE MONITOR SCRIPT PATH
 

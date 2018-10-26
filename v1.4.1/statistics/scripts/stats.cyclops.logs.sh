@@ -53,6 +53,7 @@ fi
 
 _cyclops_ha=$( awk -F\; '$1 == "CYC" && $2 == "0006" { print $4}' $_sensors_sot )
 _par_ref="empty"
+_par_src="node"
 
 ###########################################
 #              PARAMETERs                 #
@@ -107,8 +108,8 @@ do
 			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
 		"f")
-			_opt_file="yes"
-			_par_file=$OPTARG
+			_opt_fil="yes"
+			_par_fil=$OPTARG
 			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
 		"l")
@@ -148,14 +149,20 @@ do
 				echo "CYCLOPS STATISTICS: CYC LOGS MODULE"
 				echo
 				echo "MAIN FIELDS:"
-				echo "	-n [[nodename]|[device]|dashboard|cyclops] item from log to stats"
+				echo "	-n [[nodename]|[device]|dashboard|[quota]|[slurm]] item from log to stats"
 				echo "		[nodename]: name of desired host to ask data log info"
 				echo "		[device]: name of monitoring enviroment device to ask data log info"
+				echo "		[slurm]: name of slurm environment configurating in cyclops"
+				echo "		[quota]: name of user to get quota data"
 				echo "		dashboard: ask for system activity info from cyclops dashboard" 
-				echo "		cyclops: NOT AVAILABLE YET"
 				echo "	-r [sensor|help] sub-item from log to stats" 
 				echo "		sensor: what ever available sensor in monitor module"
 				echo "		help: show available sensors for host/node/device"
+				echo "	-s [log source]: specify data source"
+				echo "		node|env: by default source"
+				echo "		quota: quota cyclops service module data source"
+				echo "		slurm: slurm cyclops service module data source"
+				echo "		dashboard: cyclops monitoring plugin data source"
 				echo
 				echo "STATS:"
 				echo "	-t [avg|acu|per|max|min] : Specific Data Processing"
@@ -179,6 +186,8 @@ do
 				echo "		[YYYY-MM-DD]: Implies data from date to now if you dont use -e"
 				echo "	-e [YYYY-MM-DD], end date for concrete start date" 
 				echo "		mandatory use the same format with -d parameter"
+				echo "	-f [[field1=value1],[field2=vale2],...], one or more log fields with value"
+				echo "		you can add one or more field log with a value comma separated"
 				echo
 				echo "SHOW:"
 				echo "	-v [graph|human|wiki|commas] optional, commas default."
@@ -221,12 +230,13 @@ shift $((OPTIND-1))
 calc_data()
 {
 	_log_stats_data=$( cat $_log_file | sort -t\; -n | 
-        			awk -F " : " -v _dr="$_date_filter" -v _tsb="$_par_ds" -v _tse="$_par_de" -v _sf="$_par_itm" -v _tc="$_par_typ" '
+        			awk -F " : " -v _dr="$_date_filter" -v _tsb="$_par_ds" -v _tse="$_par_de" -v _sf="$_par_itm" -v _tc="$_par_typ" -v _pf="$_par_fil" '
                                         BEGIN { 
                                                 _to="START" ; 
                                                 t=0 ; 
                                                 a=1 ; 
 						_reg_c="no" ;
+						_tf=split(_pf,ff,",") ;
                                         } $1 > _tsb && $1 < _tse { 
                                                 if ( _dr == "year" ) { _time=strftime("%Y;%m_%b",$1) } ; 
                                                 if ( _dr == "month" ) { _time=strftime("%Y-%m_%b;%d",$1) } ; 
@@ -234,73 +244,86 @@ calc_data()
                                                 if ( _dr == "day" ) { _time=strftime("%Y-%m-%d;%Hh",$1) } ; 
                                                 if ( _dr == "hour" ) { _time=strftime("%Y-%m-%d;%H:%M",$1) } ; 
 						if ( $3 == "DIAGNOSE" ) { gsub(/CHECK /,"",$0) } ;
+						_fe=0 ; _fet=0 ; _cm=0 ; _ofc=0 ; _of=0
                                                 for (i=3;i<=NF;i++) { 
 							split($i,d,"=") ; 
 							if ( d[1] == _sf ) { 
-								split(d[2],dat," ") ;
-								gsub("%", "", dat[1]) ; 
-								gsub("%", "", dat[2]) ; 
-								if ( dat[2] ~ "^[0-9]+$" ) { 
-									_fld=dat[2] ; 
+								_ofc=d[2] ; 
+								_fe=1 ; 
+							}
+							if ( _tf > 0 ) {
+								for (m=1;m<=_tf;m++) {
+									if ( $i == ff[m] ) { _cm++ }
+								}
+								if ( _cm == _tf && _fe == 1 ) { _fet=1 ; _of=_ofc ; break }
+							} else { 
+								if ( _fe == 1 ) { _fet=1 ; _of=_ofc ; break }
+							}
+						}
+						if ( _fet == 1 ) { 
+							split(_of,dat," ") ;
+							gsub("%", "", dat[1]) ; 
+							gsub("%", "", dat[2]) ; 
+
+							if ( dat[2] ~ "^[0-9]+$" ) { 
+								_fld=dat[2] ; 
+							} else {
+								if ( dat[1] ~ "^[0-9]+$" ) { 
+									_fld=dat[1] ;	
 								} else {
-									if ( dat[1] ~ "^[0-9]+$" ) { 
-										_fld=dat[1] ;	
-									} else {
-											_fld=0
-									}
+										_fld=0
 								}
-								if ( _tc == "per" ) {
-									if ( _to != _time ) { 
-										print _to"="t/a ; 
-										_to=_time ; 
-										t=_fld ; 
-										a=1 ; 
-									} else { 
-										t=t+_fld ; 
-										a++ ; 
-									}
+							}
+							if ( _tc == "per" ) {
+								if ( _to != _time ) { 
+									print _to"="t/a ; 
+									_to=_time ; 
+									t=_fld ; 
+									a=1 ; 
+								} else { 
+									t=t+_fld ; 
+									a++ ; 
 								}
-								if ( _tc == "avg" ) {
-									if ( _to != _time ) { 
-										print _to"="t/a ; 
-										_to=_time ; 
-										t=_fld ; 
-										a=1 ;
-									} else { 
-										t=t+_fld ; 
-										a++ ;
-									}
-								} 
-								if ( _tc == "acu" ) {
-									if ( _to != _time ) { 
-										print _to"="t ; 
-										_to=_time ; 
-										t=_fld ; 
-									} else { 
-										t=t+_fld ; 
-									}
-								} 
-								if ( _tc == "max" ) {
-									if ( _to != _time ) {
-										print _to"="t ;
-										_to=_time ;
-										t=_fld ;
-									} else {
-										if ( t  <= _fld ) { t=_fld }
-									}
+							}
+							if ( _tc == "avg" ) {
+								if ( _to != _time ) { 
+									print _to"="t/a ; 
+									_to=_time ; 
+									t=_fld ; 
+									a=1 ;
+								} else { 
+									t=t+_fld ; 
+									a++ ;
 								}
-								if ( _tc == "min" ) {
-									if ( _to != _time ) {
-										print _to"="t ;
-										_to=_time ;
-										t=_fld ;
-									} else {
-										if ( t >= _fld ) { t=_fld }
-									}
-								}
-								_reg_c="yes" ;
-								break ;
 							} 
+							if ( _tc == "acu" ) {
+								if ( _to != _time ) { 
+									print _to"="t ; 
+									_to=_time ; 
+									t=_fld ; 
+								} else { 
+									t=t+_fld ; 
+								}
+							} 
+							if ( _tc == "max" ) {
+								if ( _to != _time ) {
+									print _to"="t ;
+									_to=_time ;
+									t=_fld ;
+								} else {
+									if ( t  <= _fld ) { t=_fld }
+								}
+							}
+							if ( _tc == "min" ) {
+								if ( _to != _time ) {
+									print _to"="t ;
+									_to=_time ;
+									t=_fld ;
+								} else {
+									if ( t >= _fld ) { t=_fld }
+								}
+							}
+							_reg_c="yes" ;
 						} ;
                                         } END { 
                                                 if ( _reg_c == "yes" ) { 
@@ -631,7 +654,7 @@ check_items()
 						} 
 					}' | sort -u )
 	;;
-	slurm)
+	slurm|quota)
 		_sensor_help=$( cat $_log_file | 
 					awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
 					{ 
@@ -725,19 +748,31 @@ check_items()
 			_log_file=$_pg_dashboard_log
 		;;
 		slurm)
-			_log_file=$_mon_log_path"/"$_par_nod".sl.mon.log"
+			_log_file=$_srv_slurm_logs"/"$_par_nod".sl.mon.log"
 		;;
 		quota)
-			echo "Not Available yet"
-			exit 41
+			_quota_srv=$( echo $_par_nod | cut -d'.' -f1 )
+			_par_nod=$( echo $_par_nod | cut -d'.' -f2 )
+			_log_file=$_srv_quota_logs"/"$_par_nod".qt.mon.log"
 		;;	
 		node|env)
-			_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
+			_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
 		;;
 		*)
-			_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
+			_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
+			#_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
 		;;
 		esac
+
+		if [ ! -f "$_log_file" ]
+		then
+			echo "ERR: No exist data source!"
+			echo "	source type: [$_par_src]"
+			echo "	source item: [$_par_nod]"
+			echo
+			echo "Please use -h for help"
+			exit 1
+		fi
 
 		[ -z "$_par_itm" ] && echo -e "\nNeed Log Item\nUse -h for help\n" && exit 43 
 		[ -z "$_par_date_start" ]  && _par_date_start="day" && unset _par_date_end

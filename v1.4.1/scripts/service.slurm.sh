@@ -308,7 +308,7 @@ format_output()
 		_node_total=$( node_ungroup $_node_total | tr ' ' '\n' | sort -u | wc -l )
 		_per_nodes=$( echo "${_node_total}" | awk -v _r="$_if_var_ava_compute_nodes" '$1 ~ "[0-9]+" { _s=$1 } END { if ( _s != 0 ) { print int(( _r * 100 ) / _s) } else { print _s }}' )
 		_slurm_source=$( echo "$_slurm_cluster_name" | tr [:upper:] [:lower:] ) 
-		echo "$( date +%s ) : $_slurm_source : $_slurm_status : mon_time=$_if_var_date : master=$_ctl_main_node : backup=$_ctl_bkp_node : tnodes=$_node_total : running=$_if_var_ava_compute_nodes : pernodes=$_per_nodes% : jobs=$_if_var_run_jobs : wjobs=$_if_var_wait_jobs : users=$_if_var_users" >> $_mon_log_path/$_slurm_source.sl.mon.log 
+		echo "$( date +%s ) : $_slurm_source : $_slurm_status : mon_time=$_if_var_date : master=$_ctl_main_node : backup=$_ctl_bkp_node : tnodes=$_node_total : running=$_if_var_ava_compute_nodes : pernodes=$_per_nodes% : jobs=$_if_var_run_jobs : wjobs=$_if_var_wait_jobs : users=$_if_var_users" >> $_srv_slurm_logs/$_slurm_source.sl.mon.log 
 
 		## PRINT OUTPUT --	
 

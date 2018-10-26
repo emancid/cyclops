@@ -397,6 +397,9 @@ ${_data_head}" | column -x -t -s\;
 		echo
 	;;
 	wiki)
+
+		[ ! -d "$_srv_quota_logs" ] && mkdir -p "$_srv_quota_logs"
+
 		echo
 		echo "~~NOTOC~~"
 		echo "~~NOCACHE~~"
@@ -423,12 +426,18 @@ ${_data_head}" | column -x -t -s\;
 				if ( $3 >= 1024^3 ) { $3=$3/1024^3 ; _m="T" }
 				printf "|  :::  |  %s  |  %s  ||  %s  |  %'"'"'8.1f%s  ||  %s  |  %s  |\n", _mt, $1, $2, $3, _m, $4, $5 
 			}'
-		echo "${_data_srv}" | awk -F\; -v _cm="$_color_mark" -v _co="$_color_ok" -v _cd="$_color_down" -v _cu="$_color_up" -v _ce="$_color_disable" -v _cf="$_color_fail" '
+		echo "${_data_srv}" | awk -F\; -v _s="$_srv" -v _cm="$_color_mark" -v _co="$_color_ok" -v _cd="$_color_down" -v _cu="$_color_up" -v _ce="$_color_disable" -v _cf="$_color_fail" -v _lp="$_srv_quota_logs" -v _dh="${_data_head}" '
 			BEGIN { 
 				_tud=0 ; _tum=0 ; _tuo=0 ; _tuf=0 ; _tue=0 ; 
+				logtit[1]="" ; logtit[2]="b_used" ; logtit[3]="b_soft" ; logtit[4]="b_hard" ; 
+				logtit[5]="i_used" ; logtit[6]="i_soft" ; logtit[7]="i_hard" ;  
+				split(_dh,dh,";") ;
+				_mt=systime() ;
 			} {
 				split($1,fa,":")
 				_err=0
+				_log_dst=fa[2]
+				_log_line=_mt" : "fa[2]" : "fa[1]" : mon_time="strftime("%H.%M.%S",_mt)" : server="_s" : quota_type="dh[1]" : fs_path="dh[2]" : fs_size="dh[3]" : fs_type="dh[4]" : fs_status="dh[5]
 				for (i=2;i<=NF;i++) {
 					_idx=fa[2]":"i
 					_bc=0
@@ -438,6 +447,7 @@ ${_data_head}" | column -x -t -s\;
 						if ( f[2] != 0 ) { _err=1 }
 						_rb=f[2]
 					}
+					if ( i == 4 ) { _pb=f[2] }
 					if ( i == 5 ) {
 						if ( _err == 1 && f[2] == 0 ) { _err=2 }
 						_ri=f[2]
@@ -450,17 +460,20 @@ ${_data_head}" | column -x -t -s\;
 					} else {
 						fld[_idx]=f[2]
 					}
-					if ( f[1] == "UP" ) {   cf[_idx]=_cu }
+					if ( i == 7 ) { _pi=f[2] }
+					if ( f[1] == "UP" ) {   cf[_idx]=_cu } 
 					if ( f[1] == "OK" ) {   cf[_idx]=_co }
 					if ( f[1] == "DOWN" ) { cf[_idx]=_cf } 
 					if ( f[1] == "MARK" ) { cf[_idx]=_cm } 
+					_log_line=_log_line" : "logtit[i]"="f[2]
 				}
 				if ( _ri != 0 ) { 
-					rat[fa[2]]=_rb/_ri 
-					if ( rat[fa[2]] <= 1024 ) { ratm[fa[2]]="K" }
-					if ( rat[fa[2]] > 1024 && rat[fa[2]] < 1024^2 ) { rat[fa[2]]=rat[fa[2]]/1024 ; ratm[fa[2]]="M" }
-					if ( rat[fa[2]] >= 1024^2 && rat[fa[2]] < 1024^3 ) { rat[fa[2]]=rat[fa[2]]/1024^2; ratm[fa[2]]="G" }
+					_ratio_bi=_rb/_ri 
+					if ( _ratio_bi <= 1024 ) { rat[fa[2]]=_ratio_bi ; ratm[fa[2]]="K" }
+					if ( _ratio_bi > 1024 && _ratio_bi < 1024^2 ) { rat[fa[2]]=_ratio_bi/1024 ; ratm[fa[2]]="M" }
+					if ( _ratio_bi >= 1024^2 && _ratio_bi < 1024^3 ) { rat[fa[2]]=_ratio_bi/1024^2; ratm[fa[2]]="G" }
 				} else { 
+					_ratio_bi=0
 					rat[fa[2]]=0 
 				}
 				if ( fa[1] == "DOWN" ) { _id=1 ; _tud++ }
@@ -468,13 +481,16 @@ ${_data_head}" | column -x -t -s\;
 				if ( fa[1] == "OK" ) {   _id=3 ; _tuo++ }
 				if ( _bc == 0 ) {        _id=4 ; _tuf++ }
 				if ( _err == 2 ) {       _id=5 ; cf[fa[2]":"2]=_cf ; cf[fa[2]":"5]=_cf ; _tue++ }
+				if ( _id < 4 && int(_pb) != 0 ) { pblock[fa[2]]=int((_rb * 100)/_pb) ; pinode[fa[2]]=int((_ri * 100)/_pi) } else { pblock[fa[2]]=0 ; pinode[fa[2]]=0 }
 				ord[_id]=ord[_id]""fa[2]","
 				ordb[_id]=ordb[_id]+_rb ; ordi[_id]=ordi[_id]+_ri
 				_tbc=_tbc+_rb
 				_tic=_tic+_ri
+				_log_line=_log_line" : bi_ratio="_ratio_bi" : per_block="pblock[fa[2]]"% : per_inode="pinode[fa[2]]"%"
+				print _log_line >> _lp"/"_log_dst".qt.mon.log"
 			} END {
-				_head="^  user  ^  ratio B/i  ^  Block Used  ^  Block Soft  ^  Block Hard  ^  Inode Used  ^  Inode Soft  ^  Inode Hard  ^"
-				_tab="|< 100% 13% 12% 13% 12% 12% 14% 12% 12%>|"
+				_head="^  user  ^  ratio B/i  ^  Blocks Used %  ^  Inodes Used %  ^  Block Used  ^  Block Soft  ^  Block Hard  ^  Inode Used  ^  Inode Soft  ^  Inode Hard  ^"
+				_tab="|< 100% 12% 8% 6% 6% 11% 11% 11% 11% 11% 11%>|"
 
 				if ( _tbc <= 1024 ) { _tbcm="K" }
 				if ( _tbc > 1024 && _tbc < 1024^2 ) { _tbc=_tbc/1024 ; _tbcm="M" }
@@ -525,14 +541,16 @@ ${_data_head}" | column -x -t -s\;
 
 						print _secc
 						print _tab
-						print "|  "_cg"  ||  "_cu" Users  ||  "_cu" Blocks Used  ||  "_cu" inodes Used  ||" 
-						printf "|  :::    ||  %s       ||  %'"'"'8.1f%s  ||  %'"'"'d   ||\n", ul, ordb[a], ordbm, ordi[a] 
+						print "|  "_cg"  ||  "_cu" Users  ||  "_cu" Blocks Used  |||  "_cu" inodes Used  |||" 
+						printf "|  :::    ||  %s       ||  %'"'"'8.1f%s  |||  %'"'"'d   |||\n", ul, ordb[a], ordbm, ordi[a] 
 						print _head
 						ul=asorti(u, user)	
 						for (idx=1;idx<=ul;idx++) {
 							if ( u[idx] != "" ) {
 								_ix=u[idx]":"
-								printf  "| %s  |  %'"'"'8.1f%s |  %s %'"'"'8.1f%s |  %s %'"'"'8.1f%s |  %s %'"'"'8.1f%s |  %s %'"'"'d |  %s %'"'"'d |  %s %'"'"'d |\n", u[idx], rat[u[idx]], ratm[u[idx]], cf[_ix""2], fld[_ix""2], mb[_ix""2], cf[_ix""3], fld[_ix""3], mb[_ix""3], cf[_ix""4], fld[_ix""4], mb[_ix""4], cf[_ix""5], fld[_ix""5], cf[_ix""6], fld[_ix""6], cf[_ix""7], fld[_ix""7]
+								if ( pblock[u[idx]] <= 50 ) { _pbc=_cu } else if ( pblock[u[idx]] <= 70 ) { _pbc=_co } else if ( pblock[u[idx]] < 99 ) { _pbc=_cm } else { _pbc=cf[_ix""4] }
+								if ( pinode[u[idx]] <= 50 ) { _pic=_cu } else if ( pinode[u[idx]] <= 70 ) { _pic=_co } else if ( pinode[u[idx]] < 99 ) { _pic=_cm } else { _pic=cf[_ix""4] }
+								printf  "| %s  |  %'"'"'8.1f%s |  %s %'"'"'d%%  |  %s %'"'"'d%%  |  %s %'"'"'8.1f%s |  %s %'"'"'8.1f%s |  %s %'"'"'8.1f%s |  %s %'"'"'d |  %s %'"'"'d |  %s %'"'"'d |\n", u[idx], rat[u[idx]], ratm[u[idx]], _pbc, pblock[u[idx]], _pic, pinode[u[idx]], cf[_ix""2], fld[_ix""2], mb[_ix""2], cf[_ix""3], fld[_ix""3], mb[_ix""3], cf[_ix""4], fld[_ix""4], mb[_ix""4], cf[_ix""5], fld[_ix""5], cf[_ix""6], fld[_ix""6], cf[_ix""7], fld[_ix""7]
 							}
 						}
 						print "</hidden>"
