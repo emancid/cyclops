@@ -645,14 +645,22 @@ check_items()
 						for (i=4;i<=NF;i++) { 
 							split($i,f,"=") ; 
 							if ( f[2] ~ "^[0-9]+" ) { 
-								if ( f[2] ~ "^[0-9]+$" ) { _type="numeric:acumulative/maximun values/average" }
-								if ( f[2] ~ "%$" ) { _type="percent:percent average" }
-								if ( f[2] ~ "^[0-9]+[.][0-9]+$" ) { _type="decimals:acumalative/maximun values/average" }
-								if ( f[2] ~ "^[0-9]+w$" ) { _type="watts:watts" }
-								print "["f[1]"]:"_type 
+								if ( f[2] ~ "^[0-9]+$" ) { field[f[1]]="numeric:acumulative/maximun values/average" }
+								if ( f[2] ~ "%$" ) { field[f[1]]="percent:percent average" }
+								if ( f[2] ~ "^[0-9]+[.][0-9]+$" ) { field[f[1]]="decimals:acumalative/maximun values/average" }
+								if ( f[2] ~ "^[0-9]+w$" ) { field[f[1]]="watts:watts" }
+							} else {
+								if ( field[f[1]] != "" ) { filter[f[1]]="corrupt:any bad data on this field" } else { filter[f[1]]="char:field only for filter" }
 							}
 						} 
-					}' | sort -u )
+					} END {
+						for ( a in field ) {
+							if ( field[a] != "" ) { printf "[ %-12s ]:%s\n", a, field[a] } 
+						}
+						for ( b in filter ) {
+							if ( filter[b] != "" ) { printf "[ %-12s ]:%s\n", b, filter[b] } 
+						}
+					}' )
 	;;
 	slurm|quota)
 		_sensor_help=$( cat $_log_file | 
@@ -662,14 +670,22 @@ check_items()
 						for (i=5;i<=NF;i++) { 
 							split($i,f,"=") ; 
 							if ( f[2] ~ "^[0-9]+" ) { 
-								if ( f[2] ~ "^[0-9]+$" ) { _type="numeric:acumulative/maximun values/average" }
-								if ( f[2] ~ "%$" ) { _type="percent:percent average" }
-								if ( f[2] ~ "^[0-9]+[.][0-9]+$" ) { _type="decimals:acumalative/maximun values/average" }
-								if ( f[2] ~ "^[0-9]+w$" ) { _type="watts:watts" }
-								print "["f[1]"]:"_type 
+								if ( f[2] ~ "^[0-9]+$" ) { field[f[1]]="numeric:acumulative/maximun values/average" }
+								if ( f[2] ~ "%$" ) { field[f[1]]="percent:percent average" }
+								if ( f[2] ~ "^[0-9]+[.][0-9]+$" ) { field[f[1]]="decimals:acumalative/maximun values/average" }
+								if ( f[2] ~ "^[0-9]+w$" ) { field[f[1]]="watts:watts" }
+							} else {
+								if ( field[f[1]] != "" ) { filter[f[1]]="corrupt:any bad data on this field" } else { filter[f[1]]="char:field only for filter" }
 							}
-						} 
-					}' | sort -u )
+						}
+					} END {
+						for ( a in field ) {
+							if ( field[a] != "" ) { printf "[ %-12s ]:%s\n", a, field[a] } 
+						}
+						for ( b in filter ) {
+							if ( filter[b] != "" ) { printf "[ %-12s ]:%s\n", b, filter[b] } 
+						}
+					}' )
 	;;
 	*)
 		_sensor_help=$( cat $_log_file | 
@@ -679,21 +695,31 @@ check_items()
 						for (i=4;i<=NF;i++) { 
 							split($i,f,"=") ; 
 							split(f[2],d," ") ; 
-							if ( d[2] ~ "^[0-9]+" ) { 
-								if ( d[2] ~ "^[0-9]+$" ) { _type="numeric:acumulative/maximun values/average" }
-								if ( d[2] ~ "%$" ) { _type="percent:percent average" }
-								if ( d[2] ~ "^[0-9]+[.][0-9]+$" ) { _type="decimals:acumalative/maximun values/average" }
-								if ( d[2] ~ "^[0-9]+w$" ) { _type="watts:watts" }
-								print "["f[1]"]:"_type 
+							if ( d[2] ~ "^[0-9]+" || d[2] == "" ) { 
+								if ( d[2] ~ "^[0-9]+$" ) { filter[f[1]]="numeric:acumulative/maximun values/average" }
+								if ( d[2] ~ "%$" ) { filter[f[1]]="percent:percent average" }
+								if ( d[2] ~ "^[0-9]+[.][0-9]+$" ) { filter[f[1]]="decimals:acumalative/maximun values/average" }
+								if ( d[2] ~ "^[0-9]+w$" ) { filter[f[1]]="watts:watts" }
+							} else {
+								if ( field[f[1]] != "" ) { filter[f[1]]="corrupt:any bad data on this field" } else { filter[f[1]]="char:field only for filter" }
 							}
-						} 
-					}' | sort -u )
+						}
+					} END {
+						for ( a in field ) {
+							if ( field[a] != "" ) { printf "[ %-12s ]:%s\n", a, field[a] } 
+						}
+						for ( b in filter ) {
+							if ( filter[b] != "" ) { printf "[ %-12s ]:%s\n", b, filter[b] } 
+						}
+					}' )
 	;;
 	esac
 
+	_sensor_help=$( echo -e "${_sensor_help}" | sort -t\: -k2 )
+
 	echo
 	echo -e "Available Sensors\n"
-	echo -e "Name:Data Type:Avaliable Processing Data\n----:---------:--------------------------\n${_sensor_help}" | column -t -s\:
+	echo -e "Name:Data Type:Avaliable Processing Data\n-------------:---------:--------------------------\n${_sensor_help}" | column -t -s\:
 	echo
 
 }

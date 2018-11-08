@@ -178,11 +178,11 @@ extract_data()
 	
 	case "$_fs_type" in
 	kernel)
-		[ "$_quota_type" == "user" ] && _cmd_par="-u"
-		[ "$_quota_type" == "group" ] && _cmd_par="-g" 
+		[ "$_quota_type" == "user" ] && _cmd_par="-pu"
+		[ "$_quota_type" == "group" ] && _cmd_par="-pg" 
 		_status_srv=$( ssh -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_quota_server  "$(typeset -f);check_server_kernel" $_quota_fs $_fs_type $_quota_type 2>/dev/null )
 		[ -z "$_status_srv" ] && _status_srv="FAIL;na;server no respond" || _data_srv=$( ssh -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_quota_server repquota $_cmd_par $_quota_fs 2>/dev/null )
-		[ -z "$_data_srv" ] && _data_srv="$_" 
+		[ -z "$_data_srv" ] && _data_srv="no data" 
 	;;
 	lustre)
 		#_status_srv="user;$_quota_fs;$_quota_type;ENABLE"
@@ -220,7 +220,7 @@ get_data_lustre()
 
 		for _item in $( echo "${_items}" ) 
 		do 
-			/usr/bin/lfs quota -u $_item $_lustre_fs | awk '$1 == "Disk" { _usr=$5 } $1 ~ "SCRATCH" { print _usr" -- "$2" "$3" "$4" "$6" "$7" "$8 }'  
+			/usr/bin/lfs quota -u $_item $_lustre_fs | awk '$1 == "Disk" { _usr=$5 } $1 ~ "SCRATCH" { print _usr" -- "$2" "$3" "$4" - "$6" "$7" "$8 }'  
 		done
 }
 
@@ -235,7 +235,7 @@ format_data()
 				_bg="UP" ;
 				_usr=0 ;
 				$3=int($3) ;
-				$6=int($6) ;
+				$7=int($7) ;
 				if ( $4 != 0 ) {  
 					if ( $3 >= $4 ) { 
 						_usrg="MARK" ; 
@@ -262,8 +262,8 @@ format_data()
 					_bh="UP" 
 					_usr++
 				} ; 
-				if ( $7 != 0 ) {
-					if ( $6 >= $7 ) {
+				if ( $8 != 0 ) {
+					if ( $7 >= $8 ) {
 						_usrg="MARK" ;
 						_ig="MARK" ;
 						_is="MARK" ;
@@ -276,7 +276,7 @@ format_data()
 					_usr++
 				} ;
 				if ( $8 != 0 ) {
-					if ( $6 >= $8 ) {
+					if ( $7 >= $9 ) {
 						_usrg="DOWN" ;
 						_ig="DOWN" ;
 						_ih="DOWN" ;
@@ -290,7 +290,7 @@ format_data()
 				} ;
 				if ( _usr > 4 && _usrg == "UP" ) { _usrg="OK" } 
 				if ( _usr == 4 ) { _usrg="OFF" }
-				print _usrg":"$1";"_bg":"$3";"_bs":"$4";"_bh":"$5";"_ig":"$6";"_is":"$7";"_ih":"$8  
+				print _usrg":"$1";"_bg":"$3";"_bs":"$4";"_bh":"$5";"_ig":"$7";"_is":"$8";"_ih":"$9  
 			}' ) 
 
 	case "$_par_srt" in
