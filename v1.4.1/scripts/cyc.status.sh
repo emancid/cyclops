@@ -420,6 +420,7 @@ node_real_status()
 		then
 			_node_sta="NO DATA"
 			_node_err="NO DATA"
+			_node_slm="NO DATA"
 		else
 			_node_sta=$( echo $_node_std | cut -d';' -f1 )
 			_node_slm=$( echo $_node_std | cut -d';' -f2 )

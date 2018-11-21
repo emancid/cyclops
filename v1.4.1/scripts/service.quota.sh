@@ -220,7 +220,7 @@ get_data_lustre()
 
 		for _item in $( echo "${_items}" ) 
 		do 
-			/usr/bin/lfs quota -u $_item $_lustre_fs | awk '$1 == "Disk" { _usr=$5 } $1 ~ "SCRATCH" { print _usr" -- "$2" "$3" "$4" - "$6" "$7" "$8 }'  
+			/usr/bin/lfs quota -u $_item $_lustre_fs | awk -v _usr="$_item" -v _fs="$_lustre_fs" '$1 ~ _fs { print _usr" -- "$2" "$3" "$4" - "$6" "$7" "$8 }'  
 		done
 }
 
@@ -492,11 +492,14 @@ ${_data_head}" | column -x -t -s\;
 				_head="^  user  ^  ratio B/i  ^  Blocks Used %  ^  Inodes Used %  ^  Block Used  ^  Block Soft  ^  Block Hard  ^  Inode Used  ^  Inode Soft  ^  Inode Hard  ^"
 				_tab="|< 100% 12% 8% 6% 6% 11% 11% 11% 11% 11% 11%>|"
 
+				_tbcl=_tbc
+
 				if ( _tbc <= 1024 ) { _tbcm="K" }
 				if ( _tbc > 1024 && _tbc < 1024^2 ) { _tbc=_tbc/1024 ; _tbcm="M" }
 				if ( _tbc >= 1024^2 && _tbc < 1024^3 ) { _tbc=_tbc/1024^2; _tbcm="G" }
 				if ( _tbc >= 1024^3 ) { _tbc=_tbc/1024^3; _tbcm="T" }
 				
+				split(_dh,dlog,";") 
 				_tu=_tud+_tum+_tuo+_tuf+_tue
 
 				if ( _tu == _tuo ) { _tuc=_co } else { _tuc=_cu }
@@ -509,6 +512,8 @@ ${_data_head}" | column -x -t -s\;
 				print  "|  :::  |  "_cu" Users                                    ||||||  "_cu" Total Blocks used  |  "_cu" Total inodes used  |"
 				print  "|  :::  |  "_tuc" Total  |  "_tuoc" On  |   "_tudc" Down  |  "_tumc" Warning  |  "_tufc" Off  |  "_tuec" Err  |  :::          |  :::                      |"
 				printf "|  :::  |   %s         |  %s        |   %s    |  %s       |  %s   |  %s   |  %'"'"'8.1f%s   |  %'"'"'d                  |\n\n", _tu, _tuo, _tud, _tum, _tuf, _tue, _tbc, _tbcm, _tic
+
+				print _mt" : "strftime("%H.%M.%S",_mt)" : quota_type="dlog[1]" : filesystem="dlog[2]" : size="dlog[3]" : fstype="dlog[4]" : status="dlog[5]" : usr_tot="_tu" : usr_on="_tuo" : usr_down="_tud" : usr_warning="_tum" : usr_off="_tuf" : usr_err="_tue" : size_used="_tbcl" : size_per="int((_tbcl*100)/dlog[3])"% : inode_used="_tic >> _lp"/"_s".qt.mon.log" 
 	
 				for (a=1;a<=5;a++) {
 					if ( a == 1 ) { 
@@ -607,5 +612,9 @@ log_data()
 	;;
 	config)
 		awk -F\; 'BEGIN { print "index;server;quota type;fs name" ; print "-----;------;----------;-------" } $1 ~ "^[0-9]+" { print $0 }' $_main_cfg_file | column -t -s\; 
+	;;
+	*)
+		echo "ERR: Use -h for Help"
+		exit 1
 	;;
 	esac

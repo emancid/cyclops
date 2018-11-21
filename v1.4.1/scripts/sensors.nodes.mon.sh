@@ -534,12 +534,32 @@ mon_check_status()
 
 }
 
+check_cyc_client()
+{
+	_fs_path=$1
+	_dir_path=$2
+
+	if [ ! -d "$_fs_path" ] 
+	then
+		mkdir -p $_fs_path
+		_chk_memfs=$( mount | awk 'BEGIN { _c=1 } $1 == "cyclops_mon" { _c=0 } END { print _c }' )
+		[ "$_chk_memfs" == "1" ] && mount -t tmpfs -o size=10m cyclops_mon $_fs_path 
+		[ ! -d "$_dir_path" ] && mkdir -p $_dir_path
+	else
+		if [ ! -d "$_dir_path" ] 
+		then
+			_chk_memfs=$( mount | awk 'BEGIN { _c=1 } $1 == "cyclops_mon" { _c=0 } END { print _c }' ) 
+			[ "$_chk_memfs" == "1" ] && mount -t tmpfs -o size=10m cyclops_mon $_fs_path
+			[ ! -d "$_dir_path" ] && mkdir -p $_dir_path 
+		fi
+	fi
+}
+
 mon_node()
 {
 
-
-	scp -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_sensors_data"/"$_node_name".mon.sh" "$_node_name":"$_sensor_remote_path"/ 2>/dev/null >/dev/null
-	_err=$?
+	_err=$( ssh -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_node_name  "$(typeset -f);check_cyc_client" $_base_path $_sensor_remote_path 2>&1 >/dev/null ; echo $? )
+	[ "$_err" == "0" ] && _err=$( scp -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_sensors_data"/"$_node_name".mon.sh" "$_node_name":"$_sensor_remote_path"/ 2>&1 >/dev/null ; echo $? )
 
 	case "$_err" in
 	0)

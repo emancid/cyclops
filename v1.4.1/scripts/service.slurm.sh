@@ -160,7 +160,7 @@ shift $((OPTIND-1))
 active_jobs()
 {
 
-	_node_list=$( cat "${2}" | awk '$1 ~ "NodeName" { print $1 }' | sed -e 's/,\([0-9]\)/@\1/g' -e 's/,/\n/g' | awk '$1 ~ "[0-9]@[0-9]" { split($1,n,"=") ; split(n[2],pref,"[") ; if ( n[2] ~ "@" ) { _spl=split(n[2],spl,"@") ; for ( i in spl ) { if ( i == 1 ) { print spl[i]"]" } ; if ( i > 1 && i < _spl ) { print pref[1]"["spl[i]"]" } ; if ( i == _spl ) { print pref[1]"["spl[i] } } }} $1 !~ "[0-9]@[0-9]" { gsub("NodeName=","",$1) ; print $1 }'  | sed -e 's/\([0-9]\)\-\([0-9]\)/\1..\2/' -e 's/\[/\{/' -e 's/\]/\}/' -e 's/{\([0-9]*\)}/\1/' ) 
+	_node_list=$( cat "${2}" | awk '$1 ~ "NodeName" && $1 !~ "#" { print $1 }' | sed -e 's/,\([0-9]\)/@\1/g' -e 's/,/\n/g' | awk '$1 ~ "[0-9]@[0-9]" { split($1,n,"=") ; split(n[2],pref,"[") ; if ( n[2] ~ "@" ) { _spl=split(n[2],spl,"@") ; for ( i in spl ) { if ( i == 1 ) { print spl[i]"]" } ; if ( i > 1 && i < _spl ) { print pref[1]"["spl[i]"]" } ; if ( i == _spl ) { print pref[1]"["spl[i] } } }} $1 !~ "[0-9]@[0-9]" { gsub("NodeName=","",$1) ; print $1 }'  | sed -e 's/\([0-9]\)\-\([0-9]\)/\1..\2/' -e 's/\[/\{/' -e 's/\]/\}/' -e 's/{\([0-9]*\)}/\1/' ) 
 	_node_list=$( eval echo $_node_list | tr ' ' '\n' )
 
         [ "$1" == "all" ] && _find_nodes=$_node_list || _find_nodes=$( echo "${_node_list}" |  grep $1 )
