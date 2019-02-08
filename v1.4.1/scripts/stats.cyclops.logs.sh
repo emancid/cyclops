@@ -237,6 +237,7 @@ calc_data()
                                                 a=1 ; 
 						_reg_c="no" ;
 						_tf=split(_pf,ff,",") ;
+						_mod=_tc
                                         } $1 > _tsb && $1 < _tse { 
                                                 if ( _dr == "year" ) { _time=strftime("%Y;%m_%b",$1) } ; 
                                                 if ( _dr == "month" ) { _time=strftime("%Y-%m_%b;%d",$1) } ; 
@@ -292,15 +293,22 @@ calc_data()
 							}
 							if ( _tc == "io" ) {
 								if ( _to != _time ) {
-									print _to"="_in/a"/"_ou/a ;
+									if ( _mod == "avg" || _mod == "per" ) { print _to"="int(_in/a)"/"int(_ou/a) } 
+									if ( _mod == "max" || _mod == "min" || _mod == "acu" ) { print _to"="_in"/"_ou }
 									_to=_time ;
 									_in=io[1] ;
 									_ou=io[2] ;
 									a=1 ;
 								} else { 
-									_in=_in+io[1] ;
-									_ou=_ou+io[2] ;
-									a++ ;
+									if ( _mod == "avg" || _mod == "per" || _mod == "acu" ) {
+										_in=_in+io[1] ;
+										_ou=_ou+io[2] ;
+										a++ ;
+									}
+									if ( _mod == "max" ) { 
+										if ( _in <= io[1] ) { _in=io[1] }
+										if ( _ou <= io[2] ) { _ou=io[2] }
+									}
 								}
 							}
 							if ( _tc == "avg" ) {
@@ -346,7 +354,7 @@ calc_data()
                                         } END { 
                                                 if ( _reg_c == "yes" ) { 
 							if ( _tc == "io" ) { 
-								print _to"="_in/a"/"_ou/a
+								print _to"="int(_in/a)"/"int(_ou/a)
 							} else {
 								print _to"="t/a ; 
 							}
@@ -676,17 +684,17 @@ check_items()
 	
 	case "$_par_src" in 
 	dashboard)
-		_sensor_help=$( cat $_log_file | 
-					awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
-					{ 
+		_sensor_help=$(	awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
+					$1 > _tsb && $1 < _tse { 
 						_type="unknown"
 						for (i=4;i<=NF;i++) { 
 							split($i,f,"=") ; 
 							if ( f[2] ~ "^[0-9]+" ) { 
 								if ( f[2] ~ "^[0-9]+$" ) { field[f[1]]="numeric:acumulative/maximun values/average" }
-								if ( f[2] ~ "%$" ) { field[f[1]]="percent:percent average" }
+								if ( f[2] ~ "[0+9]+%$" ) { field[f[1]]="percent:percent average" }
 								if ( f[2] ~ "^[0-9]+[.][0-9]+$" ) { field[f[1]]="decimals:acumalative/maximun values/average" }
 								if ( f[2] ~ "^[0-9]+w$" ) { field[f[1]]="watts:watts" }
+								if ( f[2] ~ "/" ) { field[f[1]]="percent:input/output values" }
 							} else {
 								if ( field[f[1]] != "" ) { filter[f[1]]="corrupt:any bad data on this field" } else { filter[f[1]]="char:field only for filter" }
 							}
@@ -698,20 +706,20 @@ check_items()
 						for ( b in filter ) {
 							if ( filter[b] != "" ) { printf "[ %-12s ]:%s\n", b, filter[b] } 
 						}
-					}' )
+					}' $_log_file )
 	;;
 	slurm|quota)
-		_sensor_help=$( cat $_log_file | 
-					awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
-					{ 
+		_sensor_help=$(	awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
+					$1 > _tsb && $1 < _tse {
 						_type="unknown"
 						for (i=5;i<=NF;i++) { 
 							split($i,f,"=") ; 
 							if ( f[2] ~ "^[0-9]+" ) { 
 								if ( f[2] ~ "^[0-9]+$" ) { field[f[1]]="numeric:acumulative/maximun values/average" }
-								if ( f[2] ~ "%$" ) { field[f[1]]="percent:percent average" }
+								if ( f[2] ~ "[0-9]+%$" ) { field[f[1]]="percent:percent average" }
 								if ( f[2] ~ "^[0-9]+[.][0-9]+$" ) { field[f[1]]="decimals:acumalative/maximun values/average" }
 								if ( f[2] ~ "^[0-9]+w$" ) { field[f[1]]="watts:watts" }
+								if ( f[2] ~ "/" ) { field[f[1]]="percent:input/output values" }
 							} else {
 								if ( field[f[1]] != "" ) { filter[f[1]]="corrupt:any bad data on this field" } else { filter[f[1]]="char:field only for filter" }
 							}
@@ -723,21 +731,21 @@ check_items()
 						for ( b in filter ) {
 							if ( filter[b] != "" ) { printf "[ %-12s ]:%s\n", b, filter[b] } 
 						}
-					}' )
+					}' $_log_file )
 	;;
 	*)
-		_sensor_help=$( cat $_log_file | 
-					awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
-					{ 
+		_sensor_help=$(	awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
+					$1 > _tsb && $1 < _tse { 
 						_type="unknown"
 						for (i=4;i<=NF;i++) { 
 							split($i,f,"=") ; 
 							split(f[2],d," ") ; 
 							if ( d[2] ~ "^[0-9]+" || d[2] == "" ) { 
 								if ( d[2] ~ "^[0-9]+$" ) { filter[f[1]]="numeric:acumulative/maximun values/average" }
-								if ( d[2] ~ "%$" ) { filter[f[1]]="percent:percent average" }
+								if ( d[2] ~ "[0-9]+%$" ) { filter[f[1]]="percent:percent average" }
 								if ( d[2] ~ "^[0-9]+[.][0-9]+$" ) { filter[f[1]]="decimals:acumalative/maximun values/average" }
 								if ( d[2] ~ "^[0-9]+w$" ) { filter[f[1]]="watts:watts" }
+								if ( d[2] ~ "/" ) { field[f[1]]="percent:input/output values" }
 							} else {
 								if ( field[f[1]] != "" ) { filter[f[1]]="corrupt:any bad data on this field" } else { filter[f[1]]="char:field only for filter" }
 							}
@@ -749,7 +757,7 @@ check_items()
 						for ( b in filter ) {
 							if ( filter[b] != "" ) { printf "[ %-12s ]:%s\n", b, filter[b] } 
 						}
-					}' )
+					}' $_log_file )
 	;;
 	esac
 

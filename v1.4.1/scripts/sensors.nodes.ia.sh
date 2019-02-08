@@ -173,7 +173,7 @@ ia_analisis()
 
 	if [ -z "$_ia_codes" ] 
 	then
-		_ia_codes=$( echo ";UNKNOWN;UNKNOWN;UNKNOWN;No relevant procedure rules detected (must be more than 40% success to considerate it);$_host_quantity;show detail table below" )
+		_ia_codes=$( echo "UNKNOWN;UNKNOWN;UNKNOWN;No relevant procedure rules detected (must be more than 40% success to considerate it);$_host_quantity;show detail table below" )
 	else
 		for _line in $( echo -e "${_ia_codes}" )
 		do

@@ -622,7 +622,7 @@ mon_node()
 			echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/@ uptime:\([0-9a-z ]*\)@/;FAIL CONTENT (( node waiting for attention )) @/' -e 's/\@\ [0-9a-z_-]*\:/; CHECKING /g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
 		;;
 		up_bmc_down)
-			if [ "$_node_err" -eq 3 ]
+			if [ "$_node_err" == "3" ]
 			then
 				_nodename_tag="DOWN"
 				_node_ia=$( echo "hostname:$_node_name;$(date +%H.%M.%S)@ uptime: DOWN really power off @\n" )
@@ -636,7 +636,7 @@ mon_node()
 			echo $_node_ia |  sed -e "s/hostname:/$_nodename_tag /" -e 's/@ uptime:[A-Z]* [0-9]*d@/;MARK bmc auth err @/' -e 's/\@\ [0-9a-z_-]*\:/;/g' -e "s/^/$_node_family\;/" -e "s/^/$_output_line;/" -e 's/@//'
 		;;
 		bmc_session)
-			if [ "$_node_err" -eq 3 ] 
+			if [ "$_node_err" == "3" ] 
 			then
 				_nodename_tag="DOWN"
 				_node_ia=$( echo "hostname:$_node_name;$(date +%H.%M.%S)@ uptime: DOWN really power off @\n" )

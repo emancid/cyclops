@@ -308,6 +308,8 @@ ctrl_zombie()
 		if [ "$_opt_kill" == "yes" ]
 		then
 			ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_zombie_kill" 2>/dev/null &
+			[ "$?" == "0" ] && _audit_status="OK" || _audit_status="FAIL"
+			$_script_path/audit.nod.sh -i event -e alert -s $_audit_status -n $_node -m "zombie kill action" 2>/dev/null 
 		else
 			ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_zombie_check" 2>/dev/null &
 		fi
@@ -331,6 +333,8 @@ ctrl_orphan()
 				if [ "$_opt_kill" == "yes" ] 
 				then
 					ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_orphan_kill" 2>/dev/null & 
+					[ "$?" == "0" ] && _audit_status="OK" || _audit_status="FAIL"
+					$_script_path/audit.nod.sh -i event -e alert -s $_audit_status -n $_node -m "orphan kill action" 2>/dev/null 
 				else
 					ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_orphan_check" 2>/dev/null &
 				fi

@@ -2230,7 +2230,7 @@ config_nodes()
 
 	done
 
-	_cfg_range_nodes=$( node_ungroup $_cfg_nodes )
+	_cfg_range_nodes=$( node_ungroup $_cfg_nodes | tr ' ' '\n' )
 
 	for _node in $( echo "${_cfg_range_nodes}" )
 	do
