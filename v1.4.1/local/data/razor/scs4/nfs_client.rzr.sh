@@ -25,16 +25,15 @@ case "$1" in
 			for _fs in $( awk '$3 == "nfs" { print $2 }' $_rsc_rzr_cfg 2>/dev/null )
 			do
 				_rsc_rzr_chk_mnt=$( $_rsc_rzr_mount | awk -v _m="$_fs" 'BEGIN { _ms="1" } $3 == _m && $5 == "nfs" { _ms="0" } END { print _ms }' 2>/dev/null )
-				[ "$_rsc_rzr_chk_mnt" == "0" ] && _rsc_rzr_chk_mnt=$( ls -1 $_fs 2>&1 | grep "Stale file handle" | wc -l )
 				[ "$_rsc_rzr_chk_mnt" != "0" ] && _rsc_rzr_out_cod="11"
 			done 
 		fi
 	;;
-	start|link|up|boot|repair)
+	start|link|up|boot)
 		_rsc_rzr_out_cod=$( awk 'BEGIN { _code="21" } $3 == "nfs" { _code="0" } END { print _code }' $_rsc_rzr_cfg 2>/dev/null )
                 if [ "$_rsc_rzr_out_cod" == "0" ]
                 then
-                        for _fs in $( awk '$3 == "nfs" && $0 !~ "^#" { print $2 }' $_rsc_rzr_cfg 2>/dev/null )
+                        for _fs in $( awk '$3 == "nfs" { print $2 }' $_rsc_rzr_cfg 2>/dev/null )
                         do
                                 _rsc_rzr_chk_mnt=$( $_rsc_rzr_mount | awk -v _m="$_fs" 'BEGIN { _ms="1" } $3 == _m && $5 == "nfs" { _ms="0" } END { print _ms }' 2>/dev/null )
                                 [ "$_rsc_rzr_chk_mnt" != "0" ] && _rsc_rzr_chk_mnt=$( $_rsc_rzr_mount $_fs 2>&1 >/dev/null ; echo $? )
@@ -42,7 +41,7 @@ case "$1" in
                         done 
                 fi
 	;;
-	stop|unlink)
+	stop|unlink|content)
 		_rsc_rzr_out_cod=$( awk 'BEGIN { _code="21" } $3 == "nfs" { _code="0" } END { print _code }' $_rsc_rzr_cfg 2>/dev/null )
                 if [ "$_rsc_rzr_out_cod" == "0" ]
                 then
@@ -53,7 +52,7 @@ case "$1" in
                         done 
                 fi
 	;;
-	diagnose|drain|reset|reboot|content)
+	diagnose|drain|repair)
 		_rsc_rzr_out_cod="21"
 	;;
 	init)

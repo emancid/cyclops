@@ -24,6 +24,8 @@
 ############# VARIABLES ###################
 #
 
+### INSERT PLIS : awk -F\; -v _ss="$( tput cols )" '{ _ls=length($0) ; _fs=length($6) ; split($6,chars,"") ; _f="" ; _l=_ss-(_ls-_fs) ; _ln=1 ; _w="" ; _pw="" ; for (i=1;i<=_fs;i++) { if ( chars[i] != " " ) { _w=_w""chars[i] ; _pw="" } else { _ws=length(_w) ; _pw=_w ; _w=chars[i] } ; if ( i+_ws >= _l * _ln  ) { _f=_f"\n ; ; ; ;"_pw ; _ln++ } else { if ( _pw != "" ) { _f=_f""_pw }} }} { print $1";"$2";"$5";"$7";"_f""_w  }' | column -t -s\;
+
 IFS="
 "
 
@@ -1201,7 +1203,41 @@ show_data()
                                 else    
                                         echo "BITACORA INFO:"
                                         echo "-----------------------------------"
-                                        echo "${_output_bitacora}" | awk -F\; 'BEGIN { print "DATE;TIME;EVENT;ACTIVITY;STATUS" } {$1=strftime("%d-%m-%Y;%H:%M:%S",$1); print $1";"$4";"$5";"$6 }' | column -s\; -t
+                                        #echo "${_output_bitacora}" | awk -F\; 'BEGIN { print "DATE;TIME;EVENT;ACTIVITY;STATUS" } {$1=strftime("%d-%m-%Y;%H:%M:%S",$1); print $1";"$4";"$5";"$6 }' | column -s\; -t
+ 					echo "${_output_bitacora}" | awk -F\; -v _ss="$( tput cols )" '
+						BEGIN { 
+							print "DATE;TIME;EVENT;ACTIVITY;STATUS" 
+						} { 
+							$1=strftime("%d-%m-%Y;%H:%M:%S",$1) ;
+							_ls=length($0) ; 
+							_fs=length($5) ; 
+							split($5,chars,"") ; 
+							_f="" ; 
+							_l=_ss-(_ls-_fs) ; 
+							_ln=1 ; 
+							_w="" ; 
+							_pw="" ; 
+							for (i=1;i<=_fs;i++) { 
+								if ( chars[i] != " " ) { 
+									_w=_w""chars[i] ; 
+									_pw="" 
+								} else { 
+									_ws=length(_w) ; 
+									_pw=_w ; 
+									_w=chars[i] 
+								} ; 
+								if ( i+_ws >= _l * _ln  ) { 
+									_f=_f"\n ; ; ; ;"_pw ; 
+									_ln++ 
+								} else { 
+									if ( _pw != "" ) { 
+										_f=_f""_pw 
+									}
+								}
+							}
+						} { 
+							print $1";"$4";"$6";"_f""_w
+						}' | column -t -s\;
                                 fi
                         fi
                 ;;

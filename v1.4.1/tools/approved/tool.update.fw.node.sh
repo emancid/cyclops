@@ -16,7 +16,7 @@ fi
 
 _ipmitool="/opt/BSMHW/bin/ipmitool"
 
-_wall_nodes="[cyclopshostname]"
+_wall_nodes="nimbus[0,1]"
 _msg_ok="_________OK."
 _msg_fail="_______FAIL."
 
@@ -218,7 +218,7 @@ fw_update_b7xx()
 			[ "$_err" == "0" ] && echo "NODE: $_node : $_bmc : BMC COLD RESET :			"$( [ "$_err" == "0" ] && echo $_msg_ok || echo $_msg_fail ) 
 			[ "$_err" == "0" ] && echo "NODE: $_node : $_bmc : NODE POWER :			________OFF." && $_ipmitool -H $_bmc -U $_user -P $_pass power off &>>$_out_par
 			sleep 10s 
-			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "BMC firmware" -n $_node
+			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "BMC firmware" -n $_node 2>/dev/null
         	else    
                 	echo "NODE: $_node : $_bmc : BMC file don't exists :		_______SKIP."
 		fi
@@ -235,7 +235,7 @@ fw_update_b7xx()
 			[ "$_err" == "0" ] && _msg_status=$_msg_ok || _msg_status=$_msg_fail
 			echo "NODE: $_node : $_bmc : BIOS update finish :		$_msg_status"
 			sleep 5s
-			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "BIOS firmware" -n $_node
+			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "BIOS firmware" -n $_node 2>/dev/null
 		else
 			echo "NODE: $_node : $_bmc : BIOS file don't exists :		_______SKIP."
 		fi
@@ -251,7 +251,7 @@ fw_update_b7xx()
 			[ "$_err" == "0" ] && _msg_status=$_msg_ok || _msg_status=$_msg_fail
 			echo "NODE: $_node : $_bmc : CPLD MAIN update finish :		$_msg_status"
 			sleep 5s
-			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "CPLD MAIN firmware" -n $_node
+			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "CPLD MAIN firmware" -n $_node 2>/dev/null
 		else
 			echo "NODE: $_node : $_bmc : CPLD MAIN file don't exists :	_______SKIP."
 		fi
@@ -267,7 +267,7 @@ fw_update_b7xx()
 			[ "$_err" == "0" ] && _msg_status=$_msg_ok || _msg_status=$_msg_fail
 			echo "NODE: $_node : $_bmc : CPLD IOEXP update finish :		$_msg_status"	
 			sleep 5s
-			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "CPLD IOEXP firmware" -n $_node
+			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "CPLD IOEXP firmware" -n $_node 2>/dev/null
 		else
 			echo "NODE: $_node : $_bmc : CPLD_IOEXP file don't exists :	_______SKIP."
 		fi
@@ -283,7 +283,7 @@ fw_update_b7xx()
 			[ "$_err" == "0" ] && _msg_status=$_msg_ok || _msg_status=$_msg_fail
 			echo "NODE: $_node : $_bmc : BIOS REGION update finish :	$_msg_status"
 			sleep 5s
-			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "BIOS REGION firmware" -n $_node
+			$_script_path/audit.nod.sh -i event -e upgrade -s ok -m "BIOS REGION firmware" -n $_node 2>/dev/null
 		else
 			echo "NODE: $_node : $_bmc : BIOS REGION file don't exists :	_______SKIP."
 		fi

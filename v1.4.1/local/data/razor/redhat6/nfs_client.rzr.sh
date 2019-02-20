@@ -30,7 +30,7 @@ case "$1" in
 			done 
 		fi
 	;;
-	start|link|up|boot|repair)
+	start|link|up|repair)
 		_rsc_rzr_out_cod=$( awk 'BEGIN { _code="21" } $3 == "nfs" { _code="0" } END { print _code }' $_rsc_rzr_cfg 2>/dev/null )
                 if [ "$_rsc_rzr_out_cod" == "0" ]
                 then
@@ -53,7 +53,7 @@ case "$1" in
                         done 
                 fi
 	;;
-	diagnose|drain|reset|reboot|content)
+	diagnose|drain|reset|reboot|content|boot)
 		_rsc_rzr_out_cod="21"
 	;;
 	init)

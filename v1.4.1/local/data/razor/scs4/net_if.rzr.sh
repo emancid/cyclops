@@ -34,7 +34,7 @@ case "$1" in
 			fi
 		done
 	;;
-	start|link|up|repair)
+	start|link|up)
 		_rsc_rzr_out_cod="0"
 
 		for _if in $( ls -1 $_rsc_rzr_cfg_pth/ifcfg-* | grep -v "ifcfg-lo" ) 
@@ -49,7 +49,22 @@ case "$1" in
 			fi
 		done
 	;;
-	drain|diagnose|boot|init|stop|content|unlink|reset|reboot)
+	notrecommended)
+		_rsc_rzr_out_cod="0"
+
+		for _if in $( ls -1 $_rsc_rzr_cfg_pth/ifcfg-* | grep -v "ifcfg-lo" ) 
+		do
+			if [ "$_rsc_rzr_out_cod" == "0" ]
+			then
+				_rsc_rzr_if=$( awk -F\= '$1 == "DEVICE" { print $2 }' $_if )
+				_rsc_rzr_if_cod=$( awk -F\= '{ if ( $1 == "ONBOOT" && $2 == "yes" ) { print "0" } else { print "1" }}' $_if ) 
+				[ "$_rsc_rzr_if_cod" == "0" ] && _rsc_rzr_if_cod=$( eval exec $_rsc_rzr_cmd show $_rsc_rzr_if 2>/dev/null | awk '{ if ( $11 == "UP" ) { print "0" } else { print "1"}}') 
+				[ "$_rsc_rzr_if_cod" == "0" ] && _rsc_rzr_if_cod=$( $_rsc_rzr_if_down $_rsc_rzr_if 2>&1 >/dev/null ; echo $? )
+				[ "$_rsc_rzr_if_cod" != "0" ] && _rsc_rzr_out_cod="13"
+			fi
+		done
+	;;
+	drain|diagnose|repair|boot|init|stop|content|unlink)
 		_rsc_rzr_out_cod="21"
 	;;
 	info)

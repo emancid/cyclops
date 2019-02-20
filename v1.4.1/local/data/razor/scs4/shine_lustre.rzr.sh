@@ -1,5 +1,5 @@
-#!/bin/bash
 ##### RAZOR RESOURCE CTRL CONFIG FILE ####
+#!/bin/bash
 
 _rsc_rzr_nam="shine_lustre"
 _rsc_rzr_des="Cyclops Local Shine Lustre Client Mounts Ctrl Razor"
@@ -26,19 +26,25 @@ case "$1" in
 			head -n1 
 			)
 		_rsc_rzr_out_cod=$( 
-			$_rsc_rzr_cmd  -O %type";"%servers";"%status -H status -n $_rsc_rzr_lustre_MDT 2>/dev/null | 
-			awk -F\; 'BEGIN { _fail="11" } $1 ~ "MDT" && $3 == "online" { _fail="0" } END { print _fail }' ) 
+			$_rsc_rzr_cmd list | 
+			grep -v mgs 2>&1 >/dev/null ; 
+			echo $? 
+			)
 		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$( 
-			$_rsc_rzr_cmd  -O %type";"%servers";"%status -H status -n $_rsc_rzr_lustre_OST 2>/dev/null | 
-			awk -F\; 'BEGIN { _fail="12" } $1 ~ "OST" && $3 == "online" { _fail="0" } END { print _fail }' )
+			$_rsc_rzr_cmd  -O %type";"%servers";"%status -H status -n $_rsc_rzr_lustre_MDT 2>/dev/null | 
+			grep "^MDT" | 
+			sort -u | 
+			grep -o ";online$" 2>&1 >/dev/null ; 
+			echo $? 
+			)
 		[ "$_rsc_rzr_out_cod" == "0" ] && _rsc_rzr_out_cod=$(
 			$_rsc_rzr_cmd -O %fsname";"%status -H status -n $_rsc_rzr_hostname 2>/dev/null |
 			sed '/^$/d' |
 			grep ";" |
-			awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="13" } END { print _fail }'
+			awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="1" } END { print _fail }'
 			)
 	;;
-	start|link|up|repair)
+	start|link|up)
 		sleep 5s
 		_rsc_rzr_out_cod=$(
 			$_rsc_rzr_cmd -O %fsname";"%status -H mount -n $_rsc_rzr_hostname 2>/dev/null | 
@@ -47,15 +53,15 @@ case "$1" in
 			awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="1" }  END { print _fail }'
 			)
 	;;
-	stop|unlink)
+	stop|unlink|content)
                 _rsc_rzr_out_cod=$(
                         $_rsc_rzr_cmd -O %fsname";"%status -H umount -n $_rsc_rzr_hostname 2>/dev/null | 
                         sed '/^$/d' | 
                         grep ";" | 
-                        awk -F\; 'BEGIN { _fail="1" } $2 != "mounted" { _fail="0" } END { print _fail }'
+                        awk -F\; 'BEGIN { _fail="0" } $2 != "mounted" { _fail="1" } END { print _fail }'
                         )
 	;;
-	drain|diagnose|boot|init|info|reset|reboot|content)
+	repair|drain|diagnose|boot|init|info)
 		_rsc_rzr_out_cod="21"
 	;;
 esac

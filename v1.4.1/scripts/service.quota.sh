@@ -187,8 +187,8 @@ extract_data()
 	lustre)
 		#_status_srv="user;$_quota_fs;$_quota_type;ENABLE"
 		_status_srv=$( ssh -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_quota_server  "$(typeset -f);check_server_lustre" $_quota_fs $_fs_type $_quota_type 2>/dev/null )
-		_data_srv=$( ssh -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_quota_server  "$(typeset -f);get_data_lustre" $_quota_fs $_quota_type 2>/dev/null )
-		[ -z "$_data_srv" ] && _data_srv="no data"
+		[ -z "$_status_srv" ] && _status_srv="FAIL;na;server no respond" || _data_srv=$( ssh -o ConnectTimeout=12 -o StrictHostKeyChecking=no $_quota_server  "$(typeset -f);get_data_lustre" $_quota_fs $_quota_type 2>/dev/null )
+		[ -z "$_data_srv" ] && _data_srv="no data recovery"
 	;;
 	esac
 }
@@ -220,7 +220,12 @@ get_data_lustre()
 
 		for _item in $( echo "${_items}" ) 
 		do 
-			/usr/bin/lfs quota -u $_item $_lustre_fs | awk -v _usr="$_item" -v _fs="$_lustre_fs" '$1 ~ _fs { print _usr" -- "$2" "$3" "$4" - "$6" "$7" "$8 }'  
+			if [ "$2" == "user" ] 
+			then
+				/usr/bin/lfs quota -u $_item $_lustre_fs | awk -v _usr="$_item" -v _fs="$_lustre_fs" '$1 ~ _fs { print _usr" -- "$2" "$3" "$4" - "$6" "$7" "$8 }'  
+			else
+				/usr/bin/lfs quota -g $_item $_lustre_fs | awk -v _usr="$_item" -v _fs="$_lustre_fs" '$1 ~ _fs { print _usr" -- "$2" "$3" "$4" - "$6" "$7" "$8 }'  
+			fi
 		done
 }
 

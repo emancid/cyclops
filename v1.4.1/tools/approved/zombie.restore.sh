@@ -23,11 +23,17 @@ source $_color_cfg_file
 _opt_kill_msg="check"
 _opt_type="yes"
 _opt_type="zombie"
+_par_show="human"
 
 #### LIBS ####
 
         source $_libs_path/node_group.sh
         source $_libs_path/node_ungroup.sh
+
+#### CHECK PATHs ####
+
+	[ ! -d "$_cyclops_temp_path/zombie" ] && mkdir -p $_cyclops_temp_path/zombie 
+	[ ! -d "$_mon_log_path/zombie" ] && mkdir -p $_mon_log_path/zombie 
 
 ###########################################
 #              PARAMETERs                 #
@@ -303,24 +309,29 @@ ps_intruder_kill()
 
 ctrl_zombie()
 {
+
 	for _node in $( echo "${_long}" )
 	do
 		if [ "$_opt_kill" == "yes" ]
 		then
-			ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_zombie_kill" 2>/dev/null &
+			_file_name="$_mon_log_path/zombie/$_node.$( date +%s ).zombie.log"
+			ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_zombie_kill" >  $_file_name 2>/dev/null
 			[ "$?" == "0" ] && _audit_status="OK" || _audit_status="FAIL"
 			$_script_path/audit.nod.sh -i event -e alert -s $_audit_status -n $_node -m "zombie kill action" 2>/dev/null 
 		else
-			ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_zombie_check" 2>/dev/null &
+			_file_name="$_cyclops_temp_path/zombie/$_node.zombie.tmp"
+			ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_zombie_check" > $_file_name 2>/dev/null
 		fi
+		_ctrl_out=$_ctrl_out"\n"$( cat $_file_name )
 	done
 	wait
-
-	[ -z "$_node" ] && echo $( date +%s )";"$_par_node";NODE(s) NOT FINDED"
+	
+	[ -z "$_node" ] && echo $( date +%s )";"$_par_node";NODE(s) NOT FINDED" || echo "${_ctrl_out}"
 }
 
 ctrl_orphan()
 {
+
         for _node in $( echo "${_long}" )
         do
 
@@ -332,11 +343,13 @@ ctrl_orphan()
 			then
 				if [ "$_opt_kill" == "yes" ] 
 				then
-					ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_orphan_kill" 2>/dev/null & 
+					_file_name="$_mon_log_path/zombie/$_node.$( date +%s ).orphan.log"
+					ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_orphan_kill" > $_file_name 2>/dev/null  
 					[ "$?" == "0" ] && _audit_status="OK" || _audit_status="FAIL"
 					$_script_path/audit.nod.sh -i event -e alert -s $_audit_status -n $_node -m "orphan kill action" 2>/dev/null 
 				else
-					ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_orphan_check" 2>/dev/null &
+					_file_name="$_cyclops_temp_path/zombie/$_node.orphan.tmp"
+					ssh -o ConnectTimeout=10 $_node "$(typeset -f) ; ps_orphan_check" > $_file_name 2>/dev/null 
 				fi
 			else
 				echo  $( date +%s )";"$_node";WARNING: JOBS ACTIVE, NO ACTION OVER IT"
@@ -344,10 +357,12 @@ ctrl_orphan()
 		else
 			echo $( date +%s )";"$_node";IGNORE ACTION: NO COMPUTE NODE"
 		fi
+
+		_ctrl_out=$_ctrl_out"\n"$( cat $_file_name )
         done
 	wait
 
-	[ -z "$_node" ] && echo $( date +%s )";"$_par_node";NODE(s) NOT FINDED OR NOT COMPUTE NODE(s)"
+	[ -z "$_node" ] && echo $( date +%s )";"$_par_node";NODE(s) NOT FINDED OR NOT COMPUTE NODE(s)" || echo -e "${_ctrl_out}"
 }
 
 ctrl_intruder()
