@@ -175,7 +175,7 @@ issue_processing()
 				gin[ni[2]]=gin[ni[2]]"\n\t"strftime("%F - %T",$1)" | "$6" | "$3" | "ni[3] 
 			} END { 
 				for ( i in gin ) { 
-					if ( gin[i] !~ "SOLVED" && gin[i] ~ /FAIL|DOWN/ ) { 
+					if ( gin[i] !~ "SOLVED" ) { 
 						split(i,inc,"-") ; 
 						finc=gensub(/.(..)(..)(..)/,"\\1 \\2 \\3","g",inc[1]) ; 
 						fts=mktime( "20"finc" 0 0 0") ; 

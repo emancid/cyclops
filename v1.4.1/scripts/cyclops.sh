@@ -543,10 +543,12 @@ mng_node_status_check()
 
 	_color_tot=$_sh_color_green
 
+	_cfg_files=$_type" "$_dev
+
 	for _host_node in $( echo "${_long}" )
 	do
 		let "_total_num++"
-		_ctrl_node=$( awk -F\; -v _n="$_host_node" 'BEGIN { _s="X" } $2 == _n { _s="#" } END { print _s }' $_type ) 
+		_ctrl_node=$( eval exec cat $_cfg_files | awk -F\; -v _n="$_host_node" 'BEGIN { _s="X" } $2 == _n { _s="#" } END { print _s }' ) 
 		if [ "$_ctrl_node" == "#" ]
 		then
 			_node_change_ok=$_node_change_ok" "$_host_node
@@ -584,14 +586,16 @@ mng_node_status_do()
 	[ -z "$_total_nodes" ] && _total_nodes=0
 
 	_color_tot=$_sh_color_green
+	_cfg_files=$_type" "$_dev
 
 	for _host_node in $( echo "${_long}" )
 	do
 		let "_total_num++"
-		_ctrl_node=$( awk -F\; -v _n="$_host_node" 'BEGIN { _s="X" } $2 == _n { _s="#" } END { print _s }' $_type ) 
+		_ctrl_node=$( eval exec cat $_cfg_files | awk -F\; -v _n="$_host_node" 'BEGIN { _s="X" } $2 == _n { _s="#" } END { print _s }' ) 
 		if [ "$_ctrl_node" == "#" ]
 		then
 			sed -i "s/\(.*;$_host_node;.*;\)[a-z]*$/\1$_par_action/" $_type
+			sed -i "s/\(.*;$_host_node;.*;\)[a-z]*$/\1$_par_action/" $_dev
 			_node_change_ok=$_node_change_ok" "$_host_node
 			[ "$_audit_status" == "ENABLED" ] &&  $_script_path/audit.nod.sh -i event -e status -m "mon status" -s $_par_action -n $_host_node 2>>$_mon_log_path/audit.log
 			let "_total_ok++"
@@ -674,7 +678,7 @@ mng_node_status()
 
 
 		_last_mon_status=$( 
-			cat  $_par_mon_file 2>/dev/null | 
+			cat $_par_mon_file 2>/dev/null | 
 			tr '|' ';' | 
 			grep ";" | 
 			sed -e 's/\ *;\ */;/g' -e '/^$/d' -e '/:wiki:/d' -e "s/$_color_disable/DISABLE/g" -e "s/$_color_unk/UNK/g" -e "s/$_color_up/UP/g" -e "s/$_color_down/DOWN/g" -e "s/$_color_mark/MARK/g" -e "s/$_color_fail/FAIL/g" -e "s/$_color_check/CHECK/g" -e "s/$_color_ok/OK/g" -e "s/$_color_disable/DISABLE/" -e "s/$_color_title//g" -e "s/$_color_header//g" -e 's/^;//' -e 's/;$//' -e '/</d' -e 's/((.*))//' -e '/:::/d' | 

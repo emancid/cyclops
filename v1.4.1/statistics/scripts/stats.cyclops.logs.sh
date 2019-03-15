@@ -148,7 +148,7 @@ do
 				echo
 				echo "CYCLOPS STATISTICS: CYC LOGS MODULE"
 				echo
-				echo "MAIN FIELDS:"
+				echo "MAIN:"
 				echo "	-n [[nodename]|[device]|dashboard|[quota]|[slurm]] item from log to stats"
 				echo "		[nodename]: name of desired host to ask data log info"
 				echo "		[device]: name of monitoring enviroment device to ask data log info"
@@ -180,8 +180,8 @@ do
 				echo "		[1-9*]year: ask for last [n] year"
 				echo "		[1-9*]month: ask for last [n] month"
 				echo "		week: ask for last week"
-				echo "		[1-9*]day: ask for last [n] days ( sort by 24h format"
-				echo "		[1-9*]day: ask for last [n] hours ( sort by hour format"
+				echo "		[1-9*]day: ask for last [n] days ( sort by 24h format )"
+				echo "		[1-9*]hour: ask for last [n] hours ( sort by hour format )"
 				echo "		report: ask for year,month,week,day"
 				echo "		[YYYY-MM-DD]: Implies data from date to now if you dont use -e"
 				echo "	-e [YYYY-MM-DD], end date for concrete start date" 
@@ -265,6 +265,7 @@ calc_data()
 							split(_of,dat," ") ;
 							if ( dat[1] ~ "%" ) { gsub("%", "", dat[1]) } ; 
 							if ( dat[2] ~ "%" ) { gsub("%", "", dat[2]) } ; 
+							if ( dat[2] ~ "d$" ) { gsub("d", "", dat[2]) ; if ( _tc != "min" || _tc != "max" ) { _tc="max" } } ;
 
 							if ( dat[2] ~ "^[0-9]+$" ) { 
 								_fld=dat[2] ; 

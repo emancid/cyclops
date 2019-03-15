@@ -67,7 +67,7 @@
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":a:n:t:d:e:o:p:v:h:" _optname
+while getopts ":a:n:t:d:e:o:p:f:v:h:" _optname
 do
         case "$_optname" in
 		"a")
@@ -103,6 +103,10 @@ do
 		"p")
 			_opt_path="yes"
 			_par_path=$OPTARG
+		;;
+		"f")
+			_opt_filter="yes"
+			_par_filter=$OPTARG
 		;;
                 "h")
                         _opt_help="yes"
@@ -144,6 +148,7 @@ do
 				echo
 				echo "	cyclops: Show cyclops source"
 				echo "	audit: Show Audit source"
+				echo "	-f [N][bitacora1,[bitacora2],[...]]: filter logbook that you want comma separated and put N capital for negate logbook"
 				echo "	critical: Show critical environment source"
 				echo "	system: Show data from system source"
 				echo "	-t [status|use] Type of information"
@@ -263,31 +268,40 @@ audit_status()
 {
 
 	_cmd_audit_status="-v eventlog -f bitacora "$( [ ! -z "$_par_node" ] && echo "-n $_par_node" )
-	_audit_status=$( eval exec $_script_path/audit.nod.sh $_cmd_audit_status 2>/dev/null | awk -F\; -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
-		$1 >= _tsb && $1 <= _tse { 
-			print strftime("%Y-%m-%d;%H:%M",$1)";"$3";"$4";"$6";"$5  
+	_audit_status=$( eval exec $_script_path/audit.nod.sh $_cmd_audit_status 2>/dev/null | awk -F\; -v _tsb="$_date_tsb" -v _tse="$_date_tse" -v _fil="$_par_filter" '
+		BEGIN { 
+			_lf=split(_fil,filtro,",")
+			if ( _lf != 0 ) {
+				for ( z in filtro ) {
+					if ( filtro[z] ~ "^N" ) {
+						_cn++
+					}
+				}
+				_cp=_lf-_cn
+			} 
+		} $1 >= _tsb && $1 <= _tse {
+			if ( _lf == 0 ) {
+				print strftime("%Y-%m-%d;%H:%M",$1)";"$3";"$4";"$6";"$5
+			} else {
+				_mn=0 ; _mp=0
+				if ( _cp > 0 ) { _mp=0 } else { _mp=1 } ;
+				for ( i in filtro ) {
+					if ( filtro[i] ~ "^N" ) {
+						_neg=filtro[i]
+						gsub(/^N/,"",_neg) ;	
+						if ( $3 == _neg ) { 
+							_mn=1
+						}
+					} else {
+						if ( $3 == filtro[i] )  {
+							_mp=1
+						}
+					}
+				}
+				if ( _mn == 0 && _mp == 1 ) { print strftime("%Y-%m-%d;%H:%M",$1)";"$3";"$4";"$6";"$5 }
+			}
 		}' | sort -t\; -k1,1n -k1,2nr 
 	)
-
-	for _line in $( echo "${_audit_status}" )
-	do
-		_date=$( echo $_line | cut -d';' -f1 )
-		_time=$( echo $_line | cut -d';' -f2 )
-		_src=$( echo $_line | cut -d';' -f3 )
-		_event=$( echo $_line | cut -d';' -f4 )
-		_action=$( echo $_line | cut -d';' -f5 )
-		_msg=$( echo $_line | cut -d';' -f6 )
-
-		if [ "$_date" != "$_old_date" ] 
-		then
-			_old_date=$_date 
-			_print_date=$_old_date
-		else
-			_print_date=" "
-		fi
-
-		_audit_output=$_audit_output""$_print_date";"$_time";"$_src";"$_event";"$_action";"$_msg"\n"
-	done
 
 	echo
 	echo -e $_sh_color_bolt"AUDIT: STATUS"$_sh_color_nformat
@@ -295,8 +309,54 @@ audit_status()
 	echo
 	[ ! -z "$_par_date_start" ] && echo -e "FILTER: Date Range: $_par_date_start\n" 
 	echo "BITACORA DATA :"
-	[ -z "$_audit_output" ] && echo "NO DATA IN DATE RANGE" || echo -e "Date;Hour;Source;Type;Status;Message\n----;----;------;----;------;-------\n${_audit_output}" | column -t -s\;
-	echo
+
+	echo "${_audit_status}" | awk -F\; -v _ss="$( tput cols )" '
+		BEGIN { 
+			print "Date;Hour;Source;Type;Status;Message\n----;----;------;----;------;-------\n"
+		} NR > 1 { 
+			if ( $0 == _lold ) {
+				_c++ 
+			} else {
+				split(_lold,campo,";") ;
+				_date=campo[1] ;
+				_time=campo[2] ;
+				if ( _date == _date_old ) { _date=" " } else { _date_old=_date }        
+				_col=10+30 ;
+				_ls=length(_date)+length(_time)+length(_c)+2+length(campo[3])+length(campo[4])+length(campo[5])+_col ; 
+				_fs=length(campo[6]) ; 
+				split(campo[6],chars,"") ; 
+				_f="" ; 
+				_l=_ss-_ls ; 
+				_ln=1 ; 
+				_w="" ; 
+				_pw="" ; 
+				for (i=1;i<=_fs;i++) { 
+					if ( chars[i] != " " ) { 
+						_w=_w""chars[i] ; 
+						_pw="" 
+					} else { 
+						_ws=length(_w)+1 ; 
+						_pw=_w" " ; 
+						_w="" ; 
+					} ; 
+					if ( i+_ws >=  _l*_ln ) { 
+						_f=_f"\n ; ; ; ; ;"_pw ; 
+						_ln++ 
+					} else { 
+						if ( _pw != "" ) { 
+							_f=_f""_pw 
+						}
+					}
+				}
+				if ( _c == 0 ) { _p="" } else { _p="["_c+1"]" }
+				print _date";"_time""_p";"campo[3]";"campo[4]";"campo[5]";"_f""_w ;
+				_c=0 ;
+				_lold=$0
+			}
+		} NR == 1 { 
+			_lold=$0 
+		}' | column -t -s\;  
+
 }
 
 critical_env()

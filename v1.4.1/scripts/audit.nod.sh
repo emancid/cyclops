@@ -345,51 +345,6 @@ shift $((OPTIND-1))
 #              FUNCTIONs                  #
 ###########################################
 
-node_group_old()
-{
-
-        _prefix=$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sed 's/^\([a-zA-Z_-]*\)[0-9]*$/\1/' | sort -u )
-
-        for _node_prefix in $( echo "${_prefix}" )
-        do
-               _node_range=$_node_range""$( echo "${1}" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | grep "^$_node_prefix" | sed 's/[0-9]*$/;&/' | sort -t\; -k2,2n -u | awk -F\; '
-                { if ( NR == "1" ) { _sta=$2 ; _end=$2  ; _string=$1"[" }
-                else {
-                    if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end"," }
-                                else {
-                                    _string=_string""_sta"," }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                    }
-                }
-
-                END { if ( $2 == _end + 1 ) {
-                        _sep="-" ;
-                        _end=$2 }
-                        else
-                        {
-                            if ( _sep == "-" ) { 
-                                _string=_string""_sta"-"_end }
-                                else {
-                                    _string=_string""_sta }
-                            _sep="," ;
-                            _sta=$2 ;
-                            _end=$2 ;
-                        }
-                        print _string"]" }' )","
-        done
-
-        echo "$_node_range" | sed 's/\,$//'
-}
-
 extract_static_data()
 {
 
@@ -450,8 +405,11 @@ read_data()
 
 		show_data
 	else
-		[ -z "$_par_node" ] && _long=$( cat $_type | awk -F\; '$1 ~ "[0-9]" { print $2 }' )
-		[ "$_par_show" == "eventlog" ] && _long=$_long"\n"$( awk -F\; '$0 !~ "#" { print $1 }' $_config_path_aud/bitacoras.cfg  )
+		[ -z "$_par_node" ] && _long=$( cat $_type $_dev | awk -F\; '$1 ~ "[0-9]" { print $2 }' )
+		if [ "$_par_show" == "eventlog" ] || [ "$_par_show" == "humanlog" ]
+		then
+			_long=$_long"\n"$( awk -F\; '$0 !~ "#" { print $1 }' $_config_path_aud/bitacoras.cfg  )
+		fi
 
 		_count=0
 
@@ -472,9 +430,6 @@ read_data()
 		done
 		[ "$_par_show" == "wiki" ] && wait
 	fi
-
-
-
 }
 
 generate_wiki_view()
@@ -961,6 +916,7 @@ interactive_event()
 			_real_node=$( awk -F\; -v _n="$_ask_node" 'BEGIN { _o="0" } $2 == _n { _o="1" } END { print _o }' $_type ) 
 			[ "$_ask_node" == "help" ] && awk -F\; 'BEGIN { print "bitacora name;description\n-------------;-----------" } $1 !~ "^#" { print $0 }' $_config_path_aud/bitacoras.cfg | column -t -s\; | sed 's/^/\t/' 
 			[ "$_real_node" == "0" ] && _real_node=$( awk -F\; -v _n="$_ask_node" 'BEGIN { _o="0" } $1 == _n { _o="1" } END { print _o }' $_config_path_aud/bitacoras.cfg )
+			[ "$_real_node" == "0" ] && _real_node=$( awk -F\; -v _n="$_ask_node" 'BEGIN { _o="0" } $2 == _n { _o="1" } END { print _o }' $_dev ) 
 			[ "$_real_node" == "0" ] && echo "Please enter a valid nodename or bitacora name" 
 		done
 
@@ -1041,40 +997,6 @@ interactive_event()
 
 		_msg_insert=$( logname )" : "$( [ ! -z "$_ask_issue" ] && echo -n $_ask_issue": " )""$( [ ! -z "$_ask_procedure" ] && echo -n $_ask_procedure" : "$_ask_proc_des" : " )""$_ask_msg
 
-}
-
-ha_check_old()
-{
-
-	_ha_master_host=$( cat $_sensors_sot | grep "^CYC;0006;HA" | cut -d';' -f5 )
-	_ha_slave_host=$( cat $_ha_cfg_file | awk -F\; -v _m="$_ha_master_host" '$1 == "ND" && $2 != _m { print $2 }' )
-	_ha_role_me=$( cat $_ha_role_file )
-
-	if [ "$HOSTNAME" != "$_ha_master_host" ]
-	then    
-		if [ "$_ha_role_me" == "SLAVE" ]
-		then    
-			if [ "$_sh_action" == "daemon" ]
-			then
-				exit 0
-			else
-				echo "WARNING: HA CONFIG ENABLED"
-				echo "$HOSTNAME in SLAVE mode" 
-				echo "Trying to execute command on master node ($_ha_master_host)"
-				echo
-				ssh $_ha_master_host "$_script_path/audit.nod.sh ${_command_opts}"
-				_exit_code=$?
-				[ "$_exit_code" != "0" ] && echo "ERROR ($_exit_code): please connect to $_ha_master_host to exec the command"
-				exit $?
-			fi
-		fi
-	else    
-		if [ "$_ha_role_me" == "SLAVE" ]
-		then    
-			[ "$_sh_action" != "daemon" ] && echo -e "WARNING: HA CONFIG ON POSIBLE SPLIT BRAIN SITUATION force MASTER on UPDATER node" 
-			exit 1
-		fi
-	fi
 }
 
 last_log_pg()
@@ -1208,12 +1130,15 @@ show_data()
 						BEGIN { 
 							print "DATE;TIME;EVENT;ACTIVITY;STATUS" 
 						} { 
-							$1=strftime("%d-%m-%Y;%H:%M:%S",$1) ;
-							_ls=length($0) ; 
+							_date=strftime("%d-%m-%Y",$1) ;
+							_time=strftime("%H:%M:%S",$1) ;
+							if ( _date == _date_old ) { _date=" " } else { _date_old=_date } 	
+							_col=8+22
+							_ls=10+8+length($2)+length($3)+length($4)+_col ; 
 							_fs=length($5) ; 
 							split($5,chars,"") ; 
 							_f="" ; 
-							_l=_ss-(_ls-_fs) ; 
+							_l=_ss-_ls ; 
 							_ln=1 ; 
 							_w="" ; 
 							_pw="" ; 
@@ -1222,11 +1147,11 @@ show_data()
 									_w=_w""chars[i] ; 
 									_pw="" 
 								} else { 
-									_ws=length(_w) ; 
-									_pw=_w ; 
-									_w=chars[i] 
+									_ws=length(_w)+1 ; 
+									_pw=_w" " ; 
+									_w="" 
 								} ; 
-								if ( i+_ws >= _l * _ln  ) { 
+								if ( i+_ws >=  _l*_ln ) { 
 									_f=_f"\n ; ; ; ;"_pw ; 
 									_ln++ 
 								} else { 
@@ -1236,7 +1161,7 @@ show_data()
 								}
 							}
 						} { 
-							print $1";"$4";"$6";"_f""_w
+							print _date";"_time";"$4";"$6";"_f""_w
 						}' | column -t -s\;
                                 fi
                         fi
