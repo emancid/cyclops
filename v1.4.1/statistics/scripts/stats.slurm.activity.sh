@@ -25,7 +25,13 @@ then
         [ -f "$_color_cfg_file" ] && source $_color_cfg_file
 
         [ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
-        [ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
+        if [ -f "$_libs_path/node_ungroup.sh" ] 
+	then
+		source $_libs_path/node_ungroup.sh
+		export -f node_ungroup
+	else
+		_exit_code="114"
+	fi
         [ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="116"
         [ -f "$_libs_path/init_date.sh" ] && source $_libs_path/init_date.sh || _exit_code="118"
 else
@@ -96,6 +102,10 @@ do
 			_opt_src="yes"
 			_par_src=$OPTARG
 		;;
+		"v")
+			_opt_shw="yes"
+			_par_shw=$OPTARG
+		;;
                 ":")
                         if [ "$OPTARG" == "h" ]
                         then
@@ -149,20 +159,54 @@ shift $((OPTIND-1))
 search_jobs()
 {
 
-	awk -F\; -v _tsdatei="$_date_tse" -v _tsdatef="$_date_tsb" '
-		{ 
-			_ts=strftime("%FT%T",$1) ; 
+	awk -F\; -v _tsdatei="$_date_tse" -v _tsdatef="$_date_tsb" -v _onod="$_opt_nod" -v _pnod="$_par_unode" '
+		BEGIN { 
+			split(_pnod,nodos," ")
+		} { 
+			_ts=strftime("%F;%T",$1) ; 
 			gsub(/:/," ",$13) ; 
 			_tsplus=mktime( "1970 01 01 "$13 ) ; 
 			_tsrange=$1+_tsplus  
 		} ( $1 < _tsdatei && _tsrange > _tsdatef ) || ( $1 < _tsdatef && _tsrange > _tsdatef ) || ( $1 > _tsdatei && _tsrange < _tsdatef )  { 
-			print _ts";"$2";"$14";"$3";"$5";"$13";"$15 
+			if ( _onod == "yes" ) { 
+				split($16,nidos," ")
+				for ( i in nodos ) { for ( a in nidos ) { if ( nodos[i] == nidos[a] ) { job[$2]=_ts";"$2";"$14";"$3";"$5";"$13";"$15 } } }  
+			} else {
+				job[$2]=_ts";"$2";"$14";"$3";"$5";"$13";"$15 
+			}
+		} END {
+			for ( i in job ) { print job[i] }
 		}' $1
 }
 
 format_output_data()
 {
-	echo -e "${1}"
+	case "$_par_shw" in
+	human)
+		echo -e "Date;Time;Job ID;Status;user;Job Name;Elapsed Time;Node(s)\n${1}" | column -t -s\;
+	;;
+	commas)
+		echo -e "Date;Time;Job ID;Status;user;Job Name;Elapsed Time;Node(s)\n${1}"
+	;;
+	*)
+		echo -e "Date;Time;Job ID;Status;user;Job Name;Elapsed Time;Node(s)\n${1}" | column -t -s\;
+	;;
+	esac
+}
+
+node_filter_active()
+{
+	awk -F\; -v _tsdatei="$_date_tse" -v _tsdatef="$_date_tsb" '
+		BEGIN { 
+			OFS=";" 
+		} {
+			_ts=strftime("%FT%T",$1) ; 
+                        gsub(/:/," ",$13) ; 
+                        _tsplus=mktime( "1970 01 01 "$13 ) ; 
+                        _tsrange=$1+_tsplus
+		} ( $1 < _tsdatei && _tsrange > _tsdatef ) || ( $1 < _tsdatef && _tsrange > _tsdatef ) || ( $1 > _tsdatei && _tsrange < _tsdatef ) { 
+			printf $0";" ; system("node_ungroup "$NF)  ; print "" 
+		}' $1
 }
 
 debug()
@@ -214,14 +258,29 @@ debug()
 
 	## PROCESSING
 
+	if [ "$_opt_nod" == "yes" ]
+	then
+		_par_unode=$( node_ungroup $_par_nod ) 
+	fi
+
+	_file_temp=$_cyclops_temp_path/$$.slurm.activity.tmp
+
 	for _file in $( echo "${_files}" )
 	do
-		_data_output=$_date_output"\n"$( search_jobs $_file )	
+		if [ "$_opt_nod" == "yes" ] 
+		then
+			node_filter_active $_file >> $_file_temp 
+		else 
+			cat $_file >> $_file_temp
+		fi
 	done
+
+	_data_output=$( search_jobs $_file_temp )
 
 	## FORMATING
 
-	format_output_data "$_data_output"
-	#echo "${_data_output}"
+	format_output_data "${_data_output}"
+
+	[ -f "$_file_temp" ] && rm -f $_file_temp 
 
 exit 0
