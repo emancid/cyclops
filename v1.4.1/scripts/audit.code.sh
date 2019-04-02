@@ -165,7 +165,7 @@ shift $((OPTIND-1))
 
 issue_processing()
 {
-	audit.nod.sh -v eventlog -f bitacora | 
+	audit.nod.sh -v eventlog -f bitacora 2>/dev/null | 
 		sort -t\; -k1n | 
 		awk -F\; -v tsb="$_par_ds" -v tse="$_par_de" -v cip="$_code_pattern" -v nd="$_par_node" '
 			BEGIN { 
@@ -189,7 +189,7 @@ issue_processing()
 
 issue_processing_temp_all()
 {
-	audit.nod.sh -v eventlog -f bitacora | 
+	audit.nod.sh -v eventlog -f bitacora 2>/dev/null | 
 		sort -t\; -k1n | 
 		awk -F\; -v tsb="$_par_ds" -v tse="$_par_de" -v cip="$_code_pattern" -v nd="$_par_node" '
 			BEGIN { 

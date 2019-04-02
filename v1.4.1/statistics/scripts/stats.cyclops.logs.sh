@@ -26,6 +26,7 @@ then
 
 	[ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
 	[ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
+	[ -f "$_libs_path/init_date.sh" ] && source $_libs_path/init_date.sh || _exit_code="118"
 else
         echo "Global config don't exits" 
         exit 1
@@ -45,7 +46,7 @@ fi
                 echo "HA Control Script doesn't exists, please revise your cyclops installation"
                 exit $_exit_code 
         ;;
-        11[3-4])
+        11[3-8])
                 echo "Necesary libs files doesn't exits, please revise your cyclops installation"
                 exit $_exit_code 
         ;;
@@ -230,7 +231,7 @@ shift $((OPTIND-1))
 calc_data()
 {
 	_log_stats_data=$( cat $_log_file | sort -t\; -n | 
-        			awk -F " : " -v _dr="$_date_filter" -v _tsb="$_par_ds" -v _tse="$_par_de" -v _sf="$_par_itm" -v _tc="$_par_typ" -v _pf="$_par_fil" '
+        			awk -F " : " -v _dr="$_date_filter" -v _tsb="$_date_tsb" -v _tse="$_date_tse" -v _sf="$_par_itm" -v _tc="$_par_typ" -v _pf="$_par_fil" '
                                         BEGIN { 
                                                 _to="START" ; 
                                                 t=0 ; 
@@ -510,185 +511,12 @@ format_output()
 
 }
 
-
-debug()
-{
-	echo 
-	echo "DEBUG:"
-	echo "----------------"
-	echo "Thrershold betwen:"
-	echo "Start Data: $_par_date_start 00:00:00 ($_par_ds)"
-	echo "End Data: $_par_date_end 23:59:59 ($_par_de)"
-	echo "Base Dir: $_log_file"
-	echo "Audit Type: $( [ -z "$_par_src" ] && echo -n all || echo -n $_par_src )"
-	echo "Date Filter: $_date_filter"
-	echo "Source:$_par_src"
-	echo "Item:$_par_itm"
-	echo "Node/Device:$_par_nod"
-	echo "$_long"
-	echo "Files:"
-	echo "${_files}"
-	echo "----------------"
-	set | grep "^_"
-	echo "----------------"
-	echo
-}
-
-init_date()
-{
-
-        _date_tsn=$( date +%s )
-
-        case "$_par_date_start" in
-	*[0-9]hour|hour)
-		_hour_count=$( echo $_par_date_start | grep -o ^[0-9]* )
-		_par_date_start="hour"
-
-		[ -z "$_hour_count" ] && _hour_count=1
-
-                let _ts_date=3600*_hour_count
-
-                let _par_ds=_date_tsn-_ts_date
-                _par_de=$_date_tsn
-
-                _date_filter=$_par_date_start
-                _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
-                _par_date_end=$( date +%Y-%m-%d )
-	;;
-        *[0-9]day|day)
-		_day_count=$( echo $_par_date_start | grep -o ^[0-9]* )
-		_par_date_start="day"
-
-		[ -z "$_day_count" ] && _day_count=1
-
-                let _ts_date=86400*_day_count
-
-                let _par_ds=_date_tsn-_ts_date
-                _par_de=$_date_tsn
-
-                _date_filter=$_par_date_start
-                _par_date_start=$( date -d @$_ts_date +%Y-%m-%d )
-                _par_date_end=$( date +%Y-%m-%d )
-        ;;
-        week|"")
-                _ts_date=604800
-
-                let _par_ds=_date_tsn-_ts_date
-                _par_de=$_date_tsn
-
-                _date_filter=$_par_date_start
-                _par_date_start=$( date -d "last week" +%Y-%m-%d )
-                _par_date_end=$( date +%Y-%m-%d )
-
-        ;;
-        *[0-9]month|month)
-                #_ask_date=$( date -d "last month" +%Y-%m-%d )
-		_month_count=$( echo $_par_date_start | grep -o ^[0-9]* )
-		_par_date_start="month"
-
-		[ -z "$_month_count" ] && _month_count=1
-
-                let _ts_date=2592000*_month_count
-
-                let _par_ds=_date_tsn-_ts_date
-                _par_de=$_date_tsn
-
-                _date_filter=$_par_date_start
-                _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
-                _par_date_end=$( date +%Y-%m-%d )
-        ;;
-        *[0-9]year|year)
-                #_ask_date=$( date -d "last year" +%Y-%m-%d )
-		_year_count=$( echo $_par_date_start | grep -o ^[0-9]* )
-
-		[ -z "$_year_count" ] && _year_count=1
-	
-		let _ts_date=31536000*_year_count
-                let _par_ds=_date_tsn-_ts_date
-                _par_de=$_date_tsn
-
-                _date_filter="year"
-                _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
-                _par_date_end=$( date +%Y-%m-%d )
-        ;;
-        "Jan-"*|"Feb-"*|"Mar-"*|"Apr-"*|"May-"*|"Jun-"*|"Jul-"*|"Aug-"*|"Sep-"*|"Oct-"*|"Nov-"*|"Dec-"*)
-                _date_year=$( echo $_par_date_start | cut -d'-' -f2 )
-                _date_month=$( echo $_par_date_start | cut -d'-' -f1 )
-
-                _query_month=$( date -d '1 '$_date_month' '$_date_year +%m | sed 's/^0//' )
-                _par_ds=$( date -d '1 '$_date_month' '$_date_year +%s )
-
-                let "_next_month=_query_month+1"
-                [ "$_next_month" == "13" ] && let "_next_year=_date_year+1" && _next_month="1" || _next_year=$_date_year
-
-                _par_de=$( date -d $_next_year'-'$_next_month'-1' +%s)
-
-                let "_par_de=_par_de-10"
-
-                _date_filter="month"
-                _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
-                _par_date_end=$( date -d @$_par_de +%Y-%m-%d )
-        ;;
-        2[0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9])
-                _par_ds=$( date -d $_par_date_start +%s )
-                if [ -z "$_par_date_end" ]
-                then
-                        _par_de=$( date +%s )
-                        _par_date_end=$( date +%Y-%m-%d )
-                else
-                        _par_de=$( date -d $_par_date_end +%s )
-                fi
-
-		let _day_count=(_par_de-_par_ds )/86400 
-
-		case "$_day_count" in
-		0)
-			_date_filter="hour"
-		;;
-		[1-2])
-			_date_filter="day"
-		;;
-		[3-9])
-			_date_filter="week"
-		;;
-		[1-4][0-9])
-			_date_filter="month"
-		;;
-		*)
-			_date_filter="year"
-		;;
-		esac
-        ;;
-        2[0-9][0-9][0-9])
-                _par_ds=$( date -d '1 Jan '$_par_date_start +%s )
-                _par_de=$( date -d '31 Dec '$_par_date_start +%s )
-
-                _date_filter="year"
-                _par_date_start=$( date -d @$_par_ds +%Y-%m-%d )
-                _par_date_end=$( date -d @$_par_de +%Y-%m-%d )
-        ;;
-	*)
-		### IF DATE START WRONG... GET DAY BY DEFAULT ####
-                _ts_date=86400
-
-                let _par_ds=_date_tsn-_ts_date
-                _par_de=$_date_tsn
-
-                _date_filter=$_par_date_start
-                _par_date_start=$( date -d "last day" +%Y-%m-%d )
-                _par_date_end=$( date +%Y-%m-%d )
-	;;
-        esac
-
-        let "_hour_days=((_par_de-_par_ds)/86400)+1"
-}
-
 check_items()
 {
 	
 	case "$_par_src" in 
 	dashboard)
-		_sensor_help=$(	awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
+		_sensor_help=$(	awk -F " : " -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
 					$1 > _tsb && $1 < _tse { 
 						_type="unknown"
 						for (i=4;i<=NF;i++) { 
@@ -713,7 +541,7 @@ check_items()
 					}' $_log_file )
 	;;
 	slurm|quota)
-		_sensor_help=$(	awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
+		_sensor_help=$(	awk -F " : " -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
 					$1 > _tsb && $1 < _tse {
 						_type="unknown"
 						for (i=5;i<=NF;i++) { 
@@ -738,7 +566,7 @@ check_items()
 					}' $_log_file )
 	;;
 	*)
-		_sensor_help=$(	awk -F " : " -v _tsb="$_par_ds" -v _tse="$_par_de" '
+		_sensor_help=$(	awk -F " : " -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
 					$1 > _tsb && $1 < _tse { 
 						_type="unknown"
 						for (i=4;i<=NF;i++) { 
@@ -867,7 +695,7 @@ check_items()
 		for _par_date_start in $( echo -e "$_par_date_start" ) 
 		do
 
-			init_date
+			init_date $_par_date_start $_par_date_end 
 
 			### LAUNCH ###
 

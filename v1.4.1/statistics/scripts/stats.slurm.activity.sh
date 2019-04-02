@@ -33,6 +33,7 @@ then
 		_exit_code="114"
 	fi
         [ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="116"
+	[ -f "$_color_cfg_file" ] && source $_color_cfg_file || _exit_code="1117"
         [ -f "$_libs_path/init_date.sh" ] && source $_libs_path/init_date.sh || _exit_code="118"
 else
         echo "Global config don't exits" 
@@ -57,6 +58,9 @@ fi
                 echo "Necesary libs files doesn't exits, please revise your cyclops installation"
                 exit $_exit_code
         ;;
+	117)
+		echo "WARNING: Color file doesn't exits, you see data in black&white" >&2
+	;;
         esac
 
 _cyclops_ha=$( awk -F\; '$1 == "CYC" && $2 == "0006" { print $4}' $_sensors_sot )
@@ -65,11 +69,18 @@ _stat_slurm_data=$( cat $_stat_main_cfg_file | awk -F\; '$2 == "slurm" { print $
 _stat_slurm_cfg_file=$_config_path_sta"/"$( echo $_stat_slurm_data | cut -d';' -f3 )
 _stat_slurm_data_dir=$_stat_data_path"/"$( echo $_stat_slurm_data | cut -d';' -f4 )
 
+#### DEFAULT OPTIONS ####
+
+_par_date_start="day"
+_par_date_shw="human"
+_par_date_end=$( date +%Y-%m-%d ) 
+_par_date_time=$( date +%H:%M:%S )
+
 ###########################################
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":r:d:e:t:f:n:v:w:k:s:xlh:" _optname
+while getopts ":r:d:e:t:f:n:g:v:t:w:k:s:u:xlh:" _optname
 do
         case "$_optname" in
                 "n")
@@ -102,9 +113,22 @@ do
 			_opt_src="yes"
 			_par_src=$OPTARG
 		;;
+		"g")
+			_opt_grp="yes"
+			_par_grp=$OPTARG
+		;;
 		"v")
 			_opt_shw="yes"
 			_par_shw=$OPTARG
+		;;
+		"t")
+			_opt_top="yes"
+			_par_top=$OPTARG
+			_par_shw="timeline"
+		;;
+		"u")
+			_opt_fusr="yes"
+			_par_fusr=$OPTARG
 		;;
                 ":")
                         if [ "$OPTARG" == "h" ]
@@ -120,6 +144,7 @@ do
 				echo "	-n [nodename|node range], by node or node range" 
 				echo "	-j [slurm num job], by slurm number job"
 				echo "	-m [slurm job name], by slurm job name" 
+				echo "	-u [slurn user], by user name"
                                 echo "  -d [date format], start date or range to filter by date:"
                                 echo "          [YYYY]: ask for complete year"
                                 echo "          [Mmm-YYYY]: ask for concrete month"
@@ -138,6 +163,12 @@ do
                                 echo "          graph, show console graph, only for percent processing sensors"
                                 echo "          human, show command output human friendly"
                                 echo "          commas, show command output with ;"	
+                                echo "          timeline, show output like job timeline use -g for threshold time"	
+				echo "			-g [seconds]: by defaul 5 seconds."
+				echo "			-t [name|job|user] optional, implies -v timeline."
+				echo "				job, by default, show job id"
+				echo "				name, show job name"
+				echo "				user, show user name"
                         else
                                 echo "ERR: Use -h for help"
                                 exit 0
@@ -159,7 +190,7 @@ shift $((OPTIND-1))
 search_jobs()
 {
 
-	awk -F\; -v _tsdatei="$_date_tse" -v _tsdatef="$_date_tsb" -v _onod="$_opt_nod" -v _pnod="$_par_unode" '
+	echo "${_main_data}" | sort -n | awk -F\; -v _tsdatei="$_date_tse" -v _tsdatef="$_date_tsb" -v _onod="$_opt_nod" -v _pnod="$_par_unode" -v _pusr="$_par_fusr" '
 		BEGIN { 
 			split(_pnod,nodos," ")
 		} { 
@@ -167,7 +198,7 @@ search_jobs()
 			gsub(/:/," ",$13) ; 
 			_tsplus=mktime( "1970 01 01 "$13 ) ; 
 			_tsrange=$1+_tsplus  
-		} ( $1 < _tsdatei && _tsrange > _tsdatef ) || ( $1 < _tsdatef && _tsrange > _tsdatef ) || ( $1 > _tsdatei && _tsrange < _tsdatef )  { 
+		} (( $1 < _tsdatei && _tsrange > _tsdatef ) || ( $1 < _tsdatef && _tsrange > _tsdatef ) || ( $1 > _tsdatei && _tsrange < _tsdatef )) && $3 ~ _pusr  { 
 			if ( _onod == "yes" ) { 
 				split($16,nidos," ")
 				for ( i in nodos ) { for ( a in nidos ) { if ( nodos[i] == nidos[a] ) { job[$2]=_ts";"$2";"$14";"$3";"$5";"$13";"$15 } } }  
@@ -176,17 +207,93 @@ search_jobs()
 			}
 		} END {
 			for ( i in job ) { print job[i] }
-		}' $1
+		}' 
 }
 
 format_output_data()
 {
 	case "$_par_shw" in
 	human)
-		echo -e "Date;Time;Job ID;Status;user;Job Name;Elapsed Time;Node(s)\n${1}" | column -t -s\;
+		echo -e "Date;Time;Job ID;Status;user;Job Name;Elapsed Time;Node(s)\n----;----;------;------;----;--------;------------;-------\n${1}" | column -t -s\;
 	;;
 	commas)
 		echo -e "Date;Time;Job ID;Status;user;Job Name;Elapsed Time;Node(s)\n${1}"
+	;;
+	timeline)
+		[ -z "$_par_grp" ] && _par_grp=5
+		echo
+		echo "${1}" | awk -F\; -v _dti="$_date_tsb" -v _dte="$_date_tse" -v _onam="$_par_top" -v _gtl="$_par_grp" -v _cy="$_sh_color_yellow" -v _cg="$_sh_color_green" -v _cr="$_sh_color_red" -v _cn="$_sh_color_nformat" '
+			$1 ~ "[0-9]+" { 
+				_d=$1 ; 
+				_t=$2 ; 
+				gsub(/-/," ",_d) ; 
+				gsub(/:/," ",_t) ; 
+				_tsi=mktime( _d" "_t ) ; 
+				_tsd=mktime( "1970 01 01 "$7 ) ; 
+				_tse=_tsi+_tsd ; 
+				job[$3]=_tsi","_tse ;
+				jobdet[$3]=$4";"$5";"$6";"$7
+				name[$3]=$6
+			} END { 
+				for (i=_dti;i<=_dte;i+=_gtl) { 
+					_y++ ; _xt=0 ; _idxv=0 ;
+					nomy[_y]=i ;
+					for ( a in job ) {                 
+						split(job[a],ts,",") ; 
+						if ( i > ts[1] && i < ts[2] ) { 
+							_xt++ ;
+							if ( posx[a] == "" ) { 
+								if ( vacio[_xt] == "" ) {
+									posx[a]=_xt ; 
+									pos[_y,_xt]=a ;
+									vacio[_xt]=a ;
+									_idxv++ ; 
+								} else {
+									for (v=1;v<=_idxv;v++) { 
+										if ( vacio[v] == "" ) {
+											posx[a]=v ;
+											pos[_t,v]=a ;
+											vacio[v]=a ;
+											_idxv++ ;
+											break ;
+										}
+									}
+								}
+							} else {
+								pos[_y,posx[a]]=a ;
+								vacio[posx[a]]=a ;
+								_idxv++ ;
+							}
+						} else {
+							vacio[posx[a]]="" ;
+							posx[a]="" ;
+							_idxv=_idxv-1 ;                    
+						}
+					} ;
+					if ( _x <= _xt ) { _x=_xt } ;
+				} ;
+				for (_dy=1;_dy<=_y;_dy++) {
+					_line="" ;
+					for (_dx=1;_dx<=_x;_dx++) {
+						if ( pos[_dy,_dx] == "" ) { 
+							_fprt=" " 
+							_cfs=_cg ; _nfs=_cn
+						} else {
+							split(jobdet[pos[_dy,_dx]],jfields,";") ; 
+							_cfs="" ; _nfs=""
+							if ( jfields[1] == "COMPLETED" ) { _cfs=_cg ; _nfs=_cn } 
+							if ( jfields[1] == "FAILED" ) { _cfs=_cr ; _nfs=_cn }
+							if ( jfields[1] == "CANCELLED" ) { _cfs=_cy ; _nfs=_cn }
+							_fprt=pos[_dy,_dx] ;
+							if ( _onam == "user" ) { _fprt=jfields[2] } 
+							if ( _onam == "name" ) { _fprt=jfields[3] }
+						};
+						_line=_line" "sprintf("%s %-10.10s %s", _cfs, _fprt, _nfs) ;
+					}
+					print ""strftime("%F %T",nomy[_dy])" "_line ;
+				}
+			}'
+		echo
 	;;
 	*)
 		echo -e "Date;Time;Job ID;Status;user;Job Name;Elapsed Time;Node(s)\n${1}" | column -t -s\;
@@ -224,18 +331,6 @@ debug()
 
 	## DATE INIT
 
-	case "$_par_date_start" in 
-	*year|*month|week|*day|*hour|[A-Z][a-z][a-z]"-"[0-9][0-9][0-9][0-9])
-	;;
-	"")
-		_par_date_start="day"
-	;;
-	"*")
-		[ -z "$_par_date_end" ] && _par_date_end=$( date +%Y-%m-%d ) && _par_date_time=$( date +%H:%M:%S )
-	;;
-	esac
-	 
-
 	init_date $_par_date_start $_par_date_end
 
 	## DATA FILES SELECTION
@@ -258,29 +353,22 @@ debug()
 
 	## PROCESSING
 
-	if [ "$_opt_nod" == "yes" ]
-	then
-		_par_unode=$( node_ungroup $_par_nod ) 
-	fi
-
-	_file_temp=$_cyclops_temp_path/$$.slurm.activity.tmp
+	[ "$_opt_nod" == "yes" ] && _par_unode=$( node_ungroup $_par_nod )
 
 	for _file in $( echo "${_files}" )
 	do
 		if [ "$_opt_nod" == "yes" ] 
 		then
-			node_filter_active $_file >> $_file_temp 
+			_main_data=$_main_data""$( node_filter_active $_file )
 		else 
-			cat $_file >> $_file_temp
+			_main_data=$_main_data""$( cat $_file )
 		fi
 	done
 
-	_data_output=$( search_jobs $_file_temp )
+	_data_output=$( search_jobs )
 
 	## FORMATING
 
 	format_output_data "${_data_output}"
-
-	[ -f "$_file_temp" ] && rm -f $_file_temp 
 
 exit 0

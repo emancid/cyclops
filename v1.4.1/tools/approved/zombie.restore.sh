@@ -168,65 +168,61 @@ fi
 
 ps_zombie_check()
 {
-
-	for _zombie in $(  ps -eFl | awk '$2 ~ "^Z"  {if ( $16 ~ "[0-9]*" ) { print $3";"$4";"$2";"$NF";"$5 }}' | grep -v "^UID;PID;S;CMD;PPID" )
-	do
-
-		_user=$( echo $_zombie | cut -d';' -f1 )
-		_pid=$( echo $_zombie | cut -d';' -f2 )
-		_status=$( echo $_zombie | cut -d';' -f3 )
-		_process=$( echo $_zombie | cut -d';' -f4 )
-		_ppid=$( echo $_zombie | cut -d';' -f5 )
-
-		echo $( date +%s )";"$HOSTNAME";"$_user";"$_ppid";"$_pid";"$_status";"$_process";NO ACTION REQUIRED"
-
-	done
+	ps -eFl --no-headers | awk -v _hn="$HOSTNAME" '
+		$2 ~ "^Z" { 
+			_lf="" ; 
+			for(i=17;i<=NF;i++) { 
+				_lf=_lf""$i" " 
+			} ;
+			print systime()";"_hn";"$3";"$4";"$2";["_lf"];"$5";NO ACTION REQUIRED" 
+		}'
 }
 
 ps_zombie_kill()
 {
+	ps -eFl --no-headers | awk -v _hn="$HOSTNAME" '
+		$2 ~ "^Z" { 
+			_lf="" ; 
+			for(i=17;i<=NF;i++) { 
+				_lf=_lf""$i" " 
+			} ;
+			_ksc=system("kill -9 "$4" 2>&1 >/dev/null" )
+			if ( _ksc == 0 ) { 
+				_ksp="KILLED" 
+			} else { 
+				_kscp=system("kill -9 "$5" 2>&1 >/dev/null" )
+				if ( _kscp == 0 ) {
+					_ksp="MASTER KILLED" ;
+				} else {
+					_ksp="CAN NOT KILL THEM ["_ksc","_kscp"]" 
+				}
+			} 
+			print systime()";"_hn";"$3";"$4";"$2";["_lf"];"$5";"_ksp 
+		}'
 
-        for _zombie in $(  ps -eFl | awk '$2 ~ "^Z"  {if ( $16 ~ "[0-9]*" ) { print $3";"$4";"$2";"$NF";"$5 }}' | grep -v "^UID;PID;S;CMD;PPID" )
-        do
-
-                _user=$( echo $_zombie | cut -d';' -f1 )
-                _pid=$( echo $_zombie | cut -d';' -f2 )
-                _status=$( echo $_zombie | cut -d';' -f3 )
-                _process=$( echo $_zombie | cut -d';' -f4 )
-                _ppid=$( echo $_zombie | cut -d';' -f5 )
-
-                _kill_status=$( kill -9 $_ppid 2>&1 >/dev/null ; echo $? )
-
-		case "$_kill_status" in
-			0)
-				_kill_status="KILLED"
-			;;
-			*)
-				_kill_status="CAN'T KILL IT ($_kill_status)"
-			;;
-		esac
-
-                echo $( date +%s )";"$HOSTNAME";"$_user";"$_ppid";"$_pid";"$_status";"$_process";"$_kill_status 
-
-        done
 }
 
 ps_orphan_check()
 {
 
-	for _orphan in $( ps -eFl | awk '{if ( $16 ~ "[0-9]*" ) { print $3";"$4";"$2";"$NF";"$5 }}' | egrep -v ^"root|rpc|dbus|ntp|munge" | grep -v "^UID;PID;S;CMD;PPID" )
-	do
-		if [ ! -z "$_orphan" ]
-		then			
-			_user=$( echo $_orphan | cut -d';' -f1 )
-			_pid=$( echo $_orphan | cut -d';' -f2 )
-			_status=$( echo $_orphan | cut -d';' -f3 )
-			_process=$( echo $_orphan | cut -d';' -f4 )
-			_ppid=$( echo $_orphan | cut -d';' -f5 )
+	ps -eFl --no-headers | awk -v _usr="root,rpc,dbus,ntp,munge" -v _hn="$HOSTNAME" '
+		BEGIN { 
+			split(_usr,users,",") 
+		} { 
+			_ctrl_u=0 ; 
+			for ( u in users ) { 
+				if ( $3 == users[u] ) { 
+					_ctrl_u=1 
+				}
+			}
+		} _ctrl_u==0 { 
+			_lf="" ; 
+			for(i=17;i<=NF;i++) { 
+				_lf=_lf""$i" " 
+			} ;
+			print systime()";"_hn";"$3";"$4";"$2";["_lf"];"$5";NO ACTION REQUIRED" 
+		}'
 
-			echo $( date +%s )";"$HOSTNAME";"$_user";"$_ppid";"$_pid";"$_status";"$_process";NO ACTION REQUIRED"
-		fi
-	done
 }
 
 ps_intruder_check()
@@ -251,6 +247,29 @@ ps_intruder_check()
 
 
 ps_orphan_kill()
+{
+	ps -eFl --no-headers | awk -v _usr="root,rpc,dbus,ntp,munge" -v _hn="$HOSTNAME" '
+		BEGIN { 
+			split(_usr,users,",") 
+		} { 
+			_ctrl_u=0 ; 
+			for ( u in users ) { 
+				if ( $3 == users[u] ) { 
+					_ctrl_u=1 
+				}
+			}
+		} _ctrl_u==0 { 
+			_lf="" ; 
+			for(i=17;i<=NF;i++) { 
+				_lf=_lf""$i" " 
+			} ;
+			_ksc=system("kill -9 "$4" 2>&1 >/dev/null" )
+			if ( _ksc == 0 ) { _ksp="KILLED" } else { _ksp="CAN NOT KILL IT ["_ksc"]" } 
+			print systime()";"_hn";"$3";"$4";"$2";["_lf"];"$5";"_ksp 
+		}'
+}
+
+ps_orphan_kill_old()
 {
 
         for _orphan in $( ps -eFl | awk '{if ( $16 ~ "[0-9]*" ) { print $3";"$4";"$2";"$NF";"$5 }}' | egrep -v ^"root|rpc|dbus|ntp|munge" | grep -v "^UID;PID;S;CMD;PPID" )
@@ -358,9 +377,8 @@ ctrl_orphan()
 			echo $( date +%s )";"$_node";IGNORE ACTION: NO COMPUTE NODE"
 		fi
 
-		_ctrl_out=$_ctrl_out"\n"$( cat $_file_name )
+		[ ! -z "$_file_name" ] && _ctrl_out=$_ctrl_out"\n"$( cat $_file_name )
         done
-	wait
 
 	[ -z "$_node" ] && echo $( date +%s )";"$_par_node";NODE(s) NOT FINDED OR NOT COMPUTE NODE(s)" || echo -e "${_ctrl_out}"
 }

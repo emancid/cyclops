@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### FIRTS CYCLOPS FUNCTION LIBRARY #### 2016-11-03
-### NODE GRUPING - GIVE LIST OF NODES COMMA SEPARATED
+### INIT DATE - FORMAT DATE FROM PATTERNS AND CREATE TIMESTAMP 
 
 #    GPL License
 #
@@ -88,9 +88,15 @@ init_date()
                 _date_start=$( date -d @$_date_tsb +%Y-%m-%d )
                 _date_end=$( date +%Y-%m-%d )
         ;;
-        year)
+        *[0-9]year|year)
                 #_ask_date=$( date -d "last year" +%Y-%m-%d )
-                _ts_date=31536000
+
+		_year_count=$( echo $_date_start | grep -o ^[0-9]* )
+		_date_start="year"
+
+		[ -z "$_year_count" ] && _year_count=1
+
+                let _ts_date=31536000*_year_count
 
                 let _date_tsb=_date_tsn-_ts_date
                 _date_tse=$_date_tsn
@@ -117,14 +123,16 @@ init_date()
                 _date_start=$( date -d @$_date_tsb +%Y-%m-%d )
                 _date_end=$( date -d @$_date_tse +%Y-%m-%d )
         ;;
-        2[0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9])
-                _date_tsb=$( date -d $_date_start +%s )
+        2[0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]*)
+		_date_start=$( echo "$_date_start" | sed 's/T/ /' )
+                _date_tsb=$( date -d "$_date_start" +%s )
                 if [ -z "$_date_end" ]
                 then
                         _date_tse=$( date +%s )
                         _date_end=$( date +%Y-%m-%d )
                 else
-                        _date_tse=$( date -d $_date_end +%s )
+			_date_end=$( echo "$_date_end" | sed 's/T/ /' )
+                        _date_tse=$( date -d "$_date_end" +%s )
                 fi
 
 		let _day_count=(_date_tse-_date_tsb )/86400 

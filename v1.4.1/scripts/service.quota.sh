@@ -32,7 +32,7 @@
 	_main_cfg_file=$_config_path_srv"/service.quota.cfg"
 
         [ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
-        [ -f "$_color_cfg_file" ] && source $_color_cfg_file || _exit_code="116"
+        [ -f "$_color_cfg_file" ] && source $_color_cfg_file || _exit_code="117"
 	[ ! -f "$_main_cfg_file" ] && _exit_code="115"
 
         case "$_exit_code" in
@@ -48,7 +48,7 @@
                 echo "Necesary libs files doesn't exits, please revise your cyclops installation" >&2
                 exit 1
         ;;
-        116)
+        117)
                 echo "WARNING: Color file doesn't exits, you see data in black" >&2
         ;;
         esac

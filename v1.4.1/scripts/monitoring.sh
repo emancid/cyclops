@@ -332,7 +332,7 @@ generate_mon_output_dash ()
 		_audit_last_bitacora_msg=$( echo "${_audit_last_bitacora_msg}" | sed '1 i\|< 100% 6% 6% 8% 10% 64% 6%>|' )
 	fi
 
-	_audit_last_events=$( $_script_path/audit.nod.sh -f activity -v eventlog | awk -F\; 'BEGIN { _tn=systime() } $1 > _tn-259200 && $4 ~ /ALERT|REACTIVE/ { print $0 }' | 
+	_audit_last_events=$( $_script_path/audit.nod.sh -f activity -v eventlog | awk -F\; 'BEGIN { _tn=systime() } $1 > _tn-259200 && ( $4 == "ALERT" || $4 == "REACTIVE" && $6 != "OK" ) { print $0 }' | 
 				sort -t\; -n |
 				tail -n 30 | 
 				awk -F\; -v _co="$_color_ok" -v _cd="$_color_down" -v _cf="$_color_fail"  -v _cr="$_color_rzr" -v _cc="$_color_fail" -v _cm="$_color_mark" -v _cu="$_color_up" -v _ap="$_wiki_audit_path" -v _uk="$_color_unk" '
