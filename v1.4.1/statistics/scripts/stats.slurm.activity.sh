@@ -130,6 +130,34 @@ do
 			_opt_fusr="yes"
 			_par_fusr=$OPTARG
 		;;
+		"h")
+		        _opt_help="yes"
+                        _par_help=$OPTARG
+
+			case "$_par_help" in
+			"des")
+				echo "$( basename "$0" ) : Cyclops Slurm Job Activity Tool"
+				echo "  Default path: $( dirname "${BASH_SOURCE[0]}" )"
+				echo "  Global config path : $_config_path"
+				echo "  	Global config file: global.cfg"
+				echo "  	Cyclops dependencies:"
+				echo "  		Cyclops libs: $_libs_path"
+				echo "				node_ungroup.sh"	
+				echo "				node_group.sh"	
+				echo "				init_date.sh"	
+				echo "				ha_ctrl.sh"
+				echo "				$_color_cfg_file"	
+				echo "		Data source dir:"
+				echo "			$_stat_slurm_data_dir"
+				echo
+				exit 0
+			;;
+			"*")
+				echo "ERR: Use -h for help"
+				exit 1
+			;;
+			esac
+		;;
                 ":")
                         if [ "$OPTARG" == "h" ]
                         then
@@ -145,7 +173,7 @@ do
 				echo "	-j [slurm num job], by slurm number job"
 				echo "	-m [slurm job name], by slurm job name" 
 				echo "	-u [slurn user], by user name"
-                                echo "  -d [date format], start date or range to filter by date:"
+                                echo "	-d [date format], start date or range to filter by date:"
                                 echo "          [YYYY]: ask for complete year"
                                 echo "          [Mmm-YYYY]: ask for concrete month"
                                 echo "          [1-9*]year: ask for last [n] year"
@@ -154,12 +182,12 @@ do
                                 echo "          [1-9*]day: ask for last [n] days ( sort by 24h format )"
                                 echo "          [1-9*]hour: ask for last [n] hours ( sort by hour format )"
                                 echo "          [YYYY-MM-DD]T[HH:MM:SS]: Implies data from date to now if you dont use -e, optional start time can be added"
-                                echo "  -e [YYYY-MM-DD]T[HH:MM:SS], end date for concrete start date, optional end time can be added" 
+                                echo "	-e [YYYY-MM-DD]T[HH:MM:SS], end date for concrete start date, optional end time can be added" 
                                 echo "          mandatory use the same format with -d parameter"
 				echo "SHOW:"
 				echo
 				echo "	-f [field1,field2,field3,...], output selected fields"
-                                echo "  -v [graph|human|wiki|commas] optional, commas default."
+                                echo "	-v [graph|human|wiki|commas] optional, commas default."
                                 echo "          graph, show console graph, only for percent processing sensors"
                                 echo "          human, show command output human friendly"
                                 echo "          commas, show command output with ;"	
@@ -169,6 +197,8 @@ do
 				echo "				job, by default, show job id"
 				echo "				name, show job name"
 				echo "				user, show user name"
+				echo
+				exit 0
                         else
                                 echo "ERR: Use -h for help"
                                 exit 0
@@ -240,7 +270,7 @@ format_output_data()
 					nomy[_y]=i ;
 					for ( a in job ) {                 
 						split(job[a],ts,",") ; 
-						if ( i > ts[1] && i < ts[2] ) { 
+						if (( i < ts[1] && i+_gtl > ts[2] ) || ( i < ts[2] && i+_gtl > ts[2] ) || ( i > ts[1] && i+_gtl < ts[2] )) { 
 							_xt++ ;
 							if ( posx[a] == "" ) { 
 								if ( vacio[_xt] == "" ) {

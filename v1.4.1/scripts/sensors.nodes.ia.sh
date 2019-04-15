@@ -48,26 +48,29 @@ _audit_status=$( awk -F\; '$1 == "CYC" && $2 == "0003" && $3 == "AUDIT" { print 
 alerts_gen()
 {
 
-	for _alert_incidence in $( echo "${_nodes_err}" | grep -v ";[1-3]$" )
+	for _alert_incidence in $( echo "${_nodes_err}" | awk -F\; '$3 !~ "^[1-3]$" { print $0 }' )
 	do
 		_alert_host=$( echo $_alert_incidence | cut -d';' -f1 )
 		_alert_fail=$( echo $_alert_incidence | cut -d';' -f2 )
 		_alert_sens_id=$( echo $_alert_incidence | cut -d';' -f3 )
+		_alert_sens_ms=$( echo $_alert_incidence | cut -d';' -f4 )
 		_alert_family=$( awk -F\; -v _node="$_alert_host" '$2 == _node { print $3 }' $_type )
+
+		[ ! -z "$_alert_sens_ms" ] && _alert_sens_ms="["$_alert_sens_ms"]"
 
 		_alert_sens=$( awk -v _id="$_alert_sens_id" '{ _line++ ; if ( _id == _line ) {  print $1 }}' $_config_path_nod/$_alert_family.mon.cfg )
 		_alert_id=$( awk -F\; 'BEGIN { _id=0 } $1 == "ALERT" { if ( $3 > _id ) { _id=$3 }} END { _id++ ; print _id }' $_sensors_sot )
 
 		_alert_status=$( awk -F\; -v _node="$_alert_host" -v _sens="$_alert_sens" '$4 == _node && $5 == _sens { print $0 }' $_sensors_sot | wc -l )
 
-		[ "$_alert_status" -eq 0 ] && echo "ALERT;NOD;$_alert_id;$_alert_host;$_alert_sens;$( date +%s );0" >> $_sensors_sot 
+		[ "$_alert_status" == "0" ] && echo "ALERT;NOD;$_alert_id;$_alert_host;$_alert_sens $_alert_sens_ms;$( date +%s );0" >> $_sensors_sot 
 
 		# AUDIT LOG TRACERT
 		if [ "$_audit_status" == "ENABLED" ] && [ "$_alert_status" -eq 0 ] 
 		then
 			[ -z "$_alert_sens" ] && _alert_sens="NULL"
 			[ -z "$_alert_fail" ] && _alert_fail="MARK" || _audit_alert=$( echo $_alert_fail | sed -e 's/^F$/FAIL/' -e 's/^D$/DOWN/' -e 's/^U$/UNKNOWN/' -e 's/^K$/UP/' )
-			[ -z "$_alert_host" ] && _alert_host="NULL" || $_script_path/audit.nod.sh -i event -e alert -m "$_alert_sens" -s $_audit_alert -n $_alert_host 2>>$_mon_log_path/audit.log
+			[ -z "$_alert_host" ] && _alert_host="NULL" || $_script_path/audit.nod.sh -i event -e alert -m "$_alert_sens $_alert_sens_ms" -s $_audit_alert -n $_alert_host 2>>$_mon_log_path/audit.log
 		fi
 	done
 

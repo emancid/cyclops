@@ -881,15 +881,21 @@ then
 			$0 ~ "OK" || $0 ~ "UP" || $0 ~ "DOWN" || $0 ~ "FAIL" || $0 ~ "UNKN" || $0 ~ "MARK" { 
 				_err=0 ; 
 				for (i=1;i<=NF;i++) { 
-					if ($i ~ "DOWN") { _err=1 ; print $1";D;"i } 
-						else ;
-						if ($i ~ "FAIL") { _err=1 ; print $1";F;"i} 
-							else ;
-							if ($i ~ "UNKN") { _err=1 ; print $1";U;"i}
-								else ;
-								if ($i ~ "MARK" ) { _err=1 ; print $1";M;"i}
-					} ; 
-					if ( _err == 0 ) { print $1";K;0"}
+					_lmsg=split($i,msg," ") ;
+					if ( msg[1] ~ /DOWN|FAIL|UNKN/ ) {
+						_msg=msg[2]
+						if ( _lmsg > 2 ) { 
+							for (m=3;m<=_lmsg;m++) { 
+								_msg=_msg" "msg[m] 
+							}
+						}
+					}
+					if ( msg[1] == "DOWN" ) { _err=1 ; print $1";D;"i";"_msg }
+					if ( msg[1] == "FAIL" ) { _err=1 ; print $1";F;"i";"_msg }
+					if ( msg[1] ~ "UNKN" )  { _err=1 ; print $1";U;"i";"_msg }
+					if ( msg[1] == "MARK" ) { _err=1 ; print $1";M;"i";"_msg }
+				}
+				if ( _err == 0 ) { print $1";K;0;"}
 			} ' | 
 		cut -d' ' -f2- )
 	echo "${_ctrl_err}" > $_sensors_ia_tmp_path/$_pid"."$_sensors_ia_tmp_name

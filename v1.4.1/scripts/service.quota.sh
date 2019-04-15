@@ -133,13 +133,17 @@ do
 				echo
 				echo "STANDARD OPTIONS"
 				echo "	-n [SERVER], specify different server from config file"
-				echo "	-t [lustre|kernel], specify file server type [WORKING ON IT]"
+				echo " 		help: show available config server and settings"
+				echo "	-t [lustre|kernel], specify file server type"
 				echo "		kernel: linux standard quota fs system ( default )"
 				echo "		lustre: Lustre FS quota system, need FS to check"
+				echo " 		help: show available config server and settings"
 				echo "	-o [filesystem], Lustre FS to check"
+				echo " 		help: show available config server and settings"
 				echo "	-q [user|group], Quota type"
 				echo "		user: user quota control"
 				echo "		group: user quota control"
+				echo " 		help: show available config server and settings"
 				echo 
 				echo "FILTER AND SORT OPTIONS"
 				echo "	-u [USER], filter date from one or many users ( comma separated ) [NOT OPERATIVE YET]"
@@ -594,6 +598,19 @@ log_data()
 }
 
 #### MAIN EXEC ####
+
+
+	if [ "$_par_srv" == "help" ] || [ "$_par_typ" == "help" ] || [ "$_par_fs" == "help" ] || [ "$_par_qt" == "help" ] 
+	then
+		awk -F";" 'BEGIN {
+			print "\nConfigurated quota services\n"
+			printf "%-14s %-10s %-18s %-10s\n", "Server", "Type", "File System", "Quota Type"
+			printf "%-14s %-10s %-18s %-10s\n", "------", "----", "-----------", "----------"
+		} $1 !~ "#" { 
+			printf "%-14s %-10s %-18s %-10s\n", $2, $3, $4, $5 
+		} END { print "" }' $_main_cfg_file 
+		exit 0
+	fi
 
 	case "$_sh_action" in
 	daemon)
