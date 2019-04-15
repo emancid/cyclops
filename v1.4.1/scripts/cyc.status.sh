@@ -310,7 +310,7 @@ audit_status()
 	[ ! -z "$_par_date_start" ] && echo -e "FILTER: Date Range: $_par_date_start\n" 
 	echo "BITACORA DATA :"
 
-	echo "${_audit_status}" | awk -F\; -v _ss="$( tput cols )" -v _nf="$_sh_color_nformat" -v _gc="$_sh_color_green" -v _rc="$_sh_color_red" -v _yc="$_sh_color_yellow" -v _ggc="$_sh_color_gray" '
+	echo "${_audit_status}" | awk -F\; -v _ss="$( tput cols )" -v _nf="$_sh_color_nformat" -v _gc="$_sh_color_green" -v _rc="$_sh_color_red" -v _yc="$_sh_color_yellow" -v _ggc="$_sh_color_gray" -v _cc="$_sh_color_cyc" '
 		BEGIN { 
 			printf "%-10s %-10s %-14s %-12s %-6s %s\n", "Date", "Hour", "Source", "Type", "Status", "Message"
 			printf "%-10s %-10s %-14s %-12s %-6s %s\n", "----------", "---------", "--------------", "------------", "------", "-------"
@@ -351,15 +351,16 @@ audit_status()
 				}
 				if ( _c == 0 ) { _p="" } else { _p="["_c+1"]" }
 				_f2c="" ; _f3c="" ; _f4c="" ; _f5c=""
-				if ( campo[4] == "ISSUE" ) { _f4c=_rc ; _f3c=_rc ; _f2c=_rc } 
 				if ( campo[4] == "INFO" || campo[4] == "DISABLE" ) { _f4c=_ggc }
+				if ( campo[5] == "INFO" ) { _f5c=_ggc }
+				if ( campo[4] == "ENABLE" ) { _f4c=_gc ; _f3c=_gc ; _f2c=_gc }
+				if ( campo[5] ~ /OK|UP/ ) { _f5c=_gc ; _f3c=_gc ; _f2c=_gc }
 				if ( campo[4] ~ /INTERVENTION|ALERT|REPAIR|TESTING/ ) { _f4c=_yc ; _f3c=_yc ; _f2c=_yc }
-				if ( campo[4] == "ENABLE" ) { _f4c=_gc }
-				if ( campo[5] == "INFO" ) { _f5c=_ggc }
-				if ( campo[5] ~ /SOLVED|OK|UP/ ) { _f5c=_gc }
-				if ( campo[5] == "INFO" ) { _f5c=_ggc }
 				if ( campo[5] == "FAIL" ) { _f5c=_yc ; _f3c=_yc ; _f2c=_yc }
+				if ( campo[4] == "ISSUE" ) { _f4c=_rc ; _f3c=_rc ; _f2c=_rc } 
+				if ( campo[5] == "SOLVED" ) { _f5c=_gc ; _f3c=_gc ; _f2c=_gc }
 				if ( campo[5] == "DOWN" ) { _f5c=_rc ; _f3c=_rc ; _f2c=_rc }
+				if ( campo[3] == "cyclops" ) { _f3c=_cc }
 				printf "%10s %s%4s%s %-4s %s%-14s%s %s%-12s%s %s%-6s%s %s %s\n", _date, _f2c, _time, _nf, _p, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f5c, campo[5], _nf, _f, _w ;
 				_c=0 ;
 				_lold=$0
@@ -531,7 +532,6 @@ node_real_status()
 		[ -z "$_node_err" ] && _node_err=" " 
 		[ "$_node_sta" == "UP" ] && _node_sta="OK"
 
-		#_new_line=${_new_line}""$_extra_line""$_print_grp';'$_node_fam';'$_node_qty';'$_node_rng';'$_node_adm';'$_node_sta';'$_node_slm";"$_node_err'\n'
 		_new_line=${_new_line}""$_extra_line""$_print_grp';'$_node_fam';'$_node_qty';'$_node_adm';'$_node_sta';'$_node_slm';'$_node_rng';'$_node_err'\n'
 
 	done 
@@ -563,7 +563,6 @@ node_real_status()
 	echo -e "CRITICAL ENV STATUS: 	$_critical_st_color$( echo "${_critical_st_simp}" | cut -d';' -f4  )$_sh_color_nformat"
 	echo
 	[ "$_opt_node" == "yes" ] && echo -e "FILTER: "$_par_node"\n"
-	#echo -e "${_new_line}" | column -t -s\; 
 	echo -e "${_new_line}" | awk -F\; -v _nf="$_sh_color_nformat" -v _gc="$_sh_color_green" -v _rc="$_sh_color_red" -v _yc="$_sh_color_yellow" -v _ggc="$_sh_color_gray" '{
 		_f2c="" ; _f4c="" ; _f5c="" ; _f6c="" ; _f7c="" ;
 		if ( NR > 3 ) {
