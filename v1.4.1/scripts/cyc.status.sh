@@ -313,7 +313,11 @@ audit_status()
 	echo "${_audit_status}" | awk -F\; -v _ss="$( tput cols )" -v _nf="$_sh_color_nformat" -v _gc="$_sh_color_green" -v _rc="$_sh_color_red" -v _yc="$_sh_color_yellow" -v _ggc="$_sh_color_gray" -v _cc="$_sh_color_cyc" '
 		BEGIN { 
 			printf "%-10s %-10s %-14s %-12s %-6s %s\n", "Date", "Hour", "Source", "Type", "Status", "Message"
-			printf "%-10s %-10s %-14s %-12s %-6s %s\n", "----------", "---------", "--------------", "------------", "------", "-------"
+			printf "%-10s %-11s %-14s %-12s %-6s %s\n", "----------", "---------", "--------------", "------------", "------", "-------"
+			_ajuste=0 ;
+			_ls=10+1+5+1+4+1+14+1+12+1+6+1+_ajuste ;
+			for (s=1;s<=_ls-_ajuste;s++) { _space=_space" " } ;
+			_l=_ss-_ls ; 
 		} NR > 1 { 
 			if ( $0 == _lold ) {
 				_c++ 
@@ -322,33 +326,29 @@ audit_status()
 				_date=campo[1] ;
 				_time=campo[2] ;
 				if ( _date == _date_old ) { _date=" " } else { _date_old=_date }        
-				_col=10+40 ;
-				_ls=length(_date)+length(_time)+length(_c)+2+length(campo[3])+length(campo[4])+length(campo[5])+_col ; 
 				_fs=length(campo[6]) ; 
 				split(campo[6],chars,"") ; 
-				_f="" ; 
-				_l=_ss-_ls ; 
-				_ln=1 ; 
-				_w="" ; 
-				_pw="" ; 
+				_long=0 ; 
+				_f="" ; _pw="" ; _w="" ;  
+				_fdbg="" ;
 				for (i=1;i<=_fs;i++) { 
-					if ( chars[i] != " " ) { 
-						_w=_w""chars[i] ; 
-						_pw="" 
-					} else { 
-						_ws=length(_w)+1 ; 
-						_pw=_w" " ; 
+					if ( chars[i] == " " ) { 
+						_ws=length(_w) ; 
+						_pw=_w ; 
+						_long=_long+_ws+1
 						_w="" ; 
-					} ; 
-					if ( i+_ws >=  _l*_ln ) { 
-						_f=_f"\n \t \t \t \t \t \t \t "_pw ; 
-						_ln++ 
-					} else { 
-						if ( _pw != "" ) { 
-							_f=_f""_pw 
+						if ( _long > _l ) { 
+							_long=_ws+1 ;
+							_f=_f"\n"_space""_pw" " ; 
+						} else { 
+							_f=_f""_pw" " ; 
 						}
-					}
+					} else { 
+						_w=_w""chars[i] ; 
+					} ; 
 				}
+				_ws=length(_w) ;
+				if (( _long + _ws ) > _l ) { _w="\n"_space""_w }
 				if ( _c == 0 ) { _p="" } else { _p="["_c+1"]" }
 				_f2c="" ; _f3c="" ; _f4c="" ; _f5c=""
 				if ( campo[4] == "INFO" || campo[4] == "DISABLE" ) { _f4c=_ggc }
@@ -361,12 +361,52 @@ audit_status()
 				if ( campo[5] == "SOLVED" ) { _f5c=_gc ; _f3c=_gc ; _f2c=_gc }
 				if ( campo[5] == "DOWN" ) { _f5c=_rc ; _f3c=_rc ; _f2c=_rc }
 				if ( campo[3] == "cyclops" ) { _f3c=_cc }
-				printf "%10s %s%4s%s %-4s %s%-14s%s %s%-12s%s %s%-6s%s %s %s\n", _date, _f2c, _time, _nf, _p, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f5c, campo[5], _nf, _f, _w ;
+				printf "%10s %s%5s%s %-4s %s%-14.14s%s %s%-12.12s%s %s%-6.6s%s %s%s\n", _date, _f2c, _time, _nf, _p, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f5c, campo[5], _nf, _f, _w;
 				_c=0 ;
 				_lold=$0
 			}
 		} NR == 1 { 
 			_lold=$0 
+		} END {
+				split(_lold,campo,";") ;
+				_date=campo[1] ;
+				_time=campo[2] ;
+				if ( _date == _date_old ) { _date=" " } else { _date_old=_date }        
+				_fs=length(campo[6]) ; 
+				split(campo[6],chars,"") ; 
+				_long=0 ; 
+				_f="" ; _pw="" ; _w="" ;  
+				_fdbg="" ;
+				for (i=1;i<=_fs;i++) { 
+					if ( chars[i] == " " ) { 
+						_ws=length(_w) ; 
+						_pw=_w ; 
+						_long=_long+_ws+1
+						_w="" ; 
+						if ( _long > _l ) { 
+							_long=_ws+1 ;
+							_f=_f"\n"_space""_pw" " ; 
+						} else { 
+							_f=_f""_pw" " ; 
+						}
+					} else { 
+						_w=_w""chars[i] ; 
+					} ; 
+				}
+				if (( _long + _ws ) > _l ) { _w="\n"_space""_w }
+				if ( _c == 0 ) { _p="" } else { _p="["_c+1"]" }
+				_f2c="" ; _f3c="" ; _f4c="" ; _f5c=""
+				if ( campo[4] == "INFO" || campo[4] == "DISABLE" ) { _f4c=_ggc }
+				if ( campo[5] == "INFO" ) { _f5c=_ggc }
+				if ( campo[4] == "ENABLE" ) { _f4c=_gc ; _f3c=_gc ; _f2c=_gc }
+				if ( campo[5] ~ /OK|UP/ ) { _f5c=_gc ; _f3c=_gc ; _f2c=_gc }
+				if ( campo[4] ~ /INTERVENTION|ALERT|REPAIR|TESTING/ ) { _f4c=_yc ; _f3c=_yc ; _f2c=_yc }
+				if ( campo[5] == "FAIL" ) { _f5c=_yc ; _f3c=_yc ; _f2c=_yc }
+				if ( campo[4] == "ISSUE" ) { _f4c=_rc ; _f3c=_rc ; _f2c=_rc } 
+				if ( campo[5] == "SOLVED" ) { _f5c=_gc ; _f3c=_gc ; _f2c=_gc }
+				if ( campo[5] == "DOWN" ) { _f5c=_rc ; _f3c=_rc ; _f2c=_rc }
+				if ( campo[3] == "cyclops" ) { _f3c=_cc }
+				printf "%10s %s%5s%s %-4s %s%-14.14s%s %s%-12.12s%s %s%-6.6s%s %s%s\n", _date, _f2c, _time, _nf, _p, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f5c, campo[5], _nf, _f, _w;
 		}' 
 
 }
@@ -564,7 +604,7 @@ node_real_status()
 	echo
 	[ "$_opt_node" == "yes" ] && echo -e "FILTER: "$_par_node"\n"
 	echo -e "${_new_line}" | awk -F\; -v _nf="$_sh_color_nformat" -v _gc="$_sh_color_green" -v _rc="$_sh_color_red" -v _yc="$_sh_color_yellow" -v _ggc="$_sh_color_gray" '{
-		_f2c="" ; _f4c="" ; _f5c="" ; _f6c="" ; _f7c="" ;
+		_f2c="" ; _f4c="" ; _f5c="" ; _f6c="" ; _f7c="" ; _f8c=""
 		if ( NR > 3 ) {
 			if ( $6 == "n/a" ) { _f6c=_ggc }
 			if ( $4 == "UP" ) { _f4c=_gc }
@@ -592,10 +632,11 @@ node_real_status()
 				if ( $6 != "maintenance" && $6 != "n/a" ) { _f6c=_rc ; _f7c=_rc } ;
 			} 
 			if ( $5 == "OK" ) { _f5c=_gc }
-			if ( $5 == "DOWN" || $5 == "FAIL" ) { _f5c=_rc }
+			if ( $5 == "DOWN" || $5 == "FAIL" ) { _f5c=_rc ; _f2c=_rc ; _f4c=_rc  }
 			if ( $6 == "idle" ) { _f6c=_gc }
+			if ( $8 != " " ) { _f8c=_rc }
 		}
-		printf "%-15.15s %s%-12.12s%s %3s %s%10s%s %s%12s%s %s%12.12s%s\t%s%-30s%s %s\n", $1, _f2c, $2, _nf, $3, _f4c, $4, _nf, _f5c, $5, _nf, _f6c, $6, _nf, _f7c, $7, _nf, $8 ; 
+		printf "%-15.15s %s%-12.12s%s %3s %s%10s%s %s%12s%s %s%12.12s%s\t%s%-30s%s %s%s%s\n", $1, _f2c, $2, _nf, $3, _f4c, $4, _nf, _f5c, $5, _nf, _f6c, $6, _nf, _f7c, $7, _nf, _f8c, $8, _nf ; 
 	}'
 
 	echo

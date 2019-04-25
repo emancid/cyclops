@@ -83,6 +83,7 @@ source $_color_cfg_file
         [ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
         [ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="113"
         [ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
+	[ -f "$_color_cfg_file" ] && source $_color_cfg_file || _exit_code="116"
 
         case "$_exit_code" in
         111)
@@ -222,7 +223,7 @@ do
                         _par_filter=$OPTARG
 
 
-                        if [ !"$_par_filter" == "activity" ] || [ !"$_par_filter" == "bitacora" ] || [ !"$_par_filter" == "settings" ] || [ !"$_par_filter" == "resume" ] || [ !"$_check_par_filter" == "1" ]
+                        if [ !"$_par_filter" == "serial" ] || [ !"$_par_filter" == "activity" ] || [ !"$_par_filter" == "bitacora" ] || [ !"$_par_filter" == "settings" ] || [ !"$_par_filter" == "resume" ] || [ !"$_check_par_filter" == "1" ]
                         then
                                 echo "-f [option] filter Show option info"
                                 echo "          activity: Node Activity Info"
@@ -1111,7 +1112,42 @@ show_data()
                                 else    
                                         echo "ACTIVITY INFO:"
                                         echo "-----------------------------------"
-                                        echo "${_output_activity}" | awk -F\; 'BEGIN { print "DATE;TIME;EVENT;ACTIVITY;STATUS" } {$1=strftime("%d-%m-%Y;%H:%M:%S",$1); print $1";"$4";"$5";"$6 }' | column -s\; -t
+					echo "${_output_activity}" | awk -F\; -v _nf="$_sh_color_nformat" -v _gc="$_sh_color_green" -v _rc="$_sh_color_red" -v _yc="$_sh_color_yellow" -v _ggc="$_sh_color_gray" -v _cc="$_sh_color_cyc" '
+						BEGIN {
+							printf "%-12s %-10s %-10s %-10s %-s\n", "DATE", "TIME", "EVENT", "STATUS", "ACTIVITY" ;
+							printf "%-12s %-10s %-10s %-10s %-s\n", "----------", "--------", "--------", "----------", "--------" ;
+						} {
+							_date=strftime("%d-%m-%Y",$1) ;
+							_time=strftime("%H:%M:%S",$1) ;
+
+							_f3c="" ; _f4c="" ;
+							if ( $6 ~ /CONTENT|DOWN/ ) { _f4c=_rc }
+							if ( $6 ~ /LINK|REPAIR|DIAGNOSE|FAIL/ ) { _f4c=_yc }
+							if ( $6 ~ /UP|OK/ ) { _f4c=_gc }
+							if ( $6 ~ /DRAIN/ ) { _f4c=_ggc }
+							if ( $6 ~ /UNKNOWN/ ) { _f4c=_cc }
+
+							if ( $4 ~ /REACTIVE|ALERT/ ) { _f3c=_yc }
+							if ( $4 ~ /STATUS/ ) { _f3c=_gc }
+
+							=1;i<=_fs;i++) { 
+                                        if ( chars[i] == " " ) { 
+                                                _ws=length(_w) ; 
+                                                _pw=_w ; 
+                                                _long=_long+_ws+1
+                                                _w="" ; 
+                                                if ( _long > _l ) { 
+                                                        _long=_ws ;
+                                                        _f=_f"\n"_space""_pw" " ; 
+                                                } else { 
+                                                        _f=_f""_pw" " ; 
+                                                }
+                                        } else { 
+                                                _w=_w""chars[i] ; 
+                                        } ; 
+                                }if ( _date != _date_old ) { _date_old=_date ; _date_pr=_date } else { _date_pr="" } 
+							printf "%-12s %-10s %s%-10s%s %s%-10s%s %-s\n", _date_pr, _time, _f3c, $4, _nf, _f4c, $6, _nf, $5 ; 
+						}'
                                         echo
                                 fi
                         fi
@@ -1125,44 +1161,103 @@ show_data()
                                 else    
                                         echo "BITACORA INFO:"
                                         echo "-----------------------------------"
-                                        #echo "${_output_bitacora}" | awk -F\; 'BEGIN { print "DATE;TIME;EVENT;ACTIVITY;STATUS" } {$1=strftime("%d-%m-%Y;%H:%M:%S",$1); print $1";"$4";"$5";"$6 }' | column -s\; -t
- 					echo "${_output_bitacora}" | awk -F\; -v _ss="$( tput cols )" '
+ 					echo "${_output_bitacora}" | awk -F\; -v _ss="$( tput cols )" -v _nf="$_sh_color_nformat" -v _gc="$_sh_color_green" -v _rc="$_sh_color_red" -v _yc="$_sh_color_yellow" -v _ggc="$_sh_color_gray" -v _cc="$_sh_color_cyc" '
 						BEGIN { 
-							print "DATE;TIME;EVENT;ACTIVITY;STATUS" 
-						} { 
-							_date=strftime("%d-%m-%Y",$1) ;
-							_time=strftime("%H:%M:%S",$1) ;
-							if ( _date == _date_old ) { _date=" " } else { _date_old=_date } 	
-							_col=8+22
-							_ls=10+8+length($2)+length($3)+length($4)+_col ; 
-							_fs=length($5) ; 
-							split($5,chars,"") ; 
-							_f="" ; 
+							printf "%-10s  %-8s  %-14s  %-12s  %-8s  %s\n", "Date", "Hour", "Source", "Type", "Status", "Message"
+							printf "%-10s  %-8s  %-14s  %-12s  %-8s  %s\n", "----------", "--------", "--------------", "------------", "------", "-------"
+							_ajuste=0
+							_ls=10+2+8+2+14+2+12+2+8+2+_ajuste
+							for (s=1;s<=_ls-_ajuste;s++) { _space=_space" " } 
 							_l=_ss-_ls ; 
-							_ln=1 ; 
-							_w="" ; 
-							_pw="" ; 
-							for (i=1;i<=_fs;i++) { 
-								if ( chars[i] != " " ) { 
-									_w=_w""chars[i] ; 
-									_pw="" 
-								} else { 
-									_ws=length(_w)+1 ; 
-									_pw=_w" " ; 
-									_w="" 
-								} ; 
-								if ( i+_ws >=  _l*_ln ) { 
-									_f=_f"\n ; ; ; ;"_pw ; 
-									_ln++ 
-								} else { 
-									if ( _pw != "" ) { 
-										_f=_f""_pw 
-									}
+						} NR > 1 { 
+							if ( $0 == _lold ) {
+								_c++ 
+							} else {
+								split(_lold,campo,";") ;
+								_date=strftime("%F",camp [1]) ;
+								_time=strftime("%T",campo[1]) ;
+								if ( _date == _date_old ) { _date=" " } else { _date_old=_date }        
+								_fs=length(campo[5]) ; 
+								split(campo[5],chars,"") ; 
+								_w="" ; _f="" ; _pw="" ; 
+								_long=0 ;
+								for (i=1;i<=_fs;i++) { 
+									if ( chars[i] == " " ) { 
+										_ws=length(_w) ; 
+										_pw=_w ; 
+										_long=_long+_ws+1
+										_w="" ; 
+										if ( _long > _l ) { 
+											_long=_ws+1 ;
+											_f=_f"\n"_space""_pw" " ; 
+										} else { 
+											_f=_f""_pw" " ; 
+										}
+									} else { 
+										_w=_w""chars[i] ; 
+									} ; 
 								}
+								if (( _long + _ws ) > _l ) { _w="\n"_space""_w }
+								if ( _c == 0 ) { _p="" } else { _p="["_c+1"]" }
+								_f2c="" ; _f3c="" ; _f4c="" ; _f6c=""
+								if ( campo[4] ~ /INFO|DISABLE|DRAIN/ ) { _f4c=_ggc }
+								if ( campo[6] ~ /INFO|DRAIN/ ) { _f6c=_ggc }
+								if ( campo[4] == "INFO" && campo[6] == "INFO" ) { _f2c=_ggc ; _f3c=_ggc } 
+								if ( campo[4] == "ENABLE" ) { _f4c=_gc ; _f3c=_gc ; _f2c=_gc }
+								if ( campo[6] ~ /OK|UP|STATUS/ ) { _f6c=_gc ; _f3c=_gc ; _f2c=_gc }
+								if ( campo[4] ~ /INTERVENTION|ALERT|REPAIR|TESTING|FAIL/ ) { _f4c=_yc ; _f3c=_yc ; _f2c=_yc }
+								if ( campo[6] ~ /FAIL|ALERT|DIAGNOSE|REPAIR/ ) { _f6c=_yc ; _f3c=_yc ; _f2c=_yc }
+								if ( campo[4] == "ISSUE" ) { _f4c=_rc ; _f3c=_rc ; _f2c=_rc } 
+								if ( campo[6] ~ "SOLVED" ) { _f6c=_gc ; _f3c=_gc ; _f2c=_gc }
+								if ( campo[6] == "DOWN" ) { _f6c=_rc ; _f3c=_rc ; _f2c=_rc }
+								if ( campo[3] == "cyclops" ) { _f3c=_cc }
+								printf "%-10s  %s%-8s%s  %s%-14s.14%s  %s%-12.12s%s  %s%-8.8s%s  %s%s\n", _date, _f2c, _time, _nf, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f6c, campo[6], _nf, _f, _w ;
+								_c=0 ;
+								_lold=$0
 							}
-						} { 
-							print _date";"_time";"$4";"$6";"_f""_w
-						}' | column -t -s\;
+						} NR == 1 { 
+							_lold=$0 
+						} END {
+								split(_lold,campo,";") ;
+								_date=strftime("%F",campo[1]) ;
+								_time=strftime("%T",campo[1]) ;
+								if ( _date == _date_old ) { _date=" " } else { _date_old=_date }        
+								_fs=length(campo[5]) ; 
+								split(campo[5],chars,"") ; 
+								_w="" ; _f="" ; _pw="" ; 
+								_long=0 ;
+								for (i=1;i<=_fs;i++) { 
+									if ( chars[i] == " " ) { 
+										_ws=length(_w) ; 
+										_pw=_w ; 
+										_long=_long+_ws+1
+										_w="" ; 
+										if ( _long > _l ) { 
+											_long=_ws+1 ;
+											_f=_f"\n"_space""_pw" " ; 
+										} else { 
+											_f=_f""_pw" " ; 
+										}
+									} else { 
+										_w=_w""chars[i] ; 
+									} ; 
+								}
+								if (( _long + _ws ) > _l ) { _w="\n"_space""_w }
+								if ( _c == 0 ) { _p="" } else { _p="["_c+1"]" }
+								_f2c="" ; _f3c="" ; _f4c="" ; _f6c=""
+								if ( campo[4] ~ /INFO|DISABLE|DRAIN/ ) { _f4c=_ggc }
+								if ( campo[6] ~ /INFO|DRAIN/ ) { _f6c=_ggc }
+								if ( campo[4] == "INFO" && campo[6] == "INFO" ) { _f2c=_ggc ; _f3c=_ggc } 
+								if ( campo[4] == "ENABLE" ) { _f4c=_gc ; _f3c=_gc ; _f2c=_gc }
+								if ( campo[6] ~ /OK|UP|STATUS/ ) { _f6c=_gc ; _f3c=_gc ; _f2c=_gc }
+								if ( campo[4] ~ /INTERVENTION|ALERT|REPAIR|TESTING|FAIL/ ) { _f4c=_yc ; _f3c=_yc ; _f2c=_yc }
+								if ( campo[6] ~ /FAIL|ALERT|DIAGNOSE|REPAIR/ ) { _f6c=_yc ; _f3c=_yc ; _f2c=_yc }
+								if ( campo[4] == "ISSUE" ) { _f4c=_rc ; _f3c=_rc ; _f2c=_rc } 
+								if ( campo[6] ~ "SOLVED" ) { _f6c=_gc ; _f3c=_gc ; _f2c=_gc }
+								if ( campo[6] == "DOWN" ) { _f6c=_rc ; _f3c=_rc ; _f2c=_rc }
+								if ( campo[3] == "cyclops" ) { _f3c=_cc }
+								printf "%-10s  %s%-8s%s  %s%-14s%s  %s%-12s%s  %s%-8s%s  %s%s\n", _date, _f2c, _time, _nf, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f6c, campo[6], _nf, _f, _w ;
+						}' 
                                 fi
                         fi
                 ;;
@@ -1403,13 +1498,13 @@ init_date()
 	show)
 		[ -z $_par_show ] && _par_show="human"
 
-		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command
+		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command 2>/dev/null
 
 		read_data
 	;;
 	insert)
 
-		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command
+		[ "$_cyclops_ha" == "ENABLED" ] &&  ha_check $_command 2>/dev/null
 
 		[ -z $_par_node ] && _par_node="main" && _audit_code_type="GEN" && _check_par_filter="1" 
 		[ -z $_opt_msg ] && [ "$_par_insert" != "issue" ] && echo "ERR: Need a Message to insert in bitacora node" && exit 1 

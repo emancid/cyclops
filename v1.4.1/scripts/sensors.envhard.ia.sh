@@ -53,6 +53,7 @@ alerts_gen()
 		_alert_dev=$( echo $_alert_incidence | cut -d';' -f1 )
 		_alert_fail=$( echo $_alert_incidence | cut -d';' -f2 )
 		_alert_sens_id=$( echo $_alert_incidence | cut -d';' -f3 )
+		_alert_sens_ms=$( echo $_alert_incidence | cut -d';' -f4 )
 		_alert_family=$( awk -F\; -v _dev="$_alert_dev" '$2 == _dev { print $3 }' $_dev )
 
 		_alert_sens=$( cat $_config_path_env/$_alert_family.env.cfg | awk -F\; -v _id="$_alert_sens_id" '{ _line++ ; if ( _id == _line ) {  print $1 }}'  )
@@ -60,7 +61,15 @@ alerts_gen()
 
 		_alert_status=$( awk -F\; -v _dev="$_alert_dev" -v _sens="$_alert_sens" '$4 == _dev && $5 == _sens { print $0 }' $_sensors_sot | wc -l )
 
-		[ "$_alert_status" -eq 0 ] && echo "ALERT;ENV;$_alert_id;$_alert_dev;$_alert_sens;$( date +%s );0" >> $_sensors_sot 
+		[ "$_alert_status" -eq 0 ] && echo "ALERT;ENV;$_alert_id;$_alert_dev;$_alert_sens $_alert_sens_ms;$( date +%s );0" >> $_sensors_sot 
+
+                # AUDIT LOG TRACERT
+                if [ "$_audit_status" == "ENABLED" ] && [ "$_alert_status" -eq 0 ]
+                then
+                        [ -z "$_alert_sens" ] && _alert_sens="NULL"
+                        [ -z "$_alert_fail" ] && _alert_fail="MARK" || _audit_alert=$( echo $_alert_fail | sed -e 's/^F$/FAIL/' -e 's/^D$/DOWN/' -e 's/^U$/UNKNOWN/' -e 's/^K$/UP/' )
+                        [ -z "$_alert_host" ] && _alert_host="NULL" || $_script_path/audit.nod.sh -i event -e alert -m "$_alert_sens $_alert_sens_ms" -s $_audit_alert -n $_alert_dev 2>>$_mon_log_path/audit.log
+                fi
 	done
 
 }
@@ -178,7 +187,7 @@ fi
 #### MAIN EXEC ####
 
 _dev_ok=$( cat $_sensors_ia_tmp_path/$_parent_pid"."$_sensors_ia_tmp_name | awk -F\; '$2 == "K" { print $0 }' )
-_dev_err=$( cat $_sensors_ia_tmp_path/$_parent_pid"."$_sensors_ia_tmp_name | awk -F\; '$2 != "K" { print $0 }' )
+_dev_err=$( cat $_sensors_ia_tmp_path/$_parent_pid"."$_sensors_ia_tmp_name | awk -F\; '$2 != "K" && $2 != "M" { print $0 }' )
 _sot_active_alerts=$( cat $_sensors_sot | grep "^ALERT;ENV" | wc -l )
 
 

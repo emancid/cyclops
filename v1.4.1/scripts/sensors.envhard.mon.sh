@@ -256,7 +256,7 @@ print_output()
 }
 
 
-ia_processing()
+ia_processing_old()
 {
 
         echo "${_output}" | sort -n | tr '@' ';' | sed -e '/^$/d' | cut -d';' -f3- |
@@ -280,12 +280,68 @@ ia_processing()
         fi
 }
 
+ia_processing()
+{
+        _ctrl_err=$( echo -e "${_output}" | sort -n | tr '@' ';' | sed -e '/^$/d' -e 's/CHECKING //g' | cut -d';' -f3- | 
+                awk -F\; '
+                        $0 ~ "OK" || $0 ~ "UP" || $0 ~ "DOWN" || $0 ~ "FAIL" || $0 ~ "UNKN" || $0 ~ "MARK" { 
+                                _err=0 ; 
+                                for (i=1;i<=NF;i++) { 
+                                        _lmsg=split($i,msg," ") ;
+                                        if ( msg[1] ~ /DOWN|FAIL|UNKN/ ) {
+                                                _msg=msg[2]
+                                                if ( _lmsg > 2 ) { 
+                                                        for (m=3;m<=_lmsg;m++) { 
+                                                                _msg=_msg" "msg[m] 
+                                                        }
+                                                }
+                                        }
+                                        if ( msg[1] == "DOWN" ) { _err=1 ; print $1";D;"i";"_msg }
+                                        if ( msg[1] == "FAIL" ) { _err=1 ; print $1";F;"i";"_msg }
+                                        if ( msg[1] ~ "UNKN" )  { _err=1 ; print $1";U;"i";"_msg }
+                                        if ( msg[1] == "MARK" ) { _err=1 ; print $1";M;"i";"_msg }
+                                }
+                                if ( _err == 0 ) { print $1";K;0;"}
+                        } ' | 
+                cut -d' ' -f2- )
+        echo "${_ctrl_err}" > $_sensors_ia_tmp_path/$_pid"."$_sensors_ia_tmp_name
+
+        _exit_code=$( echo "${_ctrl_err}" | awk -F\; '
+                BEGIN { _x="0" } 
+                $2 == "M" { _m++ } 
+                $2 == "U" { _u++ } 
+                $2 == "F" { _f++ } 
+                $2 == "D" { _d++ } 
+                END { 
+                        if ( _d != 0 ) { print "10" } 
+                                else if ( _f != 0 ) { print "11" } 
+                                        else if ( _u != 0 ) { print "90" } 
+                                                else if ( _m != 0 ) { print "12" } 
+                                                        else { print "00" } 
+                }' )
+
+        _ia_alert=$($_sensors_ia_env_script_file $_pid)
+
+        if [ ! -z "$_ia_alert" ]
+        then
+		_exit_code=2
+                _ia_hidden_state="initialState=\"visible\""
+
+                ## Generating alert --
+
+                _file_mail=$_sensors_alerts_path"/$PPID.nodes.mail."$(date +%Y%m%dt%H%M%S )".txt"
+        else
+                _ia_header=";OK NODE STATUS - OPERATIVE;"
+                _ia_hidden_state=""
+        fi
+}
+
 wiki_format_output()
 {
 
         ## PRE-PROCESSING OUTPUT --
 
-        if [ "$_exit_code" -eq 0 ]
+        if [ "$_exit_code" -eq 0 ] || [ "$_exit_code" -eq 12 ]
         then
                 _family_status=$_color_ok
                 _title_status=$_color_up
@@ -321,7 +377,7 @@ wiki_format_output()
         echo "|  $_family_status ** <fc $_family_font_color > $( echo $_par_mon | tr [:lower:] [:upper:] ) </fc> **  |  $_title_status Time  |  $_title_status Total Devices  |  $_title_status Active Devices  |  $_title_status Sensor Alerts  |  $_title_status Warnings  |" 
         echo "|  :::  |  $( date +%H.%M.%S )  |  $_total_dev              |  $_active_dev_color $_active_dev  |  $_sensor_alerts_color $_sensor_alerts  |  $_warnings_color $_warnings_active  |" 
 
-        if [ "$_exit_code" -ne 0 ]
+        if [ "$_exit_code" -ne 0 ] && [ "$_exit_code" -ne 12 ]
         then
                 echo
                 echo -e "|< 100% 10% 10% 10% 10% 25% 5% 30% >|"

@@ -59,7 +59,7 @@ ha_check()
                         [ "$_sh_action" != "daemon" ] && echo -e "WARNING: HA CONFIG ON POSIBLE SPLIT BRAIN SITUATION force MASTER on UPDATER node" >&2 
                         exit 1
 		else 
-			echo -e "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : LOCAL EXEC : [$_hostname] : DEBUG [$_sh_action]" >&2
+			echo -e "HA CHECK: ENABLED : MASTER CYCLOPS: [$_ha_master_host] : BACKUP : [$_ha_slave_host] : ME=[$_hostname] ROL : [$_ha_role_me] : LOCAL EXEC : [$_hostname] : DEBUG [$_sh_action]" 2>&1 >/dev/null  
                 fi
         fi
 }

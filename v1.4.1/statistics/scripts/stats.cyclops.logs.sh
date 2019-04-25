@@ -373,21 +373,45 @@ format_output()
         case "$_par_show" in
         graph)      
 		[ "$_opt_report" == "yes" ] && echo -e "\nSensor $_par_itm - $_date_filter\n-------------------"
+
+		_tml=$( echo "${_log_stats_data}" | awk -F\; '
+			BEGIN { 
+				_tml=0 
+			} { 
+				split($2,a,"=") ; 
+				if ( a[2] ~ "/" ) { 
+					split(a[2],b,"/") ; 
+					if ( b[1] >= b[2] ) { 
+						_tst=b[1] 
+					} else { 
+						_tst=b[2] 
+					} 
+				} else {
+					_tst=a[2]
+				} 
+			}  _tml <= _tst { 
+				_tml=_tst 
+			} END { 
+				print _tml 
+			}' )
+		[ -z "$_tml" ] && echo "no data" && exit 0 
                 echo "${_log_stats_data}" | 
-                                awk -F\; -v _g="$_sh_color_green" -v _r="$_sh_color_red" -v _y="$_sh_color_yellow" -v _n="$_sh_color_nformat"  -v _tc="$_par_typ" -v _vr="$_par_ref" '
+                                awk -F\; -v _ss="$( tput cols )" -v _tl="$_tml"  -v _g="$_sh_color_green" -v _r="$_sh_color_red" -v _y="$_sh_color_yellow" -v _n="$_sh_color_nformat"  -v _tc="$_par_typ" -v _vr="$_par_ref" '
 					BEGIN { 
-						if ( _tc == "per" ) { _us="%" }
+						if ( _tl > 100 || _ss < 100 ) { _lng=_ss-40 } else { _lng=100 ; _tl=100 } ;
 					} {
                                                 split($2,a,"=") ; 
 						if ( a[2] ~ "/" ) {
 							split(a[2],io,"/")
 							if ( io[1] > io[2] ) {
-								_dat=int(io[1])
+								_dat=int((io[1]*_lng)/_tl)
+								_rdat=int(io[1])
 								if ( io[2] <= 1  ) { _gr=2 } else { _gr=io[2] }
 								hp=_g""a[1]""_n
 								_rr=1
 							} else {
-								_dat=int(io[2])
+								_dat=int((io[2]*_lng)/_tl)
+								_rdat=int(io[2])
 								if ( io[1] <= 1 ) { _rr=1 } else { _rr=io[1] }
 								hp=_r""a[1]""_n
 								_gr=1
@@ -395,7 +419,8 @@ format_output()
 							_tp=io[1]"%/"io[2]"%"
 						} else { 
 							_gr=1
-							_dat=int(a[2])
+							_dat=int((a[2]*_lng)/_tl)
+							_rdat=int(a[2])
 							if ( _dat > 30 ) {
 								_yr=int(_dat/1.5)
 								_rr=int(_dat/1.02)
@@ -403,20 +428,20 @@ format_output()
 								_yr=20
 								_rr=40
 							}
-							if ( _tc == "per" && _vr ~ "[0-9]+" ) { _ref=(_dat*_vr)/100 ; _ref="["_ref"]" } ;
-							if ( _dat <= 50 ) { _tp=_g""_dat""_us" "_ref" "_n ; hp=a[1] } ;
-							if ( _dat > 50 ) { _tp=_y""_dat""_us" "_ref" "_n ; hp=a[1] } ; 
-							if ( _dat > 75 ) { _tp=_r""_dat""_us" "_ref" "_n ; hp=_r""a[1]_n } ; 
+							if ( _tc == "per" && _vr ~ "[0-9]+" ) { _ref=(_rdat*_vr)/100 ; _ref="["_ref"]" } else { _ref="" };
+							if ( _dat <= 50 ) { _fnc=_g ; hp=a[1] } ;
+							if ( _dat > 50 ) {  _fnc=_y ; hp=a[1] } ; 
+							if ( _dat > 75 ) {  _fnc=_r ; hp=_r""a[1]_n } ; 
 						}
-                                                for (i=1;i<=_dat;i++) { 
+                                                for (i=1;i<=_lng;i++) { 
                                                         if ( i == _gr ) { _t=_t""_n""_g } ;
                                                         if ( i == _yr ) { _t=_t""_n""_y } ;
                                                         if ( i == _rr ) { _t=_t""_n""_r } ;
                                                         _t=_t"|" ;  
-                                                        if ( i == _dat ) { _t=_t""_n } ;
+                                                        if ( i >= _dat ) { _t=_t""_n ; break } ;
                                                         } ; 
                                                 if ( _do != $1 ) { _do=$1 ; _pdo=_do } else { _pdo=" " } ; 
-                                                printf "%-12s %-3s::%-s %-s\n",_pdo, hp, _t, _tp ; 
+                                                printf "%-12s %-3s::%-s %s%'"'"'.0f%s %s\n",_pdo, hp, _t, _fnc, _rdat, _n, _ref; 
                                                 _t="" 
                                         }' 
         ;;
@@ -683,8 +708,8 @@ check_items()
 		[ -z "$_par_show" ] && _par_show="graph"
 
 		[ -z "$_par_typ" ] && _par_typ="per"
-		[ "$_par_typ" == "avg" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
-		[ "$_par_typ" == "acu" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
+		#[ "$_par_typ" == "avg" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
+		#[ "$_par_typ" == "acu" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
 
 		if [ "$_par_date_start" == "report" ] 
 		then

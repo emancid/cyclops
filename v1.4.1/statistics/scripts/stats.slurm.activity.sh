@@ -193,7 +193,7 @@ do
                                 echo "          commas, show command output with ;"	
                                 echo "          timeline, show output like job timeline use -g for threshold time"	
 				echo "			-g [seconds]: by defaul 5 seconds."
-				echo "			-t [name|job|user] optional, implies -v timeline."
+				echo "			-t [[name],[job],[user]] optional, implies -v timeline. comma separated for show two or more values"
 				echo "				job, by default, show job id"
 				echo "				name, show job name"
 				echo "				user, show user name"
@@ -262,8 +262,9 @@ format_output_data()
 				_tsd=mktime( "1970 01 01 "$7 ) ; 
 				_tse=_tsi+_tsd ; 
 				job[$3]=_tsi","_tse ;
-				jobdet[$3]=$4";"$5";"$6";"$7
-				name[$3]=$6
+				jobdet[$3]=$4";"$5";"$6";"$7 ;
+				name[$3]=$6 ; 
+				split(_onam,fil,",") ;
 			} END { 
 				for (i=_dti;i<=_dte;i+=_gtl) { 
 					_y++ ; _xt=0 ; _idxv=0 ;
@@ -314,11 +315,24 @@ format_output_data()
 							if ( jfields[1] == "COMPLETED" ) { _cfs=_cg ; _nfs=_cn } 
 							if ( jfields[1] == "FAILED" ) { _cfs=_cr ; _nfs=_cn }
 							if ( jfields[1] == "CANCELLED" ) { _cfs=_cy ; _nfs=_cn }
-							_fprt=pos[_dy,_dx] ;
+							_fprt="" ; _fl=0
+							if ( _onam == "" ) {
+								_fprt="["pos[_dy,_dx]"]" ;
+								_fl=10 ;
+							} else { 
+								_fprt="["
+								for ( _ifil in fil ) { 
+									if ( fil[_ifil] == "user" ) { _fprt=_fprt""sprintf("%8.8s", jfields[2])"|"   ; _fl=_fl+9  }
+									if ( fil[_ifil] == "name" ) { _fprt=_fprt""sprintf("%10.10s", jfields[3])"|" ; _fl=_fl+9 }
+									if ( fil[_ifil] == "job" ) {  _fprt=_fprt""sprintf("%8.8s", pos[_dy,_dx])"|";_fl=_fl+9 }
+								}	
+								gsub(/\|$/,"",_fprt) ;
+								_fprt=_fprt"]" ; _fl=_fl+3 ;
+							}
 							if ( _onam == "user" ) { _fprt=jfields[2] } 
 							if ( _onam == "name" ) { _fprt=jfields[3] }
 						};
-						_line=_line" "sprintf("%s %-10.10s %s", _cfs, _fprt, _nfs) ;
+						_line=_line" "sprintf("%s%"_fl"-s%s", _cfs, _fprt, _nfs) ;
 					}
 					print ""strftime("%F %T",nomy[_dy])" "_line ;
 				}

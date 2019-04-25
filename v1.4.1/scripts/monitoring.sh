@@ -429,7 +429,7 @@ generate_mon_output_dash ()
         if [ "$_cyclops_monenv_status" == "ENABLED" ] 
 	then
 		echo "start time;elapsed time"$_env_mon_dash_titles""$_env_header_full_text | sed -e "s/^/|  $_color_header/" -e 's/$/  |/' -e "s/;/  |  $_color_header/g"
-        	echo $_env_mon_begin_dash_date";"$_env_mon_time_elapsed""$_env_mon_dash_values | sed -e 's/^/|  /' -e 's/$/  |/' -e 's/;/  |  /g' -e "s/UP/$_color_ok \*\* \<fc white\>  OPERATIVE \<\/fc\> \*\*/g" -e "s/FAIL/$_color_fail/g" -e "s/DOWN.[0-9]/$_color_down {{ :wiki:hb-alert.gif?nolink |}}/g" -e "s/DISABLE/$_color_disable/"
+        	echo $_env_mon_begin_dash_date";"$_env_mon_time_elapsed""$_env_mon_dash_values | sed -e 's/^/|  /' -e 's/$/  |/' -e 's/;/  |  /g' -e "s/UP/$_color_ok \*\* \<fc white\>  OPERATIVE \<\/fc\> \*\*/g" -e "s/MARK/$_color_mark \*\* \<fc green\>  OPERATIVE \<\/fc\> \*\*/g" -e "s/FAIL/$_color_fail/g" -e "s/DOWN.[0-9]/$_color_down {{ :wiki:hb-alert.gif?nolink |}}/g" -e "s/DISABLE/$_color_disable/"
 	fi
        	echo
 
@@ -856,8 +856,7 @@ mon_section_env()
         	done
         	wait
 
-	        _env_mon_status=";"$( cat $_sensors_temp_path/$_env_mon_script.$_pid.tmp | sort -t\; -k1,1n | cut -d';' -f2 | tr '\n' ';' )
-      		[ -f $_sensors_temp_path/$_env_mon_script.$_pid.tmp ] && rm $_sensors_temp_path/$_env_mon_script.$_pid.tmp
+	        #_env_mon_status=";"$( cat $_sensors_temp_path/$_env_mon_script.$_pid.tmp | sort -t\; -k1,1n | cut -d';' -f2 | tr '\n' ';' )
 
 	        _env_mon_end_date=$(date +%s)
 	        let "_env_mon_time_elapsed=_env_mon_end_date - _env_mon_begin_date"
@@ -865,7 +864,20 @@ mon_section_env()
 	        ! [[ "$_env_mon_time_elapsed" =~ 0[0-2].[0-5][0-9] ]] && _env_mon_time_elapsed="FAIL exceded mon time ($_env_mon_time_elapsed)"
 	        [ "$_env_mon_time_elapsed" == "00.00" ] && _env_mon_time_elapsed="DOWN mon.err"
 
-       		_env_mon_dash_values=$( echo -e $_env_mon_status | sed -e 's/;0/;UP/g' -e 's/\;\([0-9]\)/;DOWN\.\1/g' -e 's/;$//' )
+       		#_env_mon_dash_values=$( echo -e $_env_mon_status | sed -e 's/;0/;UP/g' -e 's/\;\([0-9]\)/;DOWN\.\1/g' -e 's/;$//' )
+		_env_mon_dash_values=$( 
+			cat $_sensors_temp_path/$_env_mon_script.$_pid.tmp | 
+			sort -t\; -k1,1n | 
+			awk -F\; '
+				$2 == "0" || $2 == "00" { _out=_out";UP" } 
+				$2 == "2" || $2 == "10" { _out=_out";DOWN" } 
+				$2 == "11" { _out=_out";FAIL" } 
+				$2 == "90" { _out=_out";UNK" } 
+				$2 == "12" { _out=_out";MARK" } 
+				END { print _out }' 
+				)
+      		[ -f $_sensors_temp_path/$_env_mon_script.$_pid.tmp ] && rm $_sensors_temp_path/$_env_mon_script.$_pid.tmp
+		[ -z "$_env_mon_dash_values" ] && _env_mon_dash_values=";DISABLE"
 	fi
 }
 
