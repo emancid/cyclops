@@ -1129,24 +1129,9 @@ show_data()
 
 							if ( $4 ~ /REACTIVE|ALERT/ ) { _f3c=_yc }
 							if ( $4 ~ /STATUS/ ) { _f3c=_gc }
-
-							=1;i<=_fs;i++) { 
-                                        if ( chars[i] == " " ) { 
-                                                _ws=length(_w) ; 
-                                                _pw=_w ; 
-                                                _long=_long+_ws+1
-                                                _w="" ; 
-                                                if ( _long > _l ) { 
-                                                        _long=_ws ;
-                                                        _f=_f"\n"_space""_pw" " ; 
-                                                } else { 
-                                                        _f=_f""_pw" " ; 
-                                                }
-                                        } else { 
-                                                _w=_w""chars[i] ; 
-                                        } ; 
-                                }if ( _date != _date_old ) { _date_old=_date ; _date_pr=_date } else { _date_pr="" } 
-							printf "%-12s %-10s %s%-10s%s %s%-10s%s %-s\n", _date_pr, _time, _f3c, $4, _nf, _f4c, $6, _nf, $5 ; 
+	
+							if ( _date != _date_old ) { _date_old=_date ; _date_pr=_date } else { _date_pr="" } 
+                                                        printf "%-12s %-10s %s%-10s%s %s%-10s%s %-s\n", _date_pr, _time, _f3c, $4, _nf, _f4c, $6, _nf, $5 ;
 						}'
                                         echo
                                 fi
@@ -1174,7 +1159,7 @@ show_data()
 								_c++ 
 							} else {
 								split(_lold,campo,";") ;
-								_date=strftime("%F",camp [1]) ;
+								_date=strftime("%F",campo[1]) ;
 								_time=strftime("%T",campo[1]) ;
 								if ( _date == _date_old ) { _date=" " } else { _date_old=_date }        
 								_fs=length(campo[5]) ; 
@@ -1210,10 +1195,10 @@ show_data()
 								if ( campo[4] == "ISSUE" ) { _f4c=_rc ; _f3c=_rc ; _f2c=_rc } 
 								if ( campo[6] ~ "SOLVED" ) { _f6c=_gc ; _f3c=_gc ; _f2c=_gc }
 								if ( campo[6] == "DOWN" ) { _f6c=_rc ; _f3c=_rc ; _f2c=_rc }
-								if ( campo[3] == "cyclops" ) { _f3c=_cc }
-								printf "%-10s  %s%-8s%s  %s%-14s.14%s  %s%-12.12s%s  %s%-8.8s%s  %s%s\n", _date, _f2c, _time, _nf, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f6c, campo[6], _nf, _f, _w ;
+								if ( campo[4] == "cyclops" ) { _f3c=_cc }
+								printf "%-10s  %s%-8s%s  %s%-14.14s%s  %s%-12.12s%s  %s%-8.8s%s  %s%s\n", _date, _f2c, _time, _nf, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f6c, campo[6], _nf, _f, _w ;
 								_c=0 ;
-								_lold=$0
+								_lold=$0 ;
 							}
 						} NR == 1 { 
 							_lold=$0 
@@ -1256,7 +1241,7 @@ show_data()
 								if ( campo[6] ~ "SOLVED" ) { _f6c=_gc ; _f3c=_gc ; _f2c=_gc }
 								if ( campo[6] == "DOWN" ) { _f6c=_rc ; _f3c=_rc ; _f2c=_rc }
 								if ( campo[3] == "cyclops" ) { _f3c=_cc }
-								printf "%-10s  %s%-8s%s  %s%-14s%s  %s%-12s%s  %s%-8s%s  %s%s\n", _date, _f2c, _time, _nf, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f6c, campo[6], _nf, _f, _w ;
+								printf "%-10s  %s%-8s%s  %s%-14.14s%s  %s%-12.12s%s  %s%-8.8s%s  %s%s\n", _date, _f2c, _time, _nf, _f3c, campo[3], _nf, _f4c, campo[4], _nf, _f6c, campo[6], _nf, _f, _w ;
 						}' 
                                 fi
                         fi
