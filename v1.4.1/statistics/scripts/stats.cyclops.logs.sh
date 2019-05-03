@@ -60,7 +60,7 @@ _par_src="node"
 #              PARAMETERs                 #
 ###########################################
 
-while getopts ":r:d:e:t:f:n:v:w:k:s:xlh:" _optname
+while getopts ":r:d:e:t:f:i:n:v:w:k:s:xlh:" _optname
 do
         case "$_optname" in
 		"n")
@@ -113,6 +113,10 @@ do
 			_par_fil=$OPTARG
 			_sh_opt=$_sh_opt" -"$_optname" "$OPTARG
 		;;
+		"i")
+			_opt_ia="yes"
+			_par_ia=$OPTARG
+		;;
 		"l")
 			_opt_loop="yes"
 		;;
@@ -164,6 +168,7 @@ do
 				echo "		quota: quota cyclops service module data source"
 				echo "		slurm: slurm cyclops service module data source"
 				echo "		dashboard: cyclops monitoring plugin data source"
+				echo "		custom: cyclops external log, use -n to put absolute log path"
 				echo
 				echo "STATS:"
 				echo "	-t [avg|acu|per|max|min] : Specific Data Processing"
@@ -173,6 +178,12 @@ do
 				echo "		max|min: Get only Maximun/Minimun Value of date group" 
 				echo "	-k [value] : transform percen referenced data with real data"
 				echo "		[value] : 100% link max value"
+				echo
+				echo "ANALYSIS:"
+				echo "	-i [desv|drsm|tend] : special data processing"
+				echo "		desv: standard deviation"
+				echo "		drsm: standard deviation, with data resume"
+				echo "		tend: tendency with last time record"
 				echo
 				echo "FILTER:"
 				echo "	-d [date format], start date or range to filter by date:"
@@ -366,6 +377,161 @@ calc_data()
                                         }' | 
                                 grep -v START )
 
+
+	case "$_par_ia" in 
+	ditem|desv)
+		_log_stats_data=$( echo "${_log_stats_data}" | awk '
+		{ 
+			linea[NR]=$0 
+		} END { 
+			_idx=length(linea) ; 
+			for (i=2;i<_idx;i++) {  
+				_itm++ ; 
+				split(linea[i],campo,"=") ; 
+				if ( campo[2] ~ "/" || _ioctrl == 1 ) {
+					split(campo[2],valor,"/") ;
+					_ioctrl=1 ;
+					_sumi+=valor[1] ;
+					_sumo+=valor[2] ;
+				} else {
+					_sum+=campo[2] 
+				}
+			} ; 
+			if ( _ioctrl == 1 ) {
+				_avgi=_sumi/_itm ;
+				_avgo=_sumo/_itm ;
+			} else { 
+				_avg=_sum/_itm ; 
+			}
+			for (i=2;i<_idx;i++) { 
+				split(linea[i],campo,"=") ; 
+				if ( _ioctrl == 1 ) {
+					split(campo[2],valor,"/") ;
+					print campo[1]"="int(sqrt((valor[1]-_avgi)^2))"/"int(sqrt((valor[2]-avgo)^2))
+				} else {
+					print campo[1]"="int(sqrt((campo[2]-_avg)^2)) 
+				}
+			} 
+		}' )
+	;;
+	drsm)
+		_log_stats_data=$( echo "${_log_stats_data}" | awk '
+		BEGIN { 
+			_ioctrl=0 ;
+		} {
+			linea[NR]=$0 ; 
+		} END { 
+			_idx=length(linea) ; 
+			for (i=2;i<_idx;i++) {  
+				_itm++ ; 
+				split(linea[i],campo,"=") ; 
+				if ( campo[2] ~ "/" || _ioctrl == 1 ) {
+					split(campo[2],valor,"/") ;
+					_ioctrl=1 ;
+					_sumi+=valor[1] ;
+					_sumo+=valor[2] ;
+				} else {
+					_sum+=campo[2] ; 
+				}
+			} ; 
+			if ( _ioctrl == 1 ) {
+				_avgi=_sumi/_itm ;
+				_avgo=_sumo/_itm ;
+			} else { 
+				_avg=_sum/_itm ; 
+			}
+			for (i=2;i<_idx;i++) { 
+				split(linea[i],campo,"=") ; 
+				if ( _ioctrl == 1 ) {
+					split(campo[2],valor,"/") ;
+					_sumqi=_sumqi+((valor[1]-_avgi)^2) ;
+					_sumqo=_sumqo+((valor[2]-_avgo)^2) ;
+				} else { 
+					_sumq=_sumq+((campo[2]-_avg)^2) ; 
+				}
+			} 
+			if ( _ioctrl == 1 ) {
+				_desvi=sqrt(_sumqi/(_itm-1)) ;
+				_desvo=sqrt(_sumqo/(_itm-1)) ;
+			} else { 
+				_desv=sqrt(_sumq/(_itm-1)) ;
+			}
+			for (i=2;i<_idx;i++) {
+				split(linea[i],campo,"=") ;
+				if ( _ioctrl == 1 ) {
+					split(campo[2],valor,"/") ;
+					_searchqi=sqrt((valor[1]-_avgi)^2) ;
+					_searchqo=sqrt((valor[2]-_avgo)^2) ;
+					if ( _searchqi > _desvi ) { _omvi++ }
+					if ( _searchqo > _desvo ) { _omvo++ }
+					if ( _searchqi > _desvi || _searchqo > _desvo ) { print campo[1]"="valor[1]"/"valor[2] }
+				} else {
+					_searchq=sqrt((campo[2]-_avg)^2) ;
+					if ( _searchq > _desv && campo[2] != int(_avg)) { print campo[1]"="campo[2] ; _omv++ }
+				}
+			}
+			if ( _ioctrl == 1 ) {
+				print "report;items="_itm"/"_itm ;
+				print "report;overmach%="(_omvi*100)/_itm"/"(_omvo*100)/_itm
+				print "report;average="_avgi"/"_avgo ;
+				print "report;desviation="_desvi"/"_desvo ;
+			} else {
+				print "report;items="_itm ;
+				print "report;overmach%="(_omv*100)/_itm
+				print "report;average="_avg ;
+				print "report;desviation="_desv ;
+			}
+		}' )
+	;;
+	tend)
+		_log_stats_data=$( echo "${_log_stats_data}" | awk '
+		BEGIN {
+			_ex2=0 ; _itm=0 ; 
+			_ioctrl=0 ;
+		} {
+			linea[NR]=$0 ;
+			print $0 ;
+		} END {
+			_idx=length(linea) ; 
+			for (i=2;i<_idx;i++) {
+				_itm++ ;
+				split(linea[i],campo,"=") ;
+				_ex+=_itm ;
+				_ex2=_ex2+_itm^2 ;
+				if ( campo[2] ~ "/" || _ioctrl == 1 ) {
+					_ioctrl=1 ;
+					split(campo[2],valor,"/") ;
+					_eyi+=valor[1] ;
+					_exyi=_exy+_itm*varlor[1] ;
+					_eyo+=valor[2] ;
+					_exyo=_exyo+_itm*valor[2] ;
+				} else {
+					_ey+=campo[2] ;
+					_exy=_exy+_itm*campo[2] ;
+					_ex2=_ex2+_itm^2 ;
+				}
+			}
+			if ( _itm != 0 && _ex2 != 0 ) {
+				if ( _ioctrl == 1 ) {
+					_a0i=((_eyi*_ex2)-(_ex*_exyi))/((_itm*_ex2)-(_ex^2)) ;
+					_a1i=(_itm*_exyi-_ex*_eyi)/(_itm*_ex2) ;
+					_a0o=((_eyo*_ex2)-(_ex*_exyo))/((_itm*_ex2)-(_ex^2)) ;
+					_a1o=(_itm*_exyo-_ex*_eyo)/(_itm*_ex2) ;
+					_tyi=_a0i+(_a1i*(_itm+1)) ;
+					_tyo=_a0o+(_a1o*(_itm+1)) ;
+					print "tendency;t1="_tyi"/"_tyo ;
+				} else { 
+					_a0=((_ey*_ex2)-(_ex*_exy))/((_itm*_ex2)-(_ex^2)) ;
+					_a1=(_itm*_exy-_ex*_ey)/(_itm*_ex2) ;
+					_ty=_a0+(_a1*(_itm+1)) ;
+					print "tendency;t1="_ty ;
+				}
+			} else {
+				print "tendency;t1=0" ;
+			}
+		}' )
+	;;
+	esac
 }
 
 format_output()
@@ -381,6 +547,8 @@ format_output()
 				split($2,a,"=") ; 
 				if ( a[2] ~ "/" ) { 
 					split(a[2],b,"/") ; 
+					if ( b[1] == "na" ) { b[1]="" }
+					if ( b[2] == "na" ) { b[2]="" }
 					if ( b[1] >= b[2] ) { 
 						_tst=b[1] 
 					} else { 
@@ -401,7 +569,8 @@ format_output()
 						if ( _tl > 100 || _ss < 100 ) { _lng=_ss-40 } else { _lng=100 ; _tl=100 } ;
 					} {
                                                 split($2,a,"=") ; 
-						if ( a[2] ~ "/" ) {
+						if ( a[2] ~ "/" || _ioctrl == 1 ) {
+							_ioctlr=1 ;
 							split(a[2],io,"/")
 							if ( io[1] > io[2] ) {
 								_dat=int((io[1]*_lng)/_tl)
@@ -416,6 +585,7 @@ format_output()
 								hp=_r""a[1]""_n
 								_gr=1
 							}
+							_fdat=sprintf("%'"'"'.2f/%'"'"'.2f", io[1], io[2] )
 							_tp=io[1]"%/"io[2]"%"
 						} else { 
 							_gr=1
@@ -429,9 +599,10 @@ format_output()
 								_rr=40
 							}
 							if ( _tc == "per" && _vr ~ "[0-9]+" ) { _ref=(_rdat*_vr)/100 ; _ref="["_ref"]" } else { _ref="" };
-							if ( _dat <= 50 ) { _fnc=_g ; hp=a[1] } ;
-							if ( _dat > 50 ) {  _fnc=_y ; hp=a[1] } ; 
-							if ( _dat > 75 ) {  _fnc=_r ; hp=_r""a[1]_n } ; 
+							if ( _dat <= 50 ) { _fnc=_g } ;
+							if ( _dat > 50 ) {  _fnc=_y } ; 
+							if ( _dat > 75 ) {  _fnc=_r ; _a1c=_r } ; 
+							_fdat=sprintf("%'"'"'.2f", a[2])
 						}
                                                 for (i=1;i<=_lng;i++) { 
                                                         if ( i == _gr ) { _t=_t""_n""_g } ;
@@ -441,7 +612,12 @@ format_output()
                                                         if ( i >= _dat ) { _t=_t""_n ; break } ;
                                                         } ; 
                                                 if ( _do != $1 ) { _do=$1 ; _pdo=_do } else { _pdo=" " } ; 
-                                                printf "%-12s %-3s::%-s %s%'"'"'.0f%s %s\n",_pdo, hp, _t, _fnc, _rdat, _n, _ref; 
+						if ( $1 == "report" ) {
+							if ( _pdo == $1 ) { print " " } ;
+                                                	printf "%-12s %s%-10s%s::%-s %s%s%s\n",_pdo, _a1c, a[1], _n, _t, _fnc, _fdat, _n ; 
+						} else {
+                                                	printf "%-12s %s%-5s%s::%-s %s%s%s %s\n",_pdo, _a1c, a[1], _n, _t, _fnc, _fdat, _n, _ref; 
+						}
                                                 _t="" 
                                         }' 
         ;;
@@ -540,7 +716,7 @@ check_items()
 {
 	
 	case "$_par_src" in 
-	dashboard)
+	dashboard|custom)
 		_sensor_help=$(	awk -F " : " -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
 					$1 > _tsb && $1 < _tse { 
 						_type="unknown"
@@ -687,6 +863,10 @@ check_items()
 		node|env)
 			_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
 		;;
+		custom)
+			_log_file=$_par_nod 
+			[ ! -f "$_log_file" ] && echo "file: $_log_file doesn't exits" && exit
+		;;
 		*)
 			_log_file=$_mon_log_path"/"$_par_nod".pg.mon.log"
 			#_log_file=$( node_ungroup $_par_nod | tr ' ' '\n' | awk -v _p="$_mon_log_path" -v _s=".pg.mon.log" '{ print _p"/"$0 _s }' )
@@ -708,8 +888,6 @@ check_items()
 		[ -z "$_par_show" ] && _par_show="graph"
 
 		[ -z "$_par_typ" ] && _par_typ="per"
-		#[ "$_par_typ" == "avg" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
-		#[ "$_par_typ" == "acu" ] && [ "$_par_show" == "graph" ] && _par_show="commas"
 
 		if [ "$_par_date_start" == "report" ] 
 		then

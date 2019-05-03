@@ -390,10 +390,14 @@ debug()
 		} else {
 			_last_day="31" ;
 		}
-		_date_s=mktime(" "a[1]" "a[2]" "_last_day" 0 0 0") ;
-		_date_e=mktime(" "a[1]" "a[2]" 1 0 0 0") ;
-		if ( _date_s >= _ds && _date_e <= _de ) { print $0 }
+		_date_e=mktime(" "a[1]" "a[2]" "_last_day" 23 59 59") ;
+		_date_s=mktime(" "a[1]" "a[2]" 1 0 0 0") ;
+		if ( ( _ds <= _date_s && _de >= _date_s ) || ( _ds <= _date_e && _de >= _date_e ) || ( _ds >= _date_s && _de <= _date_e )) { file[$NF]=$0 }  
+	} END {
+		for ( i in file ) { print file[i] } 
 	}' ) 
+
+	[ -z "$_files" ] && echo "NO FILES FINDED [$_par_src][$( date -d @$_date_tsb)][$( date -d @$_date_tse)]" && exit 1
 
 	## PROCESSING
 
