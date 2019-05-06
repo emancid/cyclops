@@ -279,19 +279,18 @@ calc_data()
 							if ( dat[2] ~ "%" ) { gsub("%", "", dat[2]) } ; 
 							if ( dat[2] ~ "d$" ) { gsub("d", "", dat[2]) ; if ( _tc != "min" || _tc != "max" ) { _tc="max" } } ;
 
-							if ( dat[2] ~ "^[0-9]+$" ) { 
+							if ( dat[2] ~ "^[0-9]+$" || dat[2] ~ "^[0-9]+/[0-9]+$" ) { 
 								_fld=dat[2] ; 
 							} else {
-								if ( dat[1] ~ "^[0-9]+$" ) { 
+								if ( dat[1] ~ "^[0-9]+$" || dat[1] ~ "^[0-9]+/[0-9]+$" ) { 
 									_fld=dat[1] ;	
 								} else {
-									if ( dat[2] ~ "/" ) {
-										split(dat[2],io,"/") ;
-										_tc="io" ;
-									} else {
-										_fld=0
-									}
+									_fld=0
 								}
+							}
+							if ( _fld ~ "/" ) {
+								split(_fld,io,"/") ;
+								_tc="io" ;
 							}
 							if ( _tc == "per" ) {
 								if ( _to != _time ) { 
@@ -306,7 +305,7 @@ calc_data()
 							}
 							if ( _tc == "io" ) {
 								if ( _to != _time ) {
-									if ( _mod == "avg" || _mod == "per" ) { print _to"="int(_in/a)"/"int(_ou/a) } 
+									if ( _mod == "avg" || _mod == "per" ) { print _to"="_in/a"/"_ou/a } 
 									if ( _mod == "max" || _mod == "min" || _mod == "acu" ) { print _to"="_in"/"_ou }
 									_to=_time ;
 									_in=io[1] ;
@@ -367,7 +366,7 @@ calc_data()
                                         } END { 
                                                 if ( _reg_c == "yes" ) { 
 							if ( _tc == "io" ) { 
-								print _to"="int(_in/a)"/"int(_ou/a)
+								print _to"="_in/a"/"_ou/a
 							} else {
 								print _to"="t/a ; 
 							}
@@ -460,14 +459,14 @@ calc_data()
 				split(linea[i],campo,"=") ;
 				if ( _ioctrl == 1 ) {
 					split(campo[2],valor,"/") ;
-					_searchqi=sqrt((valor[1]-_avgi)^2) ;
-					_searchqo=sqrt((valor[2]-_avgo)^2) ;
+					_searchqi=int(sqrt((valor[1]-_avgi)^2)) ;
+					_searchqo=int(sqrt((valor[2]-_avgo)^2)) ;
 					if ( _searchqi > _desvi ) { _omvi++ }
 					if ( _searchqo > _desvo ) { _omvo++ }
 					if ( _searchqi > _desvi || _searchqo > _desvo ) { print campo[1]"="valor[1]"/"valor[2] }
 				} else {
-					_searchq=sqrt((campo[2]-_avg)^2) ;
-					if ( _searchq > _desv && campo[2] != int(_avg)) { print campo[1]"="campo[2] ; _omv++ }
+					_searchq=int(sqrt((campo[2]-_avg)^2)) ;
+					if ( _searchq > _desv ) { print campo[1]"="campo[2] ; _omv++ }
 				}
 			}
 			if ( _ioctrl == 1 ) {
@@ -574,23 +573,25 @@ format_output()
 							split(a[2],io,"/")
 							if ( io[1] > io[2] ) {
 								_dat=int((io[1]*_lng)/_tl)
-								_rdat=int(io[1])
-								if ( io[2] <= 1  ) { _gr=2 } else { _gr=io[2] }
+								_rdat=io[1]
+								if ( io[2] <= 1  ) { _gr=2 } else { _gr=int((io[2]*_lng)/_tl) }
 								hp=_g""a[1]""_n
 								_rr=1
 							} else {
 								_dat=int((io[2]*_lng)/_tl)
-								_rdat=int(io[2])
-								if ( io[1] <= 1 ) { _rr=1 } else { _rr=io[1] }
+								_rdat=io[2]
+								if ( io[1] <= 1 ) { _rr=1 } else { _rr=int((io[1]*_lng)/_tl) }
 								hp=_r""a[1]""_n
 								_gr=1
 							}
-							_fdat=sprintf("%'"'"'.2f/%'"'"'.2f", io[1], io[2] )
+							if ( io[1] > int(io[1]) ) { _fdt1=sprintf("%'"'"'.2f", io[1] ) } else { _fdt1=sprintf("%'"'"'.0f", io[1] ) } 
+							if ( io[2] > int(io[2]) ) { _fdt2=sprintf("%'"'"'.2f", io[2] ) } else { _fdt2=sprintf("%'"'"'.0f", io[2] ) } 
+							_fdat=_fdt1"/"_fdt2
 							_tp=io[1]"%/"io[2]"%"
 						} else { 
 							_gr=1
 							_dat=int((a[2]*_lng)/_tl)
-							_rdat=int(a[2])
+							_rdat=a[2]
 							if ( _dat > 30 ) {
 								_yr=int(_dat/1.5)
 								_rr=int(_dat/1.02)
@@ -598,11 +599,16 @@ format_output()
 								_yr=20
 								_rr=40
 							}
-							if ( _tc == "per" && _vr ~ "[0-9]+" ) { _ref=(_rdat*_vr)/100 ; _ref="["_ref"]" } else { _ref="" };
+							if ( _vr ~ "[0-9]+" ) { 
+								_ref=(_rdat*_vr)/100 ; 
+								_ref=sprintf("[%'"'"'.2f]", _ref )
+							} else { 
+								_ref="" 
+							};
 							if ( _dat <= 50 ) { _fnc=_g } ;
 							if ( _dat > 50 ) {  _fnc=_y } ; 
 							if ( _dat > 75 ) {  _fnc=_r ; _a1c=_r } ; 
-							_fdat=sprintf("%'"'"'.2f", a[2])
+							if ( a[2] > int(a[2]) ) { _fdat=sprintf("%'"'"'.2f", a[2]) } else { _fdat=sprintf("%'"'"'.0f", a[2]) }
 						}
                                                 for (i=1;i<=_lng;i++) { 
                                                         if ( i == _gr ) { _t=_t""_n""_g } ;
