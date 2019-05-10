@@ -377,8 +377,30 @@ calc_data()
                                 grep -v START )
 
 
-	case "$_par_ia" in 
-	ditem|desv)
+	if [ "$_opt_ia" == "yes" ]
+	then
+		for _ia_item in $( echo "$_par_ia" | tr ',' '\n' | sed '/^$/d' ) 
+		do
+			case "$_ia_item" in 
+			ditem|desv)
+				ia_desv
+			;;
+			drsm)
+				ia_drsm
+			;;
+			freq)
+				ia_freq
+			;;
+			tend)
+				ia_tend
+			;;
+			esac
+		done
+	fi
+}
+
+ia_desv()
+{
 		_log_stats_data=$( echo "${_log_stats_data}" | awk '
 		{ 
 			linea[NR]=$0 
@@ -412,8 +434,10 @@ calc_data()
 				}
 			} 
 		}' )
-	;;
-	drsm)
+}
+
+ia_drsm()
+{
 		_log_stats_data=$( echo "${_log_stats_data}" | awk '
 		BEGIN { 
 			_ioctrl=0 ;
@@ -463,26 +487,25 @@ calc_data()
 					_searchqo=int(sqrt((valor[2]-_avgo)^2)) ;
 					if ( _searchqi > _desvi ) { _omvi++ }
 					if ( _searchqo > _desvo ) { _omvo++ }
-					if ( _searchqi > _desvi || _searchqo > _desvo ) { print campo[1]"="valor[1]"/"valor[2] }
 				} else {
 					_searchq=int(sqrt((campo[2]-_avg)^2)) ;
-					if ( _searchq > _desv ) { print campo[1]"="campo[2] ; _omv++ }
+					if ( _searchq > _desv ) { _omv++ }
 				}
 			}
 			if ( _ioctrl == 1 ) {
-				print "report;items="_itm"/"_itm ;
-				print "report;overmach%="(_omvi*100)/_itm"/"(_omvo*100)/_itm
-				print "report;average="_avgi"/"_avgo ;
-				print "report;desviation="_desvi"/"_desvo ;
+				print "deviation;overmach%="(_omvi*100)/_itm"/"(_omvo*100)/_itm
+				print "deviation;average="_avgi"/"_avgo ;
+				print "deviation;desviation="_desvi"/"_desvo ;
 			} else {
-				print "report;items="_itm ;
-				print "report;overmach%="(_omv*100)/_itm
-				print "report;average="_avg ;
-				print "report;desviation="_desv ;
+				print "deviation;overmatch%="(_omv*100)/_itm
+				print "deviation;average="_avg ;
+				print "deviation;deviation="_desv ;
 			}
 		}' )
-	;;
-	tend)
+}
+
+ia_tend()
+{
 		_log_stats_data=$( echo "${_log_stats_data}" | awk '
 		BEGIN {
 			_ex2=0 ; _itm=0 ; 
@@ -524,13 +547,103 @@ calc_data()
 					_a1=(_itm*_exy-_ex*_ey)/(_itm*_ex2) ;
 					_ty=_a0+(_a1*(_itm+1)) ;
 					print "tendency;t1="_ty ;
+					print "tendency;evol="_a1 ;
 				}
 			} else {
-				print "tendency;t1=0" ;
+				if ( _ioctrl== 1 ) {
+					print "tendency;t1=0" ;
+					print "tendency;evol="_a1 ;
+				} else {
+					print "tendency;t1=0/0" ;
+					print "tendency;evol="_a1i"/"_a1o ;
+				}
 			}
 		}' )
-	;;
-	esac
+}
+
+ia_freq()
+{
+		_log_stats_data=$( echo "${_log_stats_data}" | awk '
+		BEGIN { 
+			_ioctrl=0 ;
+		} {
+			linea[NR]=$0 ; 
+		} END { 
+			_idx=length(linea) ; 
+			for (i=2;i<_idx;i++) {  
+				_itm++ ; 
+				split(linea[i],campo,"=") ; 
+				if ( campo[2] ~ "/" || _ioctrl == 1 ) {
+					split(campo[2],valor,"/") ;
+					_ioctrl=1 ;
+					_sumi+=valor[1] ;
+					_sumo+=valor[2] ;
+				} else {
+					_sum+=campo[2] ; 
+				}
+			} ; 
+			if ( _ioctrl == 1 ) {
+				_avgi=_sumi/_itm ;
+				_avgo=_sumo/_itm ;
+			} else { 
+				_avg=_sum/_itm ; 
+			}
+			for (i=2;i<_idx;i++) { 
+				split(linea[i],campo,"=") ; 
+				if ( _ioctrl == 1 ) {
+					split(campo[2],valor,"/") ;
+					_sumqi=_sumqi+((valor[1]-_avgi)^2) ;
+					_sumqo=_sumqo+((valor[2]-_avgo)^2) ;
+				} else { 
+					_sumq=_sumq+((campo[2]-_avg)^2) ; 
+				}
+			} 
+			if ( _ioctrl == 1 ) {
+				_desvi=sqrt(_sumqi/(_itm-1)) ;
+				_desvo=sqrt(_sumqo/(_itm-1)) ;
+			} else { 
+				_desv=sqrt(_sumq/(_itm-1)) ;
+			}
+			for (i=2;i<_idx;i++) {
+				split(linea[i],campo,"=") ;
+				if ( _ioctrl == 1 ) {
+					split(campo[2],valor,"/") ;
+					_searchqi=int(sqrt((valor[1]-_avgi)^2)) ;
+					_searchqo=int(sqrt((valor[2]-_avgo)^2)) ;
+					if ( _searchqi > _desvi ) { _freqai++ } else { _freqaci++ }
+					if ( _searchqo > _desvo ) { _freqao++ } else { _freqaco++ }
+				} else {
+					_searchq=int(sqrt((campo[2]-_avg)^2)) ;
+					if ( _searchq > _desv ) { _freqa++ } else { _freqac++ } 
+				}
+			}
+		} END { 
+			if ( _ioctrl == 1 ) {
+				if ( _idx-1 > 0 ) { 
+					_peaksi=(_freqai/_itm)*100  ;
+					_plaini=(_freqaci/_itm)*100 ;
+					_peakso=(_freqao/_itm)*100  ;
+					_plaino=(_freqaco/(_itm))*100 ;
+				} else {
+					_peaksi=na ;
+					_plaini=na ;
+					_peakso=na ;
+					_plaino=na ;
+				}
+				print "frequency;peaks="_peaksi/_peakso ; 
+				print "frequency;plain="_plaini/_plaino ; 
+			} else {
+				if ( _idx-1 > 0 ) { 
+					_peaks=(_freqa/(_itm))*100  ;
+					_plain=(_freqac/(_itm))*100 ;
+				} else {
+					_peaks=na ;
+					_plain=na ;
+				}
+				print "frequency;peaks="_peaks ; 
+				print "frequency;plain="_plain ; 
+			}
+		} ' )
 }
 
 format_output()
@@ -568,6 +681,7 @@ format_output()
 						if ( _tl > 100 || _ss < 100 ) { _lng=_ss-40 } else { _lng=100 ; _tl=100 } ;
 					} {
                                                 split($2,a,"=") ; 
+						_fnc="" ; _a1c="" ;
 						if ( a[2] ~ "/" || _ioctrl == 1 ) {
 							_ioctlr=1 ;
 							split(a[2],io,"/")
@@ -608,7 +722,7 @@ format_output()
 							if ( _dat <= 50 ) { _fnc=_g } ;
 							if ( _dat > 50 ) {  _fnc=_y } ; 
 							if ( _dat > 75 ) {  _fnc=_r ; _a1c=_r } ; 
-							if ( a[2] > int(a[2]) ) { _fdat=sprintf("%'"'"'.2f", a[2]) } else { _fdat=sprintf("%'"'"'.0f", a[2]) }
+							if ( a[2] > int(a[2]) || a[2] < 0 ) { _fdat=sprintf("%'"'"'.2f", a[2]) } else { _fdat=sprintf("%'"'"'.0f", a[2]) }
 						}
                                                 for (i=1;i<=_lng;i++) { 
                                                         if ( i == _gr ) { _t=_t""_n""_g } ;
@@ -616,9 +730,9 @@ format_output()
                                                         if ( i == _rr ) { _t=_t""_n""_r } ;
                                                         _t=_t"|" ;  
                                                         if ( i >= _dat ) { _t=_t""_n ; break } ;
-                                                        } ; 
+                                                } ; 
                                                 if ( _do != $1 ) { _do=$1 ; _pdo=_do } else { _pdo=" " } ; 
-						if ( $1 == "report" ) {
+						if ( $1 ~ "[a-z]+" ) {
 							if ( _pdo == $1 ) { print " " } ;
                                                 	printf "%-12s %s%-10s%s::%-s %s%s%s\n",_pdo, _a1c, a[1], _n, _t, _fnc, _fdat, _n ; 
 						} else {

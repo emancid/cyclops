@@ -429,13 +429,12 @@ do
 				echo "	---------------------------"
 				echo "	-v [option] show available cyclops config resources (EXCLUSIVE OPTION)"
 				echo "		node: configured nodes"
-				echo "		device: configured environment devices"
+				echo "		device: NOT AVAILABLE YET"
 				echo "		group:  show node cyclops group assignament" 
 				echo "		family: show node cyclops family assignament"
 				echo "		sensor: family/group/node/device active sensors"
 				echo "		messages: show dashboard messages list"
 				echo "		procedures: Show procedure status, configured codes, existing pages, etc"
-				echo "		sensor: Show available sensors list"
 				echo "		critical: Show Defined Critical Environment"
 				echo
 				echo "	HELP:"
@@ -654,7 +653,7 @@ mng_node_status()
 			mng_node_status_do
                 fi
 	;;
-	content|repair|diagnose|link|unlink)
+	content|repair|diagnose|link|unlink|exclude|poweroff)
 
 		[ "$_opt_node" == "no" ] && echo "-n parameter needed, node or node range mandatory" && exit 1
 

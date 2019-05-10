@@ -1121,13 +1121,14 @@ show_data()
 							_time=strftime("%H:%M:%S",$1) ;
 
 							_f3c="" ; _f4c="" ;
-							if ( $6 ~ /CONTENT|DOWN/ ) { _f4c=_rc }
-							if ( $6 ~ /LINK|REPAIR|DIAGNOSE|FAIL/ ) { _f4c=_yc }
+							if ( $6 ~ /CONTENT|DOWN|FAIL/ ) { _f4c=_rc }
+							if ( $6 ~ /LINK|REPAIR|DIAGNOSE/ ) { _f4c=_yc }
 							if ( $6 ~ /UP|OK/ ) { _f4c=_gc }
 							if ( $6 ~ /DRAIN/ ) { _f4c=_ggc }
 							if ( $6 ~ /UNKNOWN/ ) { _f4c=_cc }
 
-							if ( $4 ~ /REACTIVE|ALERT/ ) { _f3c=_yc }
+							if ( $4 ~ /ALERT/ ) { _f3c=_rc }
+							if ( $4 ~ /REACTIVE/ ) { _f3c=_yc }
 							if ( $4 ~ /STATUS/ ) { _f3c=_gc }
 	
 							if ( _date != _date_old ) { _date_old=_date ; _date_pr=_date } else { _date_pr="" } 
