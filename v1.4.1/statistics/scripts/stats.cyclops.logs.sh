@@ -683,25 +683,26 @@ format_output()
                                                 split($2,a,"=") ; 
 						_fnc="" ; _a1c="" ;
 						if ( a[2] ~ "/" || _ioctrl == 1 ) {
-							_ioctlr=1 ;
+							_ioctlr=1 ; 
 							split(a[2],io,"/")
 							if ( io[1] > io[2] ) {
 								_dat=int((io[1]*_lng)/_tl)
 								_rdat=io[1]
-								if ( io[2] <= 1  ) { _gr=2 } else { _gr=int((io[2]*_lng)/_tl) }
+								_gr=int((io[2]*_lng)/_tl)
+								if ( _gr <= 1  ) { _gr=2 }
 								hp=_g""a[1]""_n
 								_rr=1
 							} else {
 								_dat=int((io[2]*_lng)/_tl)
 								_rdat=io[2]
-								if ( io[1] <= 1 ) { _rr=1 } else { _rr=int((io[1]*_lng)/_tl) }
+								_rr=int((io[1]*_lng)/_tl)
+								if ( _rr <= 1 ) { _rr=1 }
 								hp=_r""a[1]""_n
 								_gr=1
 							}
 							if ( io[1] > int(io[1]) ) { _fdt1=sprintf("%'"'"'.2f", io[1] ) } else { _fdt1=sprintf("%'"'"'.0f", io[1] ) } 
 							if ( io[2] > int(io[2]) ) { _fdt2=sprintf("%'"'"'.2f", io[2] ) } else { _fdt2=sprintf("%'"'"'.0f", io[2] ) } 
 							_fdat=_fdt1"/"_fdt2
-							_tp=io[1]"%/"io[2]"%"
 						} else { 
 							_gr=1
 							_dat=int((a[2]*_lng)/_tl)
@@ -732,7 +733,7 @@ format_output()
                                                         if ( i >= _dat ) { _t=_t""_n ; break } ;
                                                 } ; 
                                                 if ( _do != $1 ) { _do=$1 ; _pdo=_do } else { _pdo=" " } ; 
-						if ( $1 ~ "[a-z]+" ) {
+						if ( $1 ~ "^[a-z]+$" ) {
 							if ( _pdo == $1 ) { print " " } ;
                                                 	printf "%-12s %s%-10s%s::%-s %s%s%s\n",_pdo, _a1c, a[1], _n, _t, _fnc, _fdat, _n ; 
 						} else {
