@@ -39,6 +39,8 @@ _rules_detected=0
 
 _ia_codes=""
 
+_audit_status=$( awk -F\; '$1 == "CYC" && $2 == "0003" && $3 == "AUDIT" { print $4 }' $_sensors_sot )
+
 #### FUNCTIONS ####
 
 alerts_gen()

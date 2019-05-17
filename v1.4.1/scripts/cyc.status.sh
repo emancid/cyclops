@@ -30,14 +30,14 @@
 	_command="$_command_dir/$_command_name $_command_opts"
 	
 	[ -f "/etc/cyclops/global.cfg" ] && source /etc/cyclops/global.cfg || _exit_code="111"
+	[ ! -f "$_sensors_sot" ] && echo "ERR: Revise cyclops instalation" && exit 1 
 
 	[ -f "$_libs_path/ha_ctrl.sh" ] && source $_libs_path/ha_ctrl.sh || _exit_code="112"
 	[ -f "$_libs_path/node_group.sh" ] && source $_libs_path/node_group.sh || _exit_code="113"
 	[ -f "$_libs_path/node_ungroup.sh" ] && source $_libs_path/node_ungroup.sh || _exit_code="114"
 	[ -f "$_libs_path/init_date.sh" ] && source $_libs_path/init_date.sh || _exit_code="115"
 	[ -f "$_color_cfg_file" ] && source $_color_cfg_file || _exit_code="116"
-
-	source $_color_cfg_file
+	
 
 	case "$_exit_code" in
 	111)
@@ -252,6 +252,8 @@ cyclops_status()
 	unset _tit 
 	unset _status 
 
+	[ ! -f "$_sensors_sot" ] && echo "ERR: revise cyclops configuration" && exit 1
+
 	for _lin in $( cat $_sensors_sot | awk -F\; '$1 == "CYC" && $4 ~ "[A-Z]+" { print $2";"$4 }' ) 
 	do 
 		_cod=$( echo $_lin | cut -d';' -f1 ) 
@@ -432,6 +434,8 @@ critical_env()
 
 node_real_status()
 {
+	[ ! -f "$_type" ] && echo "ERR: Revise cyclops configuration" >&2 && exit 1 
+
 	if [ "$_opt_path" == "yes" ] 
 	then
 		[ -f "$_mon_history_path/$_par_path" ] && _mon_nod_file=$_mon_history_path/$_par_path || _mon_nod_file=$_mon_path/monnod.txt
@@ -645,6 +649,9 @@ node_real_status()
 
 slurm_activity()
 {
+
+	[ ! -f "$_pg_dashboard_log" ] && echo "ERR: Dashboard log plugin doesn't exits" >&2 && exit 1
+
 	_slurm_activity=$( cat $_pg_dashboard_log | 
 				sed -e 's/ //g'  -e 's/\%//' | 
 				awk -F\: -v _dr="$_date_filter" -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
@@ -719,6 +726,8 @@ slurm_activity()
 
 system_avail()
 {
+	[ ! -f "$_pg_dashboard_log" ] && echo "ERR: Dashboard log plugin doesn't exits" >&2 && exit 1
+
 	_system_avail=$( cat $_pg_dashboard_log | 
 				sed -e 's/ //g'  -e 's/\%//' | 
 				awk -F\: -v _dr="$_date_filter" -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
@@ -784,6 +793,8 @@ system_avail()
 
 system_use()
 {
+	[ ! -f "$_pg_dashboard_log" ] && echo "ERR: Dashboard log plugin doesn't exits" >&2 && exit 1
+
 	_system_use=$( cat $_pg_dashboard_log | 
 				sed -e 's/ //g'  -e 's/\%//' | 
 				awk -F\: -v _dr="$_date_filter" -v _tsb="$_date_tsb" -v _tse="$_date_tse" '
@@ -859,6 +870,8 @@ system_use()
 slurm_consumption()
 {
 	[ -z "$_slurm_group" ] && _slurm_group=$_date_filter 
+	[ ! -f "$_stat_main_cfg_file" ] && echo "ERR: Slurm main config doesn't exits" && exit 1
+	[ ! -f "$_config_path_sta/$_slurm_cfg" ] && echo "ERR: Slurm config doesn't exits" && exit 1
 
 	_slurm_cfg=$( cat $_stat_main_cfg_file | awk -F\; '$2 == "slurm" { print $3 }' )
 	_slurm_sources=$( cat $_config_path_sta/$_slurm_cfg | awk -F\; '$1 ~ "[0-9]" { print $4 }')
@@ -952,6 +965,8 @@ slurm_consumption()
 slurm_use()
 {
 	[ -z "$_slurm_group" ] && _slurm_group=$_date_filter 
+	[ ! -f "$_stat_main_cfg_file" ] && echo "ERR: Slurm main config doesn't exits" && exit 1
+	[ ! -f "$_config_path_sta/$_slurm_cfg" ] && echo "ERR: Slurm config doesn't exits" && exit 1
 
 	_slurm_cfg=$( cat $_stat_main_cfg_file | awk -F\; '$2 == "slurm" { print $3 }' )
 	_slurm_sources=$( cat $_config_path_sta/$_slurm_cfg | awk -F\; '$1 ~ "[0-9]" { print $4 }')
@@ -1054,6 +1069,8 @@ slurm_use()
 
 slurm_stats()
 {
+	[ ! -f "$_stat_main_cfg_file" ] && echo "ERR: Slurm main config doesn't exits" && exit 1
+	[ ! -f "$_config_path_sta/$_slurm_cfg" ] && echo "ERR: Slurm config doesn't exits" && exit 1
 
 	if [ -z "$_slurm_group" ]
 	then

@@ -366,7 +366,11 @@ calc_data()
                                         } END { 
                                                 if ( _reg_c == "yes" ) { 
 							if ( _tc == "io" ) { 
-								print _to"="_in/a"/"_ou/a
+								if ( _mod == "avg" ) {
+									print _to"="_in/a"/"_ou/a
+								} else {
+									print _to"="_in"/"_ou
+								}
 							} else {
 								print _to"="t/a ; 
 							}
